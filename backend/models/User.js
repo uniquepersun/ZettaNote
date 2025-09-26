@@ -1,0 +1,34 @@
+import mongoose from "mongoose";
+
+const UserSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    pages: {
+        type: [mongoose.types.ObjectId],
+        required: true,
+        default: []
+    },
+    banned: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    createdAt: {
+        type: Date,
+        required: true,
+        default: Date.now()
+    }
+});
+
+export default new mongoose.model("User", UserSchema);

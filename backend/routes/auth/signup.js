@@ -4,9 +4,10 @@ import User from "../../models/User.js";
 import { genToken } from "../../util/token.js";
 
 export default async function signup(req) {
-    const { name, email, password, confirmPassword } = req.body;
-
     try {
+       const { name, email, password, confirmPassword } = req.body;
+
+        // validate user input
         const inputErrors = await validateInput(name, email, password, confirmPassword);
         if (inputErrors) {
             return {
@@ -17,6 +18,7 @@ export default async function signup(req) {
             };
         }
 
+        // create new user object and store in DB
         const hashedPass = await bcrypt.hash(password, 18);
         const newUser = new User({
             name: name,
@@ -25,6 +27,8 @@ export default async function signup(req) {
         });
 
         await newUser.save();
+
+        // gen token and return to user            
         const token = genToken(newUser);
 
         return {
@@ -59,9 +63,12 @@ async function validateInput(name, email, password, confirmPassword) {
     if (password !== confirmPassword) { error = true; errors.push("Passwords do not match"); }
     if (!isValidEmail(email)) { error = true; errors.push("Invalid email"); }
     
+    // check if email is already registered
     const emailInUse = await User.findOne({email:email});
     if (emailInUse) { error = true; errors.push("Email in use"); }
 
+
+    // return errors
     if (error) {
         return errors;
     } else {

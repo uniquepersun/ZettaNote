@@ -11,7 +11,7 @@ const PageSchema = new mongoose.Schema({
         default: ""
     },
     owner: {
-        type: mongoose.types.ObjectId,
+        type: mongoose.Types.ObjectId,
         required: true
     },
     createdAt: {

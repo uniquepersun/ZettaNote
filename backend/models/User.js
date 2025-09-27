@@ -15,7 +15,7 @@ const UserSchema = new mongoose.Schema({
         required: true
     },
     pages: {
-        type: [mongoose.types.ObjectId],
+        type: [mongoose.Types.ObjectId],
         required: true,
         default: []
     },

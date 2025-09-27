@@ -16,11 +16,17 @@ app.use(cors());
 app.use("/api/auth", authRouter);
 app.use("/api/pages", pageRouter);
 
-mongoose.connect(DB)
-    .then(() => {
-        console.log("connected to db");
+const connectToDb = async () => {
+  try {
+    await mongoose.connect(DB);
+    console.log("connected to db");
 
-        app.listen(PORT, () => {
-            console.log(`API listening on port: ${PORT}`);
-        })
+    app.listen(PORT, () => {
+      console.log(`API listening on port: ${PORT}`);
     });
+  } catch (e) {
+    console.error("Failed to connect to DB!", e);
+  }
+};
+
+connectToDb();

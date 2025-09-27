@@ -1,10 +1,17 @@
 import bcrypt from "bcryptjs";
 import User from "../../models/User.js";
 import { genToken } from "../../util/token.js";
+import validatePass from "../../util/validatePass.js";
 
 export default async function changePassword(req) {
     try {
         const { email, password, newPassword, confirmNewPassword } = req.body;
+        
+        //validating new password
+        const validation = validatePass(newPassword);
+        if(validation.resStatus != 200){
+            return validation;
+        }
 
         // check if passwords match
         if (newPassword !== confirmNewPassword) {

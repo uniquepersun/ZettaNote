@@ -40,7 +40,7 @@ Core features are being built and contributions are welcome.
 
 1. **Clone the repo**
    ```bash
-   git clone https://github.com/yourusername/zettanote.git
+   git clone https://github.com/braydenidzenga/zettanote.git
    cd zettanote/backend
 
    install dependancies with npm i

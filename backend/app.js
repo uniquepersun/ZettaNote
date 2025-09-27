@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { DB, PORT } from "./config.js";
 
 import authRouter from "./routes/auth/auth.js";
+import pageRouter from "./routes/pages/pages.js";
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(cors());
 
 // routes
 app.use("/api/auth", authRouter);
+app.use("/api/pages", pageRouter);
 
 mongoose.connect(DB)
     .then(() => {

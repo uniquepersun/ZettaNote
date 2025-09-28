@@ -24,6 +24,10 @@ export default async function createPage(req) {
             owner: user._id
         });
         await newPage.save();
+        
+        // add page id to user list of page ids
+        user.pages.push(newPage._id);
+        await user.save();
 
         // return the new page to the user
         return {

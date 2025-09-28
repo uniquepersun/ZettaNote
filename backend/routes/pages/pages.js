@@ -3,6 +3,7 @@ import express from "express";
 import createPage from "./createPage.js";
 import savePage from "./savePage.js";
 import renamePage from "./renamePage.js";
+import { getPage, getPages } from "./getPages.js";
 
 const router = express.Router();
 
@@ -19,6 +20,16 @@ router.post("/savepage", async (req,res) => {
 router.post("/renamepage", async (req,res) => {
     const { resStatus, resMessage } = await renamePage(req);
     res.status(resStatus).json(resMessage);
-})
+});
+
+router.get("/getpage", async (req,res) => {
+    const { resStatus, resMessage } = await getPage(req);
+    res.status(resStatus).json(resMessage);
+});
+
+router.get("/getpages", async (req, res) => {
+    const { resStatus, resMessage } = await getPages(req);
+    res.status(resStatus).json(resMessage);
+});
 
 export default router;

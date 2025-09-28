@@ -33,7 +33,7 @@ router.get("/getpages", async (req, res) => {
     res.status(resStatus).json(resMessage);
 });
 
-router.post("/deletepage", async (req,res) => {
+router.delete("/deletepage", async (req,res) => {
     const { resStatus, resMessage } = await deletePage(req);
     res.status(resStatus).json(resMessage);
 });

@@ -1,9 +1,25 @@
 import Page from "../../models/Page.js";
 import { verifyToken } from "../../util/token.js";
+import { z } from "zod";
 
 export default async function savePage(req) {
     try {
-        const { token, pageId, newPageData } = req.body;
+		// Zod validation
+		const savePageSchema = z.object({
+			token: z.string().min(1, "Token is required"),
+			pageId: z.string().min(1, "Page ID is required"),
+			newPageData: z.string().min(1, "Page data is required"),
+		});
+		const parseResult = savePageSchema.safeParse(req.body);
+		if (!parseResult.success) {
+			return {
+				resStatus: 400,
+				resMessage: {
+					message: JSON.parse(parseResult.error).map((err)=>err.message).join(", "),
+				},
+			};
+		}
+		const { token, pageId, newPageData } = parseResult.data;
 
         // verify user and find page in DB
         const user = await verifyToken(token);

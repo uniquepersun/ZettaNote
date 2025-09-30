@@ -1,36 +1,26 @@
+import { z } from "zod";
+
+const passwordSchema = z
+	.string()
+	.trim()
+	.min(12, { message: "Password must be of 12 characters" })
+	.refine((val) => /\d/.test(val), {
+		message: "Password must have at least 1 digit",
+	})
+	.refine((val) => /[^a-zA-Z0-9]/.test(val), {
+		message: "Password must have at least 1 symbol",
+	});
+
 export default function validatePass(password) {
-  password = password.trim();
-
-  //checking password length
-  if (password.length < 12) {
-    return {
-      resStatus: 400,
-      resMessage: {
-        Error: "Password must be of 12 characters",
-      },
-    };
-  }
-  //checking for the at least 1 digit
-  if (!/\d/.test(password)) {
-    return {
-      resStatus: 400,
-      resMessage: {
-        Error: "Password must have at least 1 digit",
-      },
-    };
-  }
-  //checking for the at least 1 symbol
-  if (!/[^a-zA-Z0-9]/.test(password)) {
-    return {
-      resStatus: 400,
-      resMessage: {
-        Error: "Password must have at least 1 symbol",
-      },
-    };
-  }
-
-  return {
-    resStatus: 200,
-    resMessage: { message: "Password is valid" },
-  };
+	const result = passwordSchema.safeParse(password);
+	if (!result.success) {
+		return {
+			resStatus: 400,
+			resMessage: { Error: JSON.parse(result.error)[0].message },
+		};
+	}
+	return {
+		resStatus: 200,
+		resMessage: { message: "Password is valid" },
+	};
 }

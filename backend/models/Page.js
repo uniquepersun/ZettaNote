@@ -14,6 +14,16 @@ const PageSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         required: true
     },
+    sharedTo: {
+      type: [mongoose.Types.ObjectId],
+      required: true,
+      default: []
+    },
+    usersWithWritePermission: {
+        type: [mongoose.Types.ObjectId],
+        required: true,
+        default: []
+    },
     createdAt: {
         type: Date,
         required: true,

@@ -19,6 +19,11 @@ const UserSchema = new mongoose.Schema({
         required: true,
         default: []
     },
+    sharedPages: {
+      type: [mongoose.Types.ObjectId],
+      required: true,
+      default: []
+    },
     banned: {
         type: Boolean,
         required: true,

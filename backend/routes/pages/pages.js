@@ -5,6 +5,7 @@ import savePage from "./savePage.js";
 import renamePage from "./renamePage.js";
 import { getPage, getPages } from "./getPages.js";
 import deletePage from "./deletePage.js";
+import sharePage from "./sharePage.js";
 
 const router = express.Router();
 
@@ -37,5 +38,10 @@ router.delete("/deletepage", async (req,res) => {
     const { resStatus, resMessage } = await deletePage(req);
     res.status(resStatus).json(resMessage);
 });
+
+router.post("/sharepage", async (req,res) => {
+    const { resStatus, resMessage } = await sharePage(req);
+    res.status(resStatus).json(resMessage);
+})
 
 export default router;

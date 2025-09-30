@@ -27,8 +27,20 @@ export async function getPage(req) {
             }
         }
 
-        // check if user owns the page
-        if (!page.owner.equals(user._id)) {
+        // check if user has access to the page
+        let permission = false;
+
+        if (page.owner.equals(user._id)) {
+            permission = true;
+        }
+
+        page.sharedTo.forEach(id => {
+            if (id.equals(user._id)) {
+                permission = true;
+            }
+        });
+
+        if (!permission) {
             return {
                 resStatus: 403,
                 resMessage: {
@@ -72,19 +84,29 @@ export async function getPages(req) {
             }
         }
 
-        // return pages to user
-        let data = [];
+        // get owned pages
+        let ownedPages = [];
         for (const id of user.pages) {
             const page = await getPageNameAndId(id);
             if (page !== null) {
-                data.push(page);
+                ownedPages.push(page);
             }
-        } 
+        }
+
+        // get shared pages
+        let sharedPages = [];
+        for (const id of user.sharedPages) {
+            const page = await getPageNameAndId(id);
+            if (page !== null) {
+                sharedPages.push(page);
+            }
+        }
 
         return {
             resStatus: 200,
             resMessage: {
-                "Pages": data
+                "OwnedPages": ownedPages,
+                "SharedPages": sharedPages
             }
         }
 

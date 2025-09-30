@@ -1,9 +1,25 @@
 import Page from "../../models/Page.js";
 import { verifyToken } from "../../util/token.js";
+import { z } from "zod";
 
 export async function getPage(req) {
     try {
-        const { token, pageId } = req.body;
+
+		// Zod validation
+		const getPageSchema = z.object({
+			token: z.string().min(1, "Token is required"),
+			pageId: z.string().min(1, "Page ID is required"),
+		});
+		const parseResult = getPageSchema.safeParse(req.body);
+		if (!parseResult.success) {
+			return {
+				resStatus: 400,
+				resMessage: {
+					message: JSON.parse(parseResult.error).map((err)=>err.message).join(", "),
+				},
+			};
+		}
+        const { token, pageId } = parseResult.data;
 
         // verify user token
         const user = await verifyToken(token);
@@ -71,7 +87,20 @@ export async function getPage(req) {
 // returns a list of the users page names and ids
 export async function getPages(req) {
     try {
-        const { token } = req.body;
+        // Zod validation
+		const getPagesSchema = z.object({
+			token: z.string().min(1, "Token is required"),
+		});
+		const parseResult = getPagesSchema.safeParse(req.body);
+		if (!parseResult.success) {
+			return {
+				resStatus: 400,
+				resMessage: {
+					message: parseResult.error.errors.map((e) => e.message).join(", "),
+				},
+			};
+		}
+		const { token } = parseResult.data;
 
         // verify user is logged in
         const user = await verifyToken(token);

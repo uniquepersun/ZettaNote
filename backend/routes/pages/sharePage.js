@@ -1,10 +1,27 @@
 import Page from "../../models/Page.js";
 import User from "../../models/User.js";
 import { verifyToken } from "../../util/token.js";
+import { z } from "zod";
 
 export default async function sharePage(req) {
     try {
-        const { token, pageId, userEmail, giveWritePermission } = req.body;
+       	// Zod validation
+		const sharePageSchema = z.object({
+			token: z.string().min(1, "Token is required"),
+			pageId: z.string().min(1, "Page ID is required"),
+			userEmail: z.string().email("Invalid email address"),
+			giveWritePermission: z.boolean().optional(),
+		});
+		const parseResult = sharePageSchema.safeParse(req.body);
+		if (!parseResult.success) {
+			return {
+				resStatus: 400,
+				resMessage: {
+					message: JSON.parse(parseResult.error).map((err)=>err.message).join(", "),
+				},
+			};
+		}
+		const { token, pageId, userEmail, giveWritePermission } = parseResult.data;
 
         // verify user is logged in
         const user = await verifyToken(token);

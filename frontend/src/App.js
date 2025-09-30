@@ -4,12 +4,13 @@ import { UIProvider } from "./components/ui/provider";
 
 import Login from "./pages/login";
 import Signup from "./pages/signup";
+import Landingpage from "./pages/landingpage";
 
 function App() {
     const router = createBrowserRouter([
         {
             path: "/",
-            element: <div>ZettaNote</div>,
+            element: <Landingpage />,
         },
         {
             path: "/login",

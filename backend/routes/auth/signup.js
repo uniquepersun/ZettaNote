@@ -19,7 +19,7 @@ export default async function signup(req) {
       return {
         resStatus: 400,
         resMessage: {
-          "Input errors": inputErrors,
+          "message": inputErrors,
         },
       };
     }
@@ -40,7 +40,7 @@ export default async function signup(req) {
     return {
       resStatus: 200,
       resMessage: {
-        Message: "Signed up",
+        "message": "Signed up",
         token: token,
       },
     };
@@ -49,7 +49,7 @@ export default async function signup(req) {
     return {
       resStatus: 500,
       resMessage: {
-        Error: "Internal server error",
+        "message": "Internal server error",
       },
     };
   }

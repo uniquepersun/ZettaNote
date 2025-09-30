@@ -1,5 +1,9 @@
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
+import { UIProvider } from "./components/ui/provider";
+
+import Login from "./pages/login";
+import Signup from "./pages/signup";
 
 function App() {
     const router = createBrowserRouter([
@@ -9,11 +13,11 @@ function App() {
         },
         {
             path: "/login",
-            element: <div>Login</div>,
+            element: <Login />,
         },
         {
             path: "/signup",
-            element: <div>Signup</div>,
+            element: <Signup />,
         },
         {
             path: "/home",
@@ -23,7 +27,9 @@ function App() {
 
     return (
     <div>
-        <RouterProvider router={router}></RouterProvider>
+        <UIProvider>
+            <RouterProvider router={router}></RouterProvider>
+        </UIProvider>
     </div>
   );
 }

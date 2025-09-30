@@ -11,7 +11,7 @@ export default async function renamePage(req) {
             return {
                 resStatus: 400,
                 resMessage: {
-                    "Error": "User not logged in"
+                    "message": "User not logged in"
                 }
             };
         }
@@ -21,7 +21,7 @@ export default async function renamePage(req) {
             return {
                 resStatus: 404,
                 resMessage: {
-                    "Error": "Page not found"
+                    "message": "Page not found"
                 }
             };
         }
@@ -31,7 +31,7 @@ export default async function renamePage(req) {
             return {
                 resStatus: 403,
                 resMessage: {
-                    "Error": "Not authorized"
+                    "message": "Not authorized"
                 }
             };
         }
@@ -53,7 +53,7 @@ export default async function renamePage(req) {
         return {
             resStatus: 500,
             resMessage: {
-                "Error": "Internal server error"
+                "message": "Internal server error"
             }
         };
     }

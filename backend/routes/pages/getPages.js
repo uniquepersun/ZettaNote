@@ -79,7 +79,7 @@ export async function getPages(req) {
             return {
                 resStatus: 400,
                 resMessage: {
-                    "Error": "User not logged in"
+                    "message": "User not logged in"
                 }
             }
         }
@@ -115,7 +115,7 @@ export async function getPages(req) {
         return {
             resStatus: 500,
             resMessage: {
-                "Error": "Internal server error"
+                "message": "Internal server error"
             }
         }
     }

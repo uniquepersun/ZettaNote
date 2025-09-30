@@ -18,7 +18,7 @@ export default async function changePassword(req) {
             return {
                 resStatus: 400,
                 resMessage: {
-                    "Error": "Passwords do not match"
+                    "message": "Passwords do not match"
                 }
             };
         }
@@ -28,7 +28,7 @@ export default async function changePassword(req) {
             return {
                 resStatus: 400,
                 resMessage: {
-                    "Error": "Password cannot be empty"
+                    "message": "Password cannot be empty"
                 }
             };
         } 
@@ -39,7 +39,7 @@ export default async function changePassword(req) {
             return {
                 resStatus: 400,
                 resMessage: {
-                    "Error": "Email or password invalid"
+                    "message": "Email or password invalid"
                 }
             }
         }
@@ -49,7 +49,7 @@ export default async function changePassword(req) {
             return {
                 resStatus: 400,
                 resMessage: {
-                    "Error": "Email or password invalid"
+                    "message": "Email or password invalid"
                 }
             }
         }
@@ -65,7 +65,7 @@ export default async function changePassword(req) {
         return {
             resStatus: 200,
             resMessage: {
-                "Message": "Password successfully changed",
+                "message": "Password successfully changed",
                 "token": token
             }
         }
@@ -75,7 +75,7 @@ export default async function changePassword(req) {
         return {
             resStatus: 500,
             resMessage: {
-                "Error": "Internal server error"
+                "message": "Internal server error"
             }
         };
     }

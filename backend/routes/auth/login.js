@@ -13,7 +13,7 @@ export default async function login(req) {
             return {
                 resStatus: 400,
                 resMessage: {
-                    "Error": "Invalid email or password"
+                    "message": "Invalid email or password"
                 }
             };
         }
@@ -29,7 +29,7 @@ export default async function login(req) {
             return {
                 resStatus: 400,
                 resMessage: {
-                    "Error": "Invalid email or password"
+                    "message": "Invalid email or password"
                 }
             }
         }
@@ -39,7 +39,7 @@ export default async function login(req) {
         return {
             resStatus: 200,
             resMessage: {
-                "Message": "Logged in",
+                "message": "Logged in",
                 "token": token
             }
         }
@@ -49,7 +49,7 @@ export default async function login(req) {
         return {
             resStatus: 500,
             resMessage: {
-                "Error": "Internal server error"
+                "message": "Internal server error"
             }
         };
     }

@@ -11,7 +11,7 @@ export default async function deletePage(req) {
             return {
                 resStatus: 400,
                 resMessage: {
-                    "Error": "User not logged in"
+                    "message": "User not logged in"
                 }
             }
         }
@@ -22,7 +22,7 @@ export default async function deletePage(req) {
             return {
                 resStatus: 404,
                 resMessage: {
-                    "Error": "Page not found"
+                    "message": "Page not found"
                 }
             }
         }
@@ -32,7 +32,7 @@ export default async function deletePage(req) {
             return {
                 resStatus: 403,
                 resMessage: {
-                    "Error": "Not authorized"
+                    "message": "Not authorized"
                 }
             }
         }
@@ -43,7 +43,7 @@ export default async function deletePage(req) {
             return {
                 resStatus: 500,
                 resMessage: {
-                    "Error": "Failed to delete page"
+                    "message": "Failed to delete page"
                 }
             }
         }
@@ -55,7 +55,7 @@ export default async function deletePage(req) {
         return {
             resStatus: 200,
             resMessage: {
-                "Message": "Page deleted"
+                "message": "Page deleted"
             }
         }
 
@@ -64,7 +64,7 @@ export default async function deletePage(req) {
         return {
             resStatus: 500,
             resMessage: {
-                "Error": "Internal server error"
+                "message": "Internal server error"
             }
         }
     }

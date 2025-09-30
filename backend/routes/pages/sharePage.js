@@ -33,7 +33,7 @@ export default async function sharePage(req) {
             return {
                 resStatus: 403,
                 resMessage: {
-                    "Error": "Not authorized"
+                    "message": "Not authorized"
                 }
             }
         }
@@ -43,7 +43,7 @@ export default async function sharePage(req) {
         if (!sharedUser) {
             return {
                 resStatus: 404,
-                resMessage: { Error: "User does not exist" }
+                resMessage: { "message": "User does not exist" }
             };
         }
 
@@ -59,7 +59,7 @@ export default async function sharePage(req) {
             return {
                 resStatus: 400,
                 resMessage: {
-                    "Error": "Page already shared with this page"
+                    "message": "Page already shared with this page"
                 }
             }
         }
@@ -78,7 +78,7 @@ export default async function sharePage(req) {
         return {
             resStatus: 200,
             resMessage: {
-                "Message": "Successfully shared with this user"
+                "message": "Successfully shared with this user"
             }
         }
 
@@ -87,7 +87,7 @@ export default async function sharePage(req) {
         return {
             resStatus: 500,
             resMessage: {
-                "Error": "Internal server error"
+                "message": "Internal server error"
             }
         };
     }

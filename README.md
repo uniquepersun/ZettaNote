@@ -25,7 +25,7 @@ Core features are being built and contributions are welcome.
 
 ## 🛠️ Tech Stack
 - **Backend**: Node.js + Express + MongoDB  
-- **Frontend**: React + Vite (UI framework TBD)  
+- **Frontend**: React + Material UI 
 
 ---
 
@@ -43,10 +43,19 @@ Core features are being built and contributions are welcome.
    git clone https://github.com/braydenidzenga/zettanote.git
    cd zettanote/backend
 
-   install dependancies with npm i
+   run "npm i" to install dependancies
 
    setup the .env file
 
    save a copy of the .env file as ".env" and fill in the variables
 
-   then run "npm run dev"
+   run "npm run dev" to start the backend in dev mode
+
+### Frontend Setup
+
+1. **Clone the repo**
+   ```bash
+   cd frontend
+   change the url in config.js to point to the backend address
+   run "npm i" to install dependancies
+   run "npm start" to start the frontend in dev mode

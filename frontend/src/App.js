@@ -1,7 +1,29 @@
+import { createBrowserRouter } from "react-router";
+import { RouterProvider } from "react-router/dom";
+
 function App() {
-  return (
+    const router = createBrowserRouter([
+        {
+            path: "/",
+            element: <div>ZettaNote</div>,
+        },
+        {
+            path: "/login",
+            element: <div>Login</div>,
+        },
+        {
+            path: "/signup",
+            element: <div>Signup</div>,
+        },
+        {
+            path: "/home",
+            element: <div>Home</div>,
+        }
+    ]);
+
+    return (
     <div>
-        <h1>Hello, World!</h1>
+        <RouterProvider router={router}></RouterProvider>
     </div>
   );
 }

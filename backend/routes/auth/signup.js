@@ -55,7 +55,7 @@ export default async function signup(req) {
 	}   
 
     // create new user object and store in DB
-    const hashedPass = await bcrypt.hash(password, 18);
+    const hashedPass = await bcrypt.hash(password, 12);
     const newUser = new User({
       name: name,
       email: email,

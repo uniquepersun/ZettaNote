@@ -6,6 +6,16 @@ import { z } from "zod";
 
 export default async function login(req) {
     try {
+        if(!req.body || !req.body.email || !req.body.password){
+            return {
+                resStatus:400,
+                resMessage:{
+                    message:"Email and Password are required"
+                }
+            }
+        }
+        const { email, password } = req.body;
+      
         const loginSchema = z.object({
 			email: z.string().email("Invalid email address"),
 			password: z.string().min(1, "Password is required"),

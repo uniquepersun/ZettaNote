@@ -6,6 +6,15 @@ import { z } from "zod";
 
 export default async function signup(req) {
   try {
+    if(!req.body || !req.body.email || !req.body.name || !req.body.password){
+        return {
+            resStatus:400,
+            resMessage:{
+                message:"Email and Password and name are required"
+            }
+        }
+    }
+    const { name, email, password, confirmPassword } = req.body;
 	// Zod validation
 	const signupSchema = z.object({
 		name: z.string().min(1, "Name is required"),

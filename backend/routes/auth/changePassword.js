@@ -2,11 +2,27 @@ import bcrypt from "bcryptjs";
 import User from "../../models/User.js";
 import { genToken } from "../../util/token.js";
 import validatePass from "../../util/validatePass.js";
+import { z } from "zod";
 
 export default async function changePassword(req) {
     try {
-        const { email, password, newPassword, confirmNewPassword } = req.body;
-        
+		// Zod validation
+        const changePasswordSchema = z.object({
+			email: z.string().email("Invalid email address"),
+			password: z.string().min(1, "Password is required"),
+			newPassword: z.string().min(1, "New password is required"),
+			confirmNewPassword: z.string().min(1, "Confirm new password is required"),
+		});
+        const parseResult = changePasswordSchema.safeParse(req.body);
+		if (!parseResult.success) {
+			return {
+				resStatus: 400,
+				resMessage: {
+					message: JSON.parse(parseResult.error).map((err)=>err.message).join(", "),
+				},
+			};
+		}
+        const { email, password, newPassword, confirmNewPassword } = parseResult.data;
         //validating new password
         const validation = validatePass(newPassword);
         if(validation.resStatus != 200){
@@ -23,15 +39,6 @@ export default async function changePassword(req) {
             };
         }
 
-        // check if password is empty
-        if (isEmptyOrWhitespace(newPassword)) {
-            return {
-                resStatus: 400,
-                resMessage: {
-                    "message": "Password cannot be empty"
-                }
-            };
-        } 
 
         // check if user exists and is given the correct password
         const user = await User.findOne({email:email});
@@ -79,8 +86,4 @@ export default async function changePassword(req) {
             }
         };
     }
-}
-
-function isEmptyOrWhitespace(str) {
-  return !str || str.trim().length === 0;
 }

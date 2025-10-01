@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { genToken } from "../../util/token.js";
 import User from "../../models/User.js";
 import validatePass from "../../util/validatePass.js";
+import { z } from "zod";
 
 export default async function login(req) {
     try {
@@ -14,6 +15,22 @@ export default async function login(req) {
             }
         }
         const { email, password } = req.body;
+      
+        const loginSchema = z.object({
+			email: z.string().email("Invalid email address"),
+			password: z.string().min(1, "Password is required"),
+		});
+		const parseResult = loginSchema.safeParse(req.body);
+		if (!parseResult.success) {
+			return {
+				resStatus: 400,
+				resMessage: {
+					message: JSON.parse(parseResult.error).map((err)=>err.message).join(", "),
+				},
+			};
+		}
+
+        const { email, password } = parseResult.data;
 
         // check if email is in db
         const user = await User.findOne({email:email});

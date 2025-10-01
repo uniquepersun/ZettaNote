@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import validatePass from "../../util/validatePass.js";
 import User from "../../models/User.js";
 import { genToken } from "../../util/token.js";
+import { z } from "zod";
 
 export default async function signup(req) {
   try {
@@ -14,23 +15,45 @@ export default async function signup(req) {
         }
     }
     const { name, email, password, confirmPassword } = req.body;
+	// Zod validation
+	const signupSchema = z.object({
+		name: z.string().min(1, "Name is required"),
+		email: z.string().email("Invalid email address"),
+		password: z.string().min(1, "Password is required"),
+		confirmPassword: z.string().min(1, "Confirm password is required"),
+	});
 
-    // validate user input
-    const inputErrors = await validateInput(
-      name,
-      email,
-      password,
-      confirmPassword
-    );
+	const parseResult = signupSchema.safeParse(req.body);
 
-    if (inputErrors) {
-      return {
-        resStatus: 400,
-        resMessage: {
-          "message": inputErrors,
-        },
-      };
-    }
+	if (!parseResult.success) {
+		return {
+			resStatus: 400,
+			resMessage: {
+				message: JSON.parse(parseResult.error).map((err)=>err.message).join(", "),
+			},
+		};
+	}
+
+    const { name, email, password, confirmPassword } = parseResult.data;
+	// checking same password and confirm password
+	if (password !== confirmPassword) {
+	return {
+		resStatus: 400,
+		resMessage: {
+			message: "Passwords do not match",
+		},
+	};
+	}
+	// checking user exists
+	const emailInUse = await User.findOne({ email: email });
+	if(emailInUse){
+		return {
+			resStatus: 400,
+			resMessage: {
+				message: "Email in use",
+			},
+		};
+	}   
 
     // create new user object and store in DB
     const hashedPass = await bcrypt.hash(password, 18);
@@ -61,62 +84,4 @@ export default async function signup(req) {
       },
     };
   }
-}
-
-async function validateInput(name, email, password, confirmPassword) {
-  let error = false;
-  let errors = [];
-
-  // check for empty strings
-  if (isEmptyOrWhitespace(name)) {
-    error = true;
-    errors.push("Name cannot be empty");
-  }
-  if (isEmptyOrWhitespace(email)) {
-    error = true;
-    errors.push("Email cannot be empty");
-  }
-  if (isEmptyOrWhitespace(password)) {
-    error = true;
-    errors.push("Password cannot be empty");
-  }
-
-  // validate input
-  if (password !== confirmPassword) {
-    error = true;
-    errors.push("Passwords do not match");
-  }
-  if (!isValidEmail(email)) {
-    error = true;
-    errors.push("Invalid email");
-  }
-
-  // check if email is already registered
-  const emailInUse = await User.findOne({ email: email });
-  if (emailInUse) {
-    error = true;
-    errors.push("Email in use");
-  }
-
-  //validating password
-  const validation = validatePass(password);
-  if (validation.resStatus != 200) {
-    error = true;
-    errors.push(validation.resMessage.Error);
-  }
-
-  // return errors
-  if (error) {
-    return errors;
-  } else {
-    return null;
-  }
-}
-
-function isEmptyOrWhitespace(str) {
-  return !str || str.trim().length === 0;
-}
-
-function isValidEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }

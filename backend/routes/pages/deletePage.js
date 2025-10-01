@@ -1,9 +1,25 @@
 import Page from "../../models/Page.js";
 import { verifyToken } from "../../util/token.js";
+import { z } from "zod";
 
 export default async function deletePage(req) {
     try {
-        const { pageId, token } = req.body;
+        // Zod validation
+		const deletePageSchema = z.object({
+			pageId: z.string().min(1, "Page ID is required"),
+			token: z.string().min(1, "Token is required"),
+		});
+		const parseResult = deletePageSchema.safeParse(req.body);
+		if (!parseResult.success) {
+			return {
+				resStatus: 400,
+				resMessage: {
+					message: JSON.parse(parseResult.error).map((err)=>err.message).join(", "),
+				},
+			};
+		}
+
+        const { pageId, token } = parseResult.data;
 
         // verify user is logged in
         const user = await verifyToken(token);

@@ -41,21 +41,59 @@ Core features are being built and contributions are welcome.
 1. **Clone the repo**
    ```bash
    git clone https://github.com/braydenidzenga/zettanote.git
-   cd zettanote/backend
 
-   run "npm i" to install dependancies
+2. **Install dependencies**
+   ```bash
+    cd ZettaNote/backend
+    npm install
 
-   setup the .env file
-
-   save a copy of the .env file as ".env" and fill in the variables
-
-   run "npm run dev" to start the backend in dev mode
-
+3. **Setup .env file**
+   ```bash
+    save a copy of .env.example as ".env" and fill in the variables
+    
+4. **Run the backend**
+   ```bash
+    npm run dev
 ### Frontend Setup
+
+1. **Install dependencies**
+   ```bash
+   cd ZettaNote/frontend
+   npm install
+
+2. **Edit config.js**
+   ```bash
+    update the API_URL to point to your backend instance
+   
+3. **Run the frontend**
+   ```bash
+    npm start
+
+## Running with Docker
+
+### Requirements
+* Docker
+* MongoDB instance (local or cloud)
+
 
 1. **Clone the repo**
    ```bash
-   cd frontend
-   change the url in config.js to point to the backend address
-   run "npm i" to install dependancies
-   run "npm start" to start the frontend in dev mode
+   git clone https://github.com/braydenidzenga/zettanote.git
+
+2. **Edit variables**
+    ```bash
+   cd ZettaNote/backend
+   modify the variables in the Dockerfile
+   
+   cd ZettaNote/frontend
+   modify config.js to point to your backend instance
+   
+3. **Build Docker images**
+   ```bash
+    docker build -t zettanote-backend ./backend
+    docker build -t zettanote-frontend ./frontend
+
+4. **Run Docker containers**
+   ```bash
+        docker run -d -p PORT:PORT --name zettanote-backend zettanote-backend
+        docker run -d -p 3000:3000 --name zettanote-frontend zettanote-frontend

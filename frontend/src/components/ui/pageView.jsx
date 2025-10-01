@@ -3,6 +3,7 @@ import { Container, Typography, IconButton, Box, Paper, CircularProgress } from 
 import SaveIcon from "@mui/icons-material/Save";
 import { API_URL } from "../../config";
 import ReactMarkdown from "react-markdown";
+import SharePageButton from "./sharePageButton";
 
 // Always normalize page id for backend requests
 const normalizePage = (page) => ({
@@ -72,6 +73,8 @@ export default function PageView({ page }) {
         }
     };
 
+    const token = localStorage.getItem("token");
+
     return (
         <Container sx={{ mt: 8 }}>
             <Box display="flex" alignItems="center" mb={2}>
@@ -81,6 +84,7 @@ export default function PageView({ page }) {
                 <IconButton color="primary" onClick={handleSave} disabled={loading}>
                     <SaveIcon />
                 </IconButton>
+                <SharePageButton token={token} pageId={normalizedPage.id} />
             </Box>
             {error && (
                 <Typography color="error" sx={{ mb: 2 }}>

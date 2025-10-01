@@ -3,6 +3,7 @@
 [![License](https://img.shields.io/github/license/braydenidzenga/zettanote)](./LICENSE)
 [![Issues](https://img.shields.io/github/issues/braydenidzenga/zettanote)](https://github.com/yourusername/zettanote/issues)
 [![Pull Requests](https://img.shields.io/github/issues-pr/braydenidzenga/zettanote)](https://github.com/yourusername/zettanote/pulls)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit-blue?style=for-the-badge&logo=github)](https://zettanote.tech)
 
 ZettaNote is an **open-source note-taking app** (in active development) inspired by tools like Notion.  
 It focuses on **Markdown-based notes**, **real-time collaboration**, and **flexible organization** while remaining lightweight and developer-friendly.

@@ -5,6 +5,14 @@ import validatePass from "../../util/validatePass.js";
 
 export default async function login(req) {
     try {
+        if(!req.body || !req.body.email || !req.body.password){
+            return {
+                resStatus:400,
+                resMessage:{
+                    message:"Email and Password are required"
+                }
+            }
+        }
         const { email, password } = req.body;
 
         // check if email is in db

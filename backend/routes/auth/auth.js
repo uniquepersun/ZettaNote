@@ -7,18 +7,36 @@ import changePassword from "./changePassword.js";
 const router = express.Router();
 
 router.post("/signup", async (req,res) => {
-    const { resStatus, resMessage } = await signup(req);
-    res.status(resStatus).json(resMessage);
+    try{
+        const { resStatus, resMessage } = await signup(req);
+        res.status(resStatus).json(resMessage);
+    }catch(err){
+        console.log("Signup Error: ",err);
+        res.status(500).json({success:false,message:'Internal Server error.'})
+    }
 });
 
 router.post("/login", async (req,res) => {
-    const { resStatus, resMessage } = await login(req);
-    res.status(resStatus).json(resMessage);
+    try{
+        const { resStatus, resMessage } = await login(req);
+        res.status(resStatus).json(resMessage);
+    }
+    catch(err){
+        console.log("Login Error: ",err);
+        res.status(500).json({success:false,message:'Internal Server error.'})
+    }
 });
 
 
 router.post("/changepassword", async (req,res) => {
-    const { resStatus, resMessage } = await changePassword(req);
-    res.status(resStatus).json(resMessage);
-})
+    try{
+        const { resStatus, resMessage } = await changePassword(req);
+        res.status(resStatus).json(resMessage);
+    }catch(err){
+        console.log("ChangePassword error: ",err);
+        res.status(500).json({success:false,message:'Internal Server error.'})
+    }
+});
+
+
 export default router;

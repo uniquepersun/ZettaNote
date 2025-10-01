@@ -5,6 +5,14 @@ import { genToken } from "../../util/token.js";
 
 export default async function signup(req) {
   try {
+    if(!req.body || !req.body.email || !req.body.name || !req.body.password){
+        return {
+            resStatus:400,
+            resMessage:{
+                message:"Email and Password and name are required"
+            }
+        }
+    }
     const { name, email, password, confirmPassword } = req.body;
 
     // validate user input

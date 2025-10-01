@@ -16,6 +16,44 @@ app.use(cors());
 app.use("/api/auth", authRouter);
 app.use("/api/pages", pageRouter);
 
+// Root route for quick backend check
+app.get('/', (req, res) => {
+    let dbStatus = "Unknown ❓";
+
+    // Optional: check database connection if using Mongoose
+    if (mongoose.connection.readyState === 1) {
+        dbStatus = "Connected ✅";
+    } else if (mongoose.connection.readyState === 0) {
+        dbStatus = "Disconnected ❌";
+    } else if (mongoose.connection.readyState === 2) {
+        dbStatus = "Connecting ⏳";
+    } else if (mongoose.connection.readyState === 3) {
+        dbStatus = "Disconnecting ⚠";
+    }
+
+    res.status(200).json({
+        success: true,
+        message: "ZettaNote backend is running! 🚀",
+        db_status: dbStatus,
+        endpoints: {
+            signup: "api/auth/signup",
+            login: "api/auth/login",
+            changePassword_auth:"api/auth.changePassword",
+            pages:"/api/pages"
+        },
+        instructions: "Use Postman or curl to test the above endpoints."
+    });
+});
+
+// Catch-all 404 handler for undefined routes
+app.use((req, res) => {
+    res.status(404).json({
+        success: false,
+        message: "Route not found! Check your endpoint URL."
+    });
+});
+
+
 const connectToDb = async () => {
   try {
     await mongoose.connect(DB);

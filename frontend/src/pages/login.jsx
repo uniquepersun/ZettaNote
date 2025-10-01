@@ -7,6 +7,7 @@ import {
     Paper,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
+import { useNavigate } from "react-router-dom";
 
 import { API_URL } from "../config";
 
@@ -15,6 +16,7 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState("");
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -37,6 +39,7 @@ export default function Login() {
             }
 
             localStorage.setItem("token", data.token);
+            navigate("/home");
         } catch (err) {
             setErrors(data.message);
         } finally {

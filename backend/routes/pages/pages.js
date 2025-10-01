@@ -24,12 +24,12 @@ router.post("/renamepage", async (req,res) => {
     res.status(resStatus).json(resMessage);
 });
 
-router.get("/getpage", async (req,res) => {
+router.post("/getpage", async (req,res) => {
     const { resStatus, resMessage } = await getPage(req);
     res.status(resStatus).json(resMessage);
 });
 
-router.get("/getpages", async (req, res) => {
+router.post("/getpages", async (req, res) => {
     const { resStatus, resMessage } = await getPages(req);
     res.status(resStatus).json(resMessage);
 });

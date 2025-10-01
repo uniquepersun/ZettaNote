@@ -5,6 +5,7 @@ import { UIProvider } from "./components/ui/provider";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
 import Landingpage from "./pages/landingpage";
+import Home from "./pages/home";
 
 function App() {
     const router = createBrowserRouter([
@@ -22,7 +23,7 @@ function App() {
         },
         {
             path: "/home",
-            element: <div>Home</div>,
+            element: <Home />,
         }
     ]);
 

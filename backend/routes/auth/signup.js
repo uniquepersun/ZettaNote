@@ -34,7 +34,6 @@ export default async function signup(req) {
 		};
 	}
 
-    const { name, email, password, confirmPassword } = parseResult.data;
 	// checking same password and confirm password
 	if (password !== confirmPassword) {
 	return {

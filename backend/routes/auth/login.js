@@ -30,8 +30,6 @@ export default async function login(req) {
 			};
 		}
 
-        const { email, password } = parseResult.data;
-
         // check if email is in db
         const user = await User.findOne({email:email});
         if (!user) {

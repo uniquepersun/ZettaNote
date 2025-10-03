@@ -4,10 +4,38 @@ import Sidebar from "../components/ui/sidebar";
 import HeaderBar from "../components/ui/headerbar";
 import PageView from "../components/ui/pageView";
 import { Typography } from "@mui/material";
+import { useEffect } from "react";
+import { API_URL } from "../config";
 
 export default function Home() {
     const navigate = useNavigate();
     const [selectedPage, setSelectedPage] = useState(null);
+    const [name, setName] = useState("");
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        const getUser = async () => {
+            try {
+                const res = await fetch(API_URL+"/api/auth/getuser", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token })
+                });
+                const data = await res.json();
+                if (res.ok && data.user) {
+                    setName(data.user.name);
+                } else {
+                    navigate("/");
+                }
+            } catch (err) {
+                navigate("/");
+            }
+        }
+
+        getUser();
+    });
+
 
     const onLogout = () => {
         localStorage.removeItem("token");

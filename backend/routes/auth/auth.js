@@ -3,6 +3,7 @@ import express from "express";
 import signup from "./signup.js";
 import login from "./login.js";
 import changePassword from "./changePassword.js";
+import getUser from "./getUser.js";
 
 const router = express.Router();
 
@@ -38,5 +39,14 @@ router.post("/changepassword", async (req,res) => {
     }
 });
 
+router.post("/getuser", async (req,res) => {
+    try{
+        const { resStatus, resMessage } = await getUser(req);
+        res.status(resStatus).json(resMessage);
+    }catch(err){
+        console.log("GetUser error: ",err);
+        res.status(500).json({success:false,message:'Internal Server error.'})
+    }
+});
 
 export default router;

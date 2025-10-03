@@ -4,6 +4,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import NewPagePopup from './newPagePopup';
+import { ThemeToggleButton } from "./ThemeContext";
 
 export default function HeaderBar({ onLogout, onNewPage }) {
     const [open, setOpen] = React.useState(false);
@@ -26,6 +27,8 @@ export default function HeaderBar({ onLogout, onNewPage }) {
                     <Button color="inherit" onClick={onLogout}>
                         Logout
                     </Button>
+                    <ThemeToggleButton />
+
                 </Toolbar>
             </AppBar>
 

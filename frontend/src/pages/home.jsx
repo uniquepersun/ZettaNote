@@ -4,6 +4,8 @@ import Sidebar from "../components/ui/sidebar";
 import HeaderBar from "../components/ui/headerbar";
 import PageView from "../components/ui/pageView";
 import { Typography } from "@mui/material";
+import { ThemeToggleButton } from "../components/ui/ThemeContext";
+
 
 export default function Home() {
     const navigate = useNavigate();

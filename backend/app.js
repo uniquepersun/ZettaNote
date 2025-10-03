@@ -39,6 +39,7 @@ app.get('/', (req, res) => {
             signup: "api/auth/signup",
             login: "api/auth/login",
             changePassword_auth:"api/auth.changePassword",
+            getuser: "api/auth/getuser",
             pages:"/api/pages"
         },
         instructions: "Use Postman or curl to test the above endpoints."

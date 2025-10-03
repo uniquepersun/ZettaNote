@@ -1,86 +1,59 @@
 import bcrypt from "bcryptjs";
-import validatePass from "../../util/validatePass.js";
 import User from "../../models/User.js";
 import { genToken } from "../../util/token.js";
 import { z } from "zod";
 
+const signupSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(1, "Password is required"),
+  confirmPassword: z.string().min(1, "Confirm password is required"),
+});
+
 export default async function signup(req) {
   try {
-    if(!req.body || !req.body.email || !req.body.name || !req.body.password){
-        return {
-            resStatus:400,
-            resMessage:{
-                message:"Email and Password and name are required"
-            }
-        }
+    if (!req.body) {
+      return { resStatus: 400, resMessage: { message: "Invalid request" } };
     }
-    const { name, email, password, confirmPassword } = req.body;
-	// Zod validation
-	const signupSchema = z.object({
-		name: z.string().min(1, "Name is required"),
-		email: z.string().email("Invalid email address"),
-		password: z.string().min(1, "Password is required"),
-		confirmPassword: z.string().min(1, "Confirm password is required"),
-	});
 
-	const parseResult = signupSchema.safeParse(req.body);
+    // Zod
+    const parsed = signupSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return {
+        resStatus: 400,
+        resMessage: {
+          message: parsed.error.errors.map(e => e.message).join(", "),
+        },
+      };
+    }
 
-	if (!parseResult.success) {
-		return {
-			resStatus: 400,
-			resMessage: {
-				message: JSON.parse(parseResult.error).map((err)=>err.message).join(", "),
-			},
-		};
-	}
+    const { name, email, password, confirmPassword } = parsed.data;
 
-	// checking same password and confirm password
-	if (password !== confirmPassword) {
-	return {
-		resStatus: 400,
-		resMessage: {
-			message: "Passwords do not match",
-		},
-	};
-	}
-	// checking user exists
-	const emailInUse = await User.findOne({ email: email });
-	if(emailInUse){
-		return {
-			resStatus: 400,
-			resMessage: {
-				message: "Email in use",
-			},
-		};
-	}   
+    // Password match check
+    if (password !== confirmPassword) {
+      return { resStatus: 400, resMessage: { message: "Passwords do not match" } };
+    }
 
-    // create new user object and store in DB
-    const hashedPass = await bcrypt.hash(password, 12);
-    const newUser = new User({
-      name: name,
-      email: email,
-      password: hashedPass,
+    // Saving directly & rely on unique index
+    const hashedPass = await bcrypt.hash(password, 10); // cost 10 for better speed
+    const newUser = new User({ name, email, password: hashedPass });
+
+    await newUser.save().catch(err => {
+      if (err.code === 11000) { // Mongo duplicate key error
+        return { resStatus: 400, resMessage: { message: "Email already in use" } };
+      }
+      throw err;
     });
 
-    await newUser.save();
-
-    // gen token and return to user
+    // Generate token
     const token = genToken(newUser);
 
     return {
       resStatus: 200,
-      resMessage: {
-        "message": "Signed up",
-        token: token,
-      },
+      resMessage: { message: "Signed up", token },
     };
   } catch (err) {
-    console.log(err);
-    return {
-      resStatus: 500,
-      resMessage: {
-        "message": "Internal server error",
-      },
-    };
+    console.error(err);
+    return { resStatus: 500, resMessage: { message: "Internal server error" } };
   }
 }

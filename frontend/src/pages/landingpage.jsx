@@ -56,11 +56,6 @@ export default function Landing() {
             description: "Write beautiful notes with full Markdown support. Format text, add links, images, and code blocks effortlessly."
         },
         {
-            icon: <GroupIcon sx={{ fontSize: 40, color: 'primary.main' }} />,
-            title: "Real-time Collaboration",
-            description: "Collaborate with your team in real-time. Share pages, edit together, and stay synchronized across all devices."
-        },
-        {
             icon: <FolderIcon sx={{ fontSize: 40, color: 'primary.main' }} />,
             title: "Flexible Organization",
             description: "Organize your notes with a flexible folder structure. Create, rename, and manage your pages with ease."
@@ -316,6 +311,7 @@ export default function Landing() {
                 </Box>
             </Container>
 
+            /*
             {/* Benefits Section */}
             <Container maxWidth="lg" sx={{ py: 8 }}>
                 <Slide direction="up" in={testimonialVisible} timeout={800}>
@@ -443,7 +439,7 @@ export default function Landing() {
                         </Zoom>
                     ))}
                 </Box>
-            </Container>
+            </Container> */
 
             {/* Final CTA Section */}
             <Container maxWidth="md" sx={{ py: 8 }}>

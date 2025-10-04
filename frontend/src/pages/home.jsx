@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/ui/sidebar";
-import HeaderBar from "../components/ui/headerbar";
+import Navbar from "../components/ui/Navbar";
 import PageView from "../components/ui/pageView";
 import NewPagePopup from "../components/ui/newPagePopup";
 import { Typography, Box, Paper, Card, CardContent, useTheme, useMediaQuery } from "@mui/material";
-import { ThemeToggleButton } from "../components/ui/ThemeContext";
 import { useEffect } from "react";
 import { API_URL } from "../config";
 import { showToast } from "../utils/toast";
@@ -204,7 +203,7 @@ export default function Home() {
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-            <HeaderBar onLogout={onLogout} onNewPage={onCreatePage} />
+            <Navbar />
 
             {/* Add spacer to account for fixed header */}
             <Box sx={{ height: { xs: 64, md: 72 } }} />

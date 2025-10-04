@@ -5,7 +5,10 @@ import {
     TextField,
     Typography,
     Paper,
+    IconButton,
+    InputAdornment,
 } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
 
@@ -14,6 +17,7 @@ import { API_URL } from "../config";
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState("");
     const navigate = useNavigate();
@@ -80,12 +84,25 @@ export default function Login() {
 
                     <TextField
                         label="Password"
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         variant="outlined"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                         fullWidth
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        edge="end"
+                                        aria-label="toggle password visibility"
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
                     />
 
                     <LoadingButton

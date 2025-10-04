@@ -14,12 +14,14 @@ import { LoadingButton } from "@mui/lab";
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/ui/Navbar";
 
 import { API_URL } from "../config";
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState("");
     const navigate = useNavigate();
@@ -40,12 +42,12 @@ export default function Login() {
             });
 
             data = await res.json();
-            if (!res.ok) {
+            if (res.status !== 200) {
                 setErrors(data.message);
+            } else {
+                localStorage.setItem("token", data.token);
+                navigate("/home");
             }
-
-            localStorage.setItem("token", data.token);
-            navigate("/home");
         } catch (err) {
             setErrors(data.message);
         } finally {

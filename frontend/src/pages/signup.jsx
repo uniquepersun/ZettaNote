@@ -15,6 +15,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/ui/Navbar";
 
 import { API_URL } from "../config";
 
@@ -23,6 +24,8 @@ export default function Signup() {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState("");
     const navigate = useNavigate();
@@ -43,14 +46,14 @@ export default function Signup() {
             });
 
             data = await res.json();
-            if (!res.ok) {
-                setErrors(data.message);
+            if (res.status !== 200) {
+                setErrors(data.Error);
+            } else {
+                localStorage.setItem("token", data.token);
+                navigate("/home");
             }
-
-            localStorage.setItem("token", data.token);
-            navigate("/home");
         } catch (err) {
-            setErrors(data.message);
+            setErrors(data.Error);
         } finally {
             setLoading(false);
         }
@@ -106,8 +109,6 @@ export default function Signup() {
                             {errors}
                         </Typography>
                     )}
-
-
 
                     <TextField
                         label="Name"

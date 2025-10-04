@@ -25,6 +25,8 @@ import {
     GitHub as GitHubIcon
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/ui/Navbar";
+
 
 export default function Landing() {
     const navigate = useNavigate();
@@ -100,8 +102,12 @@ export default function Landing() {
 
     return (
         <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+            {/* Navbar */}
+            <Navbar />
             {/* Hero Section */}
-            <Container maxWidth="lg" sx={{ py: 8 }}>
+            <Container maxWidth="lg" sx={{ pt: 12, pb: 8 }}>
+
+
                 <Box sx={{ textAlign: 'center', mb: 8 }}>
                         <Box>
                                 <Typography 
@@ -173,6 +179,23 @@ export default function Landing() {
                                     }}
                                 >
                                     Get Started Free
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    size="large"
+                                    onClick={() => navigate("/login")}
+                                    sx={{ 
+                                        px: 4, 
+                                        py: 1.5,
+                                        fontSize: '1.1rem',
+                                        transition: 'all 0.3s ease',
+                                        '&:hover': {
+                                            transform: 'translateY(-2px)',
+                                            boxShadow: 4
+                                        }
+                                    }}
+                                >
+                                    Already registered? Login now
                                 </Button>
                                 <Button
                                     variant="outlined"
@@ -311,7 +334,6 @@ export default function Landing() {
                 </Box>
             </Container>
 
-            /*
             {/* Benefits Section */}
 
             {/* Final CTA Section */}

@@ -8,6 +8,7 @@ on:
 
 jobs:
     prettier:
+        if: github.event.action == 'labeled' && github.event.label.name == 'format'
         runs-on: ubuntu-latest
 
         permissions:

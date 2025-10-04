@@ -8,18 +8,22 @@ import {
     Avatar,
     Link,
     InputAdornment,
+    Stack,
+    Link as MuiLink,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import PersonIcon from '@mui/icons-material/Person';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import { LoadingButton } from "@mui/lab";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/ui/Navbar";
+import { useTheme, alpha } from '@mui/material/styles';
 
 import { API_URL } from "../config";
 
 export default function Signup() {
+    const theme = useTheme();
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
@@ -47,17 +51,24 @@ export default function Signup() {
 
             data = await res.json();
             if (res.status !== 200) {
-                setErrors(data.Error);
+                setErrors(data.Error || data.message || "Error creating account");
             } else {
                 localStorage.setItem("token", data.token);
                 navigate("/home");
             }
         } catch (err) {
-            setErrors(data.Error);
+            setErrors(err?.message || "Network error");
         } finally {
             setLoading(false);
         }
     };
+
+    const paperBg = theme.palette.mode === 'dark'
+        ? alpha(theme.palette.background.paper, 0.06)
+        : alpha(theme.palette.background.paper, 0.95);
+    const borderColor = theme.palette.mode === 'dark' ? alpha('#ffffff', 0.06) : alpha('#000000', 0.06);
+
+    const passwordsMatch = confirmPassword === "" || password === confirmPassword;
 
     return (
         <Box sx={{
@@ -99,16 +110,16 @@ export default function Signup() {
                     </Typography>
                 </Box>
 
-                <Box
-                    component="form"
-                    onSubmit={handleSubmit}
-                    sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-                >
-                    {errors && (
-                        <Typography color="error" variant="body2" align="center">
-                            {errors}
-                        </Typography>
-                    )}
+                    <Box
+                        component="form"
+                        onSubmit={handleSubmit}
+                        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                    >
+                        {errors && (
+                            <Typography color="error" variant="body2" align="center">
+                                {errors}
+                            </Typography>
+                        )}
 
                     <TextField
                         label="Name"

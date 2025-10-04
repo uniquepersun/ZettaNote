@@ -8,6 +8,8 @@ import {
     Avatar,
     Link,
     InputAdornment,
+    Stack,
+    Link as MuiLink,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
@@ -15,10 +17,12 @@ import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/ui/Navbar";
+import { useTheme, alpha } from '@mui/material/styles';
 
 import { API_URL } from "../config";
 
 export default function Login() {
+    const theme = useTheme();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -49,11 +53,16 @@ export default function Login() {
                 navigate("/home");
             }
         } catch (err) {
-            setErrors(data.message);
+            setErrors(err?.message || "Network error");
         } finally {
             setLoading(false);
         }
     };
+
+    const paperBg = theme.palette.mode === 'dark'
+        ? alpha(theme.palette.background.paper, 0.06)
+        : alpha(theme.palette.background.paper, 0.95);
+    const borderColor = theme.palette.mode === 'dark' ? alpha('#ffffff', 0.06) : alpha('#000000', 0.06);
 
     return (
         <Box sx={{
@@ -154,23 +163,15 @@ export default function Login() {
                             }}
                         />
 
-                        <LoadingButton
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            size="large"
-                            loading={loading}
-                            sx={{
-                                bgcolor: '#1976d2',
-                                color: 'common.white',
-                                fontWeight: 700,
-                                boxShadow: '0 8px 20px rgba(25,118,210,0.12)',
-                                '&:hover': { bgcolor: '#155fa8', transform: 'translateY(-2px)' },
-                                py: 1.25,
-                            }}
-                        >
-                            Sign In
-                        </LoadingButton>
+                    <LoadingButton
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                        loading={loading}
+                    >
+                        Sign In
+                    </LoadingButton>
 
                         <Typography variant="body2" align="center" sx={{ mt: 1, color: '#4b5563' }}>
                             Don’t have an account?{' '}

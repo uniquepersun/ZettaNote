@@ -19,10 +19,25 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4
 
-            - name: Prettify code
-              uses: creyD/prettier_action@v4.6
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
               with:
-                  prettier_options: --write .
+                  node-version: "20"
+
+            - name: Install Prettier
+              run: npm install -g prettier
+
+            - name: Format Frontend
+              run: |
+                  echo "Formatting frontend folder..."
+                  prettier --write "frontend/**/*.{js,jsx,ts,tsx,json,css,scss,md}" --config .prettierrc --ignore-path .prettierignore
+              continue-on-error: true
+
+            - name: Format Backend
+              run: |
+                  echo "Formatting backend folder..."
+                  prettier --write "backend/**/*.{js,jsx,ts,tsx,json,css,scss,md}" --config .prettierrc --ignore-path .prettierignore
+              continue-on-error: true
 
             - name: commit changes
               uses: stefanzweifel/git-auto-commit-action@v6

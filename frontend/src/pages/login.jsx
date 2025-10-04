@@ -11,6 +11,7 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/ui/Navbar";
 
 import { API_URL } from "../config";
 
@@ -52,11 +53,13 @@ export default function Login() {
     };
 
     return (
-        <Container maxWidth="sm">
-            <Paper
-                elevation={4}
-                sx={{ p: 4, mt: 10, borderRadius: 3 }}
-            >
+        <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+            <Navbar />
+            <Container maxWidth="sm" sx={{ pt: 12 }}>
+                <Paper
+                    elevation={4}
+                    sx={{ p: 4, borderRadius: 3 }}
+                >
                 <Typography variant="h4" align="center" gutterBottom>
                     Login
                 </Typography>
@@ -118,5 +121,6 @@ export default function Login() {
                 </Box>
             </Paper>
         </Container>
+        </Box>
     );
 }

@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { UIProvider } from "./components/ui/provider";
+import { Toaster } from 'react-hot-toast';
 
 import Login from "./pages/login";
 import Signup from "./pages/signup";
@@ -31,6 +32,7 @@ function App() {
     <div>
         <UIProvider>
             <RouterProvider router={router}></RouterProvider>
+            <Toaster />
         </UIProvider>
     </div>
   );

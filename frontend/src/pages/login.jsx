@@ -34,12 +34,12 @@ export default function Login() {
             });
 
             data = await res.json();
-            if (!res.ok) {
+            if (res.status !== 200) {
                 setErrors(data.message);
+            } else {
+                localStorage.setItem("token", data.token);
+                navigate("/home");
             }
-
-            localStorage.setItem("token", data.token);
-            navigate("/home");
         } catch (err) {
             setErrors(data.message);
         } finally {

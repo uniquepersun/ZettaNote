@@ -36,14 +36,14 @@ export default function Signup() {
             });
 
             data = await res.json();
-            if (!res.ok) {
-                setErrors(data.message);
+            if (res.status !== 200) {
+                setErrors(data.Error);
+            } else {
+                localStorage.setItem("token", data.token);
+                navigate("/home");
             }
-
-            localStorage.setItem("token", data.token);
-            navigate("/home");
         } catch (err) {
-            setErrors(data.message);
+            setErrors(data.Error);
         } finally {
             setLoading(false);
         }

@@ -45,12 +45,14 @@ export default async function signup(req) {
     const hashedPass = await bcrypt.hash(password, 10); // cost 10 for better speed
     const newUser = new User({ name, email, password: hashedPass });
 
-    await newUser.save().catch(err => {
+    try {
+      await newUser.save();
+    } catch (err) {
       if (err.code === 11000) { // Mongo duplicate key error
         return { resStatus: 400, resMessage: { message: "Email already in use" } };
       }
       throw err;
-    });
+    }
 
     // Generate token
     const token = genToken(newUser);

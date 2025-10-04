@@ -18,6 +18,11 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v4
+              with:
+                  # Checkout the PR branch with full history
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  ref: ${{ github.head_ref }}
+                  fetch-depth: 0
 
             - name: Setup Node.js
               uses: actions/setup-node@v4
@@ -43,5 +48,7 @@ jobs:
               uses: stefanzweifel/git-auto-commit-action@v6
               with:
                   commit_message: "chore: format code with Prettier"
-                  # Push to the PR branch
                   branch: ${{ github.head_ref }}
+                  push_options: "--force-with-lease"
+                  skip_fetch: false
+                  skip_checkout: false

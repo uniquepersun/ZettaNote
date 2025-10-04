@@ -25,7 +25,7 @@ import {
     GitHub as GitHubIcon
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { ThemeToggleButton } from "../components/ui/ThemeContext";
+import Navbar from "../components/ui/Navbar";
 
 
 export default function Landing() {
@@ -102,11 +102,10 @@ export default function Landing() {
 
     return (
         <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+            {/* Navbar */}
+            <Navbar />
             {/* Hero Section */}
-            <Container maxWidth="lg" sx={{ py: 8 }}>
-                <Box sx={{ position: "absolute", top: 20, right: 20, zIndex: 10 }}>
-                <ThemeToggleButton />
-                </Box>
+            <Container maxWidth="lg" sx={{ pt: 12, pb: 8 }}>
 
 
                 <Box sx={{ textAlign: 'center', mb: 8 }}>
@@ -180,6 +179,23 @@ export default function Landing() {
                                     }}
                                 >
                                     Get Started Free
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    size="large"
+                                    onClick={() => navigate("/login")}
+                                    sx={{ 
+                                        px: 4, 
+                                        py: 1.5,
+                                        fontSize: '1.1rem',
+                                        transition: 'all 0.3s ease',
+                                        '&:hover': {
+                                            transform: 'translateY(-2px)',
+                                            boxShadow: 4
+                                        }
+                                    }}
+                                >
+                                    Already registered? Login now
                                 </Button>
                                 <Button
                                     variant="outlined"

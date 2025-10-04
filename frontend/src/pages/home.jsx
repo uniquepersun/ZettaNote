@@ -20,7 +20,9 @@ export default function Home() {
     const [name, setName] = useState("");
     const [newPagePopupOpen, setNewPagePopupOpen] = useState(false);
     const theme = useTheme();
+    const [sidebarRefresh, setSidebarRefresh] = useState(0);
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -212,6 +214,7 @@ export default function Home() {
                 <Sidebar
                     token={localStorage.getItem("token")}
                     onSelectPage={onSelectPage}
+                    refreshTrigger={sidebarRefresh}
                 />
 
                 <Box 
@@ -236,6 +239,7 @@ export default function Home() {
             <NewPagePopup 
                 open={newPagePopupOpen} 
                 onClose={() => setNewPagePopupOpen(false)} 
+                onPageCreated={() => setSidebarRefresh(prev => prev + 1)}
             />
         </Box>
     );

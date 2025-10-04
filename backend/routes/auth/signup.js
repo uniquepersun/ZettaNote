@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import User from "../../models/User.js";
 import { genToken } from "../../util/token.js";
+import validatePass from "../../util/validatePass.js";
 import { z } from "zod";
 
 const signupSchema = z.object({
@@ -32,6 +33,12 @@ export default async function signup(req) {
     // Password match check
     if (password !== confirmPassword) {
       return { resStatus: 400, resMessage: { message: "Passwords do not match" } };
+    }
+
+    //validating password
+    const validation = validatePass(password);
+    if (validation.resStatus != 200) {
+      return validation
     }
 
     // Saving directly & rely on unique index

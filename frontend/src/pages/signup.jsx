@@ -5,7 +5,14 @@ import {
     TextField,
     Typography,
     Paper,
+    Avatar,
+    Link,
+    InputAdornment,
 } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
+import PersonIcon from '@mui/icons-material/Person';
+import EmailIcon from '@mui/icons-material/Email';
+import LockIcon from '@mui/icons-material/Lock';
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
 
@@ -50,14 +57,44 @@ export default function Signup() {
     };
 
     return (
-        <Container maxWidth="sm">
-            <Paper
-                elevation={4}
-                sx={{ p: 4, mt: 10, borderRadius: 3 }}
-            >
-                <Typography variant="h4" align="center" gutterBottom>
-                    Sign Up
-                </Typography>
+        <Box sx={{
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#f0f6ff',
+            p: 2,
+        }}>
+            <Container maxWidth="sm">
+                <Paper
+                    elevation={0}
+                    sx={{
+                        p: 4,
+                        borderRadius: 3,
+                        backgroundColor: '#fbfeff',
+                        border: '1px solid rgba(0,0,0,0.04)',
+                        boxShadow: '12px 12px 24px rgba(163,177,198,0.12), -12px -12px 24px rgba(255,255,255,0.9)',
+                        color: 'text.primary',
+                    }}
+                >
+                <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 1, mb: 2 }}>
+                    <Avatar
+                        src="/logo.png"
+                        alt="ZettaNote"
+                        sx={{
+                            width: 86,
+                            height: 86,
+                            bgcolor: "transparent",
+                            boxShadow: `0 6px 18px rgba(21,101,192,0.08)`,
+                        }}
+                    />
+                    <Typography variant="h5" align="center" sx={{ color: "#0f1724", fontWeight: 800 }}>
+                        ZettaNote
+                    </Typography>
+                    <Typography variant="body2" align="center" sx={{ color: '#4b5563' }}>
+                        Create your free account
+                    </Typography>
+                </Box>
 
                 <Box
                     component="form"
@@ -75,41 +112,97 @@ export default function Signup() {
                     <TextField
                         label="Name"
                         type="text"
-                        variant="outlined"
+                        variant="filled"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         required
                         fullWidth
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <PersonIcon sx={{ color: '#1976d2' }} />
+                                </InputAdornment>
+                            ),
+                            disableUnderline: true,
+                        }}
+                        sx={{
+                            bgcolor: '#ffffff',
+                            borderRadius: 2,
+                            '& .MuiFilledInput-input': { color: '#0f1724' },
+                            boxShadow: 'inset 0 2px 6px rgba(16,24,40,0.04)',
+                        }}
                     />
 
                     <TextField
                         label="Email"
                         type="email"
-                        variant="outlined"
+                        variant="filled"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
                         fullWidth
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <EmailIcon sx={{ color: '#1976d2' }} />
+                                </InputAdornment>
+                            ),
+                            disableUnderline: true,
+                        }}
+                        sx={{
+                            bgcolor: '#ffffff',
+                            borderRadius: 2,
+                            '& .MuiFilledInput-input': { color: '#0f1724' },
+                            boxShadow: 'inset 0 2px 6px rgba(16,24,40,0.04)',
+                        }}
                     />
 
                     <TextField
                         label="Password"
                         type="password"
-                        variant="outlined"
+                        variant="filled"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                         fullWidth
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <LockIcon sx={{ color: '#1976d2' }} />
+                                </InputAdornment>
+                            ),
+                            disableUnderline: true,
+                        }}
+                        sx={{
+                            bgcolor: '#ffffff',
+                            borderRadius: 2,
+                            '& .MuiFilledInput-input': { color: '#0f1724' },
+                            boxShadow: 'inset 0 2px 6px rgba(16,24,40,0.04)',
+                        }}
                     />
 
                     <TextField
                         label="Confirm password"
                         type="password"
-                        variant="outlined"
+                        variant="filled"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         required
                         fullWidth
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <LockIcon sx={{ color: '#1976d2' }} />
+                                </InputAdornment>
+                            ),
+                            disableUnderline: true,
+                        }}
+                        sx={{
+                            bgcolor: '#ffffff',
+                            borderRadius: 2,
+                            '& .MuiFilledInput-input': { color: '#0f1724' },
+                            boxShadow: 'inset 0 2px 6px rgba(16,24,40,0.04)',
+                        }}
                     />
 
                     <LoadingButton
@@ -118,12 +211,27 @@ export default function Signup() {
                         color="primary"
                         size="large"
                         loading={loading}
+                        sx={{
+                            bgcolor: '#1976d2',
+                            color: 'common.white',
+                            fontWeight: 700,
+                            boxShadow: '0 8px 20px rgba(25,118,210,0.12)',
+                            '&:hover': { bgcolor: '#155fa8', transform: 'translateY(-2px)' },
+                            py: 1.25,
+                        }}
                     >
                         Sign Up
                     </LoadingButton>
 
-                </Box>
-            </Paper>
-        </Container>
-    );
-}
+                        <Typography variant="body2" align="center" sx={{ mt: 2, color: '#4b5563' }}>
+                            Already have an account?{' '}
+                            <Link component={RouterLink} to="/login" underline="hover" sx={{ color: '#155fa8', fontWeight: 700 }}>
+                                Sign in
+                            </Link>
+                        </Typography>
+                    </Box>
+                </Paper>
+            </Container>
+        </Box>
+        );
+    }

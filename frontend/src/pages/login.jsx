@@ -5,8 +5,14 @@ import {
     TextField,
     Typography,
     Paper,
+    Avatar,
+    Link,
+    InputAdornment,
 } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
+import EmailIcon from '@mui/icons-material/Email';
+import LockIcon from '@mui/icons-material/Lock';
 import { useNavigate } from "react-router-dom";
 
 import { API_URL } from "../config";
@@ -48,58 +54,131 @@ export default function Login() {
     };
 
     return (
-        <Container maxWidth="sm">
-            <Paper
-                elevation={4}
-                sx={{ p: 4, mt: 10, borderRadius: 3 }}
-            >
-                <Typography variant="h4" align="center" gutterBottom>
-                    Login
-                </Typography>
-
-                <Box
-                    component="form"
-                    onSubmit={handleSubmit}
-                    sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+        <Box sx={{
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#f0f6ff',
+            p: 2,
+        }}>
+            <Container maxWidth="sm">
+                <Paper
+                    elevation={0}
+                    sx={{
+                        p: 4,
+                        borderRadius: 3,
+                        backgroundColor: '#fbfeff',
+                        border: '1px solid rgba(0,0,0,0.04)',
+                        boxShadow: '12px 12px 24px rgba(163,177,198,0.12), -12px -12px 24px rgba(255,255,255,0.9)',
+                        color: 'text.primary',
+                    }}
                 >
-                    {errors && (
-                        <Typography color="error" variant="body2" align="center">
-                            {errors}
+                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 1, mb: 2 }}>
+                        <Avatar
+                            src="/logo.png"
+                            alt="ZettaNote"
+                            sx={{
+                                width: 86,
+                                height: 86,
+                                bgcolor: "transparent",
+                                boxShadow: `0 6px 18px rgba(21,101,192,0.08)`,
+                            }}
+                        />
+                        <Typography variant="h5" align="center" sx={{ color: "#0f1724", fontWeight: 800 }}>
+                            ZettaNote
                         </Typography>
-                    )}
+                        <Typography variant="body2" align="center" sx={{ color: '#4b5563' }}>
+                            Welcome back — sign in to continue
+                        </Typography>
+                    </Box>
 
-                    <TextField
-                        label="Email"
-                        type="email"
-                        variant="outlined"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        fullWidth
-                    />
-
-                    <TextField
-                        label="Password"
-                        type="password"
-                        variant="outlined"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        fullWidth
-                    />
-
-                    <LoadingButton
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                        size="large"
-                        loading={loading}
+                    <Box
+                        component="form"
+                        onSubmit={handleSubmit}
+                        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                     >
-                        Sign In
-                    </LoadingButton>
+                        {errors && (
+                            <Typography color="error" variant="body2" align="center">
+                                {errors}
+                            </Typography>
+                        )}
 
-                </Box>
-            </Paper>
-        </Container>
+                        <TextField
+                            label="Email"
+                            type="email"
+                            variant="filled"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            fullWidth
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <EmailIcon sx={{ color: '#1976d2' }} />
+                                    </InputAdornment>
+                                ),
+                                disableUnderline: true,
+                            }}
+                            sx={{
+                                bgcolor: '#ffffff',
+                                borderRadius: 2,
+                                '& .MuiFilledInput-input': { color: '#0f1724' },
+                                boxShadow: 'inset 0 2px 6px rgba(16,24,40,0.04)',
+                            }}
+                        />
+
+                        <TextField
+                            label="Password"
+                            type="password"
+                            variant="filled"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            fullWidth
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <LockIcon sx={{ color: '#1976d2' }} />
+                                    </InputAdornment>
+                                ),
+                                disableUnderline: true,
+                            }}
+                            sx={{
+                                bgcolor: '#ffffff',
+                                borderRadius: 2,
+                                '& .MuiFilledInput-input': { color: '#0f1724' },
+                                boxShadow: 'inset 0 2px 6px rgba(16,24,40,0.04)',
+                            }}
+                        />
+
+                        <LoadingButton
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            size="large"
+                            loading={loading}
+                            sx={{
+                                bgcolor: '#1976d2',
+                                color: 'common.white',
+                                fontWeight: 700,
+                                boxShadow: '0 8px 20px rgba(25,118,210,0.12)',
+                                '&:hover': { bgcolor: '#155fa8', transform: 'translateY(-2px)' },
+                                py: 1.25,
+                            }}
+                        >
+                            Sign In
+                        </LoadingButton>
+
+                        <Typography variant="body2" align="center" sx={{ mt: 1, color: '#4b5563' }}>
+                            Don’t have an account?{' '}
+                            <Link component={RouterLink} to="/signup" underline="hover" sx={{ color: '#155fa8' }}>
+                                Create one
+                            </Link>
+                        </Typography>
+                    </Box>
+                </Paper>
+            </Container>
+        </Box>
     );
 }

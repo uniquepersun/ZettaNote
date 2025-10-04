@@ -318,7 +318,6 @@ export default function Landing() {
                 </Box>
             </Container>
 
-            /*
             {/* Benefits Section */}
 
             {/* Final CTA Section */}

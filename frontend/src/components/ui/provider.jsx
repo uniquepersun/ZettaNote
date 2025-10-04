@@ -1,6 +1,7 @@
 import * as React from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeContextProvider } from "./ThemeContext";
 
 const theme = createTheme({
     palette: {
@@ -19,9 +20,8 @@ const theme = createTheme({
 
 export const UIProvider = ({ children }) => {
     return (
-        <ThemeProvider theme={theme}>
-            <CssBaseline />
+        <ThemeContextProvider>
             {children}
-        </ThemeProvider>
+        </ThemeContextProvider>
     );
 };

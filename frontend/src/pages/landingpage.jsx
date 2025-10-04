@@ -25,6 +25,8 @@ import {
     GitHub as GitHubIcon
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { ThemeToggleButton } from "../components/ui/ThemeContext";
+
 
 export default function Landing() {
     const navigate = useNavigate();
@@ -102,6 +104,11 @@ export default function Landing() {
         <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
             {/* Hero Section */}
             <Container maxWidth="lg" sx={{ py: 8 }}>
+                <Box sx={{ position: "absolute", top: 20, right: 20, zIndex: 10 }}>
+                <ThemeToggleButton />
+                </Box>
+
+
                 <Box sx={{ textAlign: 'center', mb: 8 }}>
                         <Box>
                                 <Typography 

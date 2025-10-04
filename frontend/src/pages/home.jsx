@@ -4,6 +4,7 @@ import Sidebar from "../components/ui/sidebar";
 import HeaderBar from "../components/ui/headerbar";
 import PageView from "../components/ui/pageView";
 import { Typography } from "@mui/material";
+import { ThemeToggleButton } from "../components/ui/ThemeContext";
 import { useEffect } from "react";
 import { API_URL } from "../config";
 

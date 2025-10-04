@@ -15,12 +15,13 @@ export async function publicShare(req) {
             }
         }
     }
-
+    console.log(page.publicShareId)
     if(page.publicShareId){
         return {
             resStatus: 200,
             resMessage: {
-                    "message": "Already Shared"
+                    "message": "Already Shared",
+                    "publicShareId" : page.publicShareId
             }
         }
     }
@@ -32,7 +33,7 @@ export async function publicShare(req) {
 
     await page.save();
 
-    return {resStatus:200, resMessage:{"message":"Successfully Shared"}}
+    return {resStatus:200, resMessage:{"message":"Successfully Shared","publicShareId" : page.publicShareId}}
 }
 
 export async function getPublicShare(shareId){

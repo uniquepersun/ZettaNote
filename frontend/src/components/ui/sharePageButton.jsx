@@ -12,6 +12,8 @@ import {
   Typography
 } from "@mui/material";
 import ShareIcon from "@mui/icons-material/Share";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+
 import { API_URL } from "../../config";
 
 function SharePageButton({ token, pageId }) {
@@ -20,17 +22,20 @@ function SharePageButton({ token, pageId }) {
   const [giveWrite, setGiveWrite] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [publicLink, setPublicLink] = useState("");
 
   const handleOpen = () => {
     setOpen(true);
     setEmail("");
     setGiveWrite(false);
     setMessage("");
+    setPublicLink("");
   };
 
   const handleClose = () => {
     setOpen(false);
     setMessage("");
+    setPublicLink(""); 
   };
 
   // Share via email
@@ -73,6 +78,10 @@ function SharePageButton({ token, pageId }) {
       });
 
       const data = await res.json();
+
+      if (data.publicShareId) {
+        setPublicLink(`${API_URL}/api/pages/share/`+data.publicShareId);   
+      }
       setMessage(data.message || "Public link generated!");
     } catch {
       setMessage("Error generating public link.");
@@ -80,6 +89,15 @@ function SharePageButton({ token, pageId }) {
 
     setLoading(false);
   };
+
+  const handleCopyLink = async () => {
+  try {
+    await navigator.clipboard.writeText(publicLink);
+    setMessage("Link copied to clipboard!");
+  } catch {
+    setMessage("Failed to copy link.");
+  }
+};
 
   return (
     <>
@@ -141,6 +159,15 @@ function SharePageButton({ token, pageId }) {
               >
                 Share Public Link
               </Button>
+              {publicLink && (
+                  <Button
+                    type="button"
+                    variant="outlined"
+                    startIcon={<ContentCopyIcon />}
+                    onClick={handleCopyLink}
+                    disabled={loading}
+                  ></Button>
+                )}
             </DialogActions>
           </form>
         </DialogContent>

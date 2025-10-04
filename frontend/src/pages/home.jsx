@@ -14,7 +14,7 @@ import {
     TrendingUp as TrendingIcon 
 } from '@mui/icons-material';
 
-export default function Home() {
+export default function Home(token, refreshTrigger) {
     const navigate = useNavigate();
     const [selectedPage, setSelectedPage] = useState(null);
     const [name, setName] = useState("");
@@ -47,7 +47,7 @@ export default function Home() {
         }
 
         getUser();
-    });
+    },[navigate, token, refreshTrigger]);
 
 
 
@@ -223,7 +223,10 @@ export default function Home() {
                     }}
                 >
                     {selectedPage ? (
-                        <PageView page={selectedPage} />
+                        <PageView 
+                            page={selectedPage} 
+                            onPageDeleted={()=>{setSelectedPage(null);setSidebarRefresh(prev => prev+1)}}
+                        />
                     ) : (
                         <WelcomeScreen />
                     )}

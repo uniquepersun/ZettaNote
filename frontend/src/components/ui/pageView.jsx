@@ -25,7 +25,7 @@ const normalizePage = (page) => ({
     content: page?.pageData,
 });
 
-export default function PageView({ page }) {
+export default function PageView({ page, onPageDeleted }) {
     const normalizedPage = normalizePage(page);
     const [content, setContent] = useState("");
     const [editing, setEditing] = useState(true);
@@ -34,6 +34,7 @@ export default function PageView({ page }) {
     const textareaRef = useRef(null);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    
 
     useEffect(() => {
         if (!normalizedPage.id) return;
@@ -118,7 +119,8 @@ export default function PageView({ page }) {
                 showToast.error("Failed to delete page");
             } else {
                 showToast.success("Page deleted successfully");
-                window.location.reload();
+                if (onPageDeleted) onPageDeleted();
+                setContent("");
             }
         } catch (err) {
             console.error(err);

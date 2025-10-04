@@ -34,7 +34,10 @@ export default function Login() {
         e.preventDefault();
         setLoading(true);
         setErrors("");
-        let data;
+        let data; 
+
+
+        
 
         try {
             const res = await fetch(API_URL + "/api/auth/login", {

@@ -6,9 +6,7 @@ import {
     Typography,
     Paper,
     Avatar,
-    Link,
     InputAdornment,
-    Stack,
     Link as MuiLink,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
@@ -16,20 +14,17 @@ import PersonIcon from '@mui/icons-material/Person';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import { LoadingButton } from "@mui/lab";
-import { useNavigate, Link } from "react-router-dom";
-import Navbar from "../components/ui/Navbar";
-import { useTheme, alpha } from '@mui/material/styles';
+import { useNavigate } from "react-router-dom";
+import { } from '@mui/material/styles';
 
 import { API_URL } from "../config";
 
 export default function Signup() {
-    const theme = useTheme();
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState("");
     const navigate = useNavigate();
@@ -63,12 +58,7 @@ export default function Signup() {
         }
     };
 
-    const paperBg = theme.palette.mode === 'dark'
-        ? alpha(theme.palette.background.paper, 0.06)
-        : alpha(theme.palette.background.paper, 0.95);
-    const borderColor = theme.palette.mode === 'dark' ? alpha('#ffffff', 0.06) : alpha('#000000', 0.06);
-
-    const passwordsMatch = confirmPassword === "" || password === confirmPassword;
+    
 
     return (
         <Box sx={{
@@ -237,9 +227,9 @@ export default function Signup() {
 
                         <Typography variant="body2" align="center" sx={{ mt: 2, color: '#4b5563' }}>
                             Already have an account?{' '}
-                            <Link component={RouterLink} to="/login" underline="hover" sx={{ color: '#155fa8', fontWeight: 700 }}>
+                            <MuiLink component={RouterLink} to="/login" underline="hover" sx={{ color: '#155fa8', fontWeight: 700 }}>
                                 Sign in
-                            </Link>
+                            </MuiLink>
                         </Typography>
                     </Box>
                 </Paper>

@@ -4,6 +4,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import { API_URL } from "../../config";
 import ReactMarkdown from "react-markdown";
 import SharePageButton from "./sharePageButton";
+import { FaTrashCan } from "react-icons/fa6";
 
 // Always normalize page id for backend requests
 const normalizePage = (page) => ({
@@ -73,6 +74,38 @@ export default function PageView({ page }) {
         }
     };
 
+    const handleDelete = async () => {
+        if (!window.confirm("Are you sure you want to delete this page?")) return;
+        setError("");
+        setLoading(true);
+
+        try {
+            const token = localStorage.getItem("token");
+            const res = await fetch(API_URL + "/api/pages/deletepage", {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token, pageId: normalizedPage.id }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                setError(data.message || "Failed to delete page");
+                alert("Failed to delete page");
+            } else {
+                alert("Page deleted");
+                window.location.reload();
+            }
+        } catch (err) {
+            console.error(err);
+            setError("Failed to delete page");
+            alert("Failed to delete page");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
     const token = localStorage.getItem("token");
 
     return (
@@ -81,6 +114,9 @@ export default function PageView({ page }) {
                 <Typography variant="h4" sx={{ flexGrow: 1 }}>
                     {normalizedPage.name}
                 </Typography>
+                <IconButton color="primary" onClick={handleDelete} disabled={loading} >
+                    <FaTrashCan />
+                </IconButton>
                 <IconButton color="primary" onClick={handleSave} disabled={loading}>
                     <SaveIcon />
                 </IconButton>

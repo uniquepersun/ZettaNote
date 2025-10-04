@@ -5,7 +5,10 @@ import {
     TextField,
     Typography,
     Paper,
+    IconButton,
+    InputAdornment,
 } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
 
@@ -16,6 +19,8 @@ export default function Signup() {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState("");
     const navigate = useNavigate();
@@ -70,8 +75,6 @@ export default function Signup() {
                         </Typography>
                     )}
 
-
-
                     <TextField
                         label="Name"
                         type="text"
@@ -94,22 +97,48 @@ export default function Signup() {
 
                     <TextField
                         label="Password"
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         variant="outlined"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                         fullWidth
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        edge="end"
+                                        aria-label="toggle password visibility"
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
                     />
 
                     <TextField
-                        label="Confirm password"
-                        type="password"
+                        label="Confirm Password"
+                        type={showConfirmPassword ? "text" : "password"}
                         variant="outlined"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         required
                         fullWidth
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        edge="end"
+                                        aria-label="toggle confirm password visibility"
+                                    >
+                                        {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
                     />
 
                     <LoadingButton
@@ -121,7 +150,6 @@ export default function Signup() {
                     >
                         Sign Up
                     </LoadingButton>
-
                 </Box>
             </Paper>
         </Container>

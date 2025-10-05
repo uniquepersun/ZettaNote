@@ -1,4 +1,31 @@
 // src/pages/Landing.jsx
+import React, { useEffect, useState } from "react";
+import { 
+    Container, 
+    Typography, 
+    Button, 
+    Box, 
+    Paper, 
+    Card, 
+    CardContent, 
+    Chip,
+    Fade,
+    Slide,
+    Zoom,
+    Grow
+} from "@mui/material";
+import { 
+    Edit as EditIcon,
+    Folder as FolderIcon,
+    Speed as SpeedIcon,
+    Security as SecurityIcon,
+    CloudSync as CloudIcon,
+    
+    GitHub as GitHubIcon
+} from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../components/ui/Navbar";
+
 import React, { useEffect, useState } from 'react';
 import {
   Container,
@@ -44,6 +71,7 @@ export default function Landing() {
     // Testimonials section animation
     const timer3 = setTimeout(() => setTestimonialVisible(true), 1200);
 
+    // Testimonials temporarily removed to avoid unused variable lint error
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);

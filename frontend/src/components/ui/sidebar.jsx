@@ -20,7 +20,7 @@ import {
 import { API_URL } from "../../config";
 import { showToast } from "../../utils/toast";
 
-export default function Sidebar({ token, onSelectPage }) {
+export default function Sidebar({ token, onSelectPage, refreshTrigger }) {
     const [ownedPages, setOwnedPages] = useState([]);
     const [sharedPages, setSharedPages] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -48,7 +48,7 @@ export default function Sidebar({ token, onSelectPage }) {
         };
 
         fetchPages();
-    }, [token]);
+    }, [token, refreshTrigger]);
 
     // Normalize page object for frontend
     const normalizePage = (page) => ({

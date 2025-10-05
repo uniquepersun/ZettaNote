@@ -18,7 +18,7 @@ import { Add as AddIcon } from '@mui/icons-material';
 import {API_URL} from "../../config";
 import { showToast } from "../../utils/toast";
 
-export default function NewPagePopup({ open, onClose }) {
+export default function NewPagePopup({ open, onClose, onPageCreated }) {
     const [name, setName] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -62,7 +62,7 @@ export default function NewPagePopup({ open, onClose }) {
                 showToast.success(`Page "${name}" created successfully!`);
                 setName("");
                 onClose();
-                window.location.reload();
+                if (onPageCreated) onPageCreated();
             } else {
                 const data = await res.json();
                 showToast.error(data.message || "Failed to create page");

@@ -16,16 +16,14 @@ import {
 } from "@mui/material";
 import { 
     Edit as EditIcon,
-    Group as GroupIcon,
     Folder as FolderIcon,
     Speed as SpeedIcon,
     Security as SecurityIcon,
     CloudSync as CloudIcon,
-    Star as StarIcon,
     GitHub as GitHubIcon
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { ThemeToggleButton } from "../components/ui/ThemeContext";
+import Navbar from "../components/ui/Navbar";
 
 
 export default function Landing() {
@@ -79,34 +77,12 @@ export default function Landing() {
         }
     ];
 
-    const testimonials = [
-        {
-            name: "Alex Chen",
-            role: "Software Developer",
-            content: "ZettaNote has transformed how our team collaborates on documentation. Real-time editing are game-changers.",
-            rating: 5
-        },
-        {
-            name: "Sarah Johnson",
-            role: "Product Manager",
-            content: "Finally, a note-taking app that doesn't get in the way. Clean, fast, and exactly what we needed for our project planning.",
-            rating: 5
-        },
-        {
-            name: "Mike Rodriguez",
-            role: "Tech Lead",
-            content: "The open-source nature of ZettaNote gives us confidence in our data. Plus, the collaboration features are top-notch.",
-            rating: 5
-        }
-    ];
-
     return (
         <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+            {/* Navbar */}
+            <Navbar />
             {/* Hero Section */}
-            <Container maxWidth="lg" sx={{ py: 8 }}>
-                <Box sx={{ position: "absolute", top: 20, right: 20, zIndex: 10 }}>
-                <ThemeToggleButton />
-                </Box>
+            <Container maxWidth="lg" sx={{ pt: 12, pb: 8 }}>
 
 
                 <Box sx={{ textAlign: 'center', mb: 8 }}>
@@ -180,6 +156,23 @@ export default function Landing() {
                                     }}
                                 >
                                     Get Started Free
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    size="large"
+                                    onClick={() => navigate("/login")}
+                                    sx={{ 
+                                        px: 4, 
+                                        py: 1.5,
+                                        fontSize: '1.1rem',
+                                        transition: 'all 0.3s ease',
+                                        '&:hover': {
+                                            transform: 'translateY(-2px)',
+                                            boxShadow: 4
+                                        }
+                                    }}
+                                >
+                                    Already registered? Login now
                                 </Button>
                                 <Button
                                     variant="outlined"

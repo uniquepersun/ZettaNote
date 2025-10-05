@@ -181,6 +181,8 @@ const RichMarkdownEditor = ({
                     e.preventDefault();
                     setIsPreviewMode(!isPreviewMode);
                     break;
+                default:
+                    break;
             }
         }
     }, [insertMarkdown, insertAtCursor, undo, redo, isPreviewMode]);

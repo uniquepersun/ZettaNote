@@ -4,7 +4,7 @@ import Sidebar from "../components/ui/sidebar";
 import Navbar from "../components/ui/Navbar";
 import PageView from "../components/ui/pageView";
 import NewPagePopup from "../components/ui/newPagePopup";
-import { Typography, Box, Paper, Card, CardContent, useTheme, useMediaQuery } from "@mui/material";
+import { Typography, Box, Paper, Card, CardContent, useTheme } from "@mui/material";
 import { useEffect } from "react";
 import { API_URL } from "../config";
 import { showToast } from "../utils/toast";
@@ -14,13 +14,14 @@ import {
     TrendingUp as TrendingIcon 
 } from '@mui/icons-material';
 
-export default function Home() {
+export default function Home(token, refreshTrigger) {
     const navigate = useNavigate();
     const [selectedPage, setSelectedPage] = useState(null);
     const [name, setName] = useState("");
     const [newPagePopupOpen, setNewPagePopupOpen] = useState(false);
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const [sidebarRefresh, setSidebarRefresh] = useState(0);
+
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -46,14 +47,9 @@ export default function Home() {
         }
 
         getUser();
-    });
+    },[navigate, token, refreshTrigger]);
 
 
-    const onLogout = () => {
-        localStorage.removeItem("token");
-        showToast.info("Logged out successfully");
-        navigate("/");
-    };
 
     const onCreatePage = () => {
         setNewPagePopupOpen(true);
@@ -212,6 +208,7 @@ export default function Home() {
                 <Sidebar
                     token={localStorage.getItem("token")}
                     onSelectPage={onSelectPage}
+                    refreshTrigger={sidebarRefresh}
                 />
 
                 <Box 
@@ -226,7 +223,10 @@ export default function Home() {
                     }}
                 >
                     {selectedPage ? (
-                        <PageView page={selectedPage} />
+                        <PageView 
+                            page={selectedPage} 
+                            onPageDeleted={()=>{setSelectedPage(null);setSidebarRefresh(prev => prev+1)}}
+                        />
                     ) : (
                         <WelcomeScreen />
                     )}
@@ -236,6 +236,7 @@ export default function Home() {
             <NewPagePopup 
                 open={newPagePopupOpen} 
                 onClose={() => setNewPagePopupOpen(false)} 
+                onPageCreated={() => setSidebarRefresh(prev => prev + 1)}
             />
         </Box>
     );

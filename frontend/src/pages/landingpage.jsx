@@ -16,12 +16,10 @@ import {
 } from "@mui/material";
 import { 
     Edit as EditIcon,
-    Group as GroupIcon,
     Folder as FolderIcon,
     Speed as SpeedIcon,
     Security as SecurityIcon,
     CloudSync as CloudIcon,
-    Star as StarIcon,
     GitHub as GitHubIcon
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -76,27 +74,6 @@ export default function Landing() {
             icon: <CloudIcon sx={{ fontSize: 40, color: 'primary.main' }} />,
             title: "Cloud Sync",
             description: "Access your notes anywhere, anytime. Your data syncs seamlessly across all your devices."
-        }
-    ];
-
-    const testimonials = [
-        {
-            name: "Alex Chen",
-            role: "Software Developer",
-            content: "ZettaNote has transformed how our team collaborates on documentation. Real-time editing are game-changers.",
-            rating: 5
-        },
-        {
-            name: "Sarah Johnson",
-            role: "Product Manager",
-            content: "Finally, a note-taking app that doesn't get in the way. Clean, fast, and exactly what we needed for our project planning.",
-            rating: 5
-        },
-        {
-            name: "Mike Rodriguez",
-            role: "Tech Lead",
-            content: "The open-source nature of ZettaNote gives us confidence in our data. Plus, the collaboration features are top-notch.",
-            rating: 5
         }
     ];
 

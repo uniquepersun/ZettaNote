@@ -9,31 +9,21 @@ import {
   IconButton,
   InputAdornment,
   Link as MuiLink,
+  useTheme,
 } from "@mui/material";
 import { Visibility, VisibilityOff, Email, Lock } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-  IconButton,
-  InputAdornment,
-} from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { LoadingButton } from '@mui/lab';
-import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/ui/Navbar';
 
 import { API_URL } from '../config';
 
 export default function Login() {
+  const theme = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState("");
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -61,46 +51,17 @@ export default function Login() {
   };
 
   return (
-    <Box sx={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: '#f0f6ff',
-      p: 2,
-    }}>
+    <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: theme.palette.background.default, p: 2 }}>
       <Container maxWidth="sm">
-        <Paper
-          elevation={0}
-          sx={{
-            p: 4,
-            borderRadius: 3,
-            backgroundColor: '#fbfeff',
-            border: '1px solid rgba(0,0,0,0.04)',
-            boxShadow: '12px 12px 24px rgba(163,177,198,0.12), -12px -12px 24px rgba(255,255,255,0.9)',
-            color: 'text.primary',
-          }}
-        >
+        <Paper elevation={0} sx={{ p: 4, borderRadius: 3, backgroundColor: theme.palette.background.paper, border: `1px solid ${theme.palette.divider}` }}>
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 1, mb: 2 }}>
-            <Avatar
-              src="/logo.png"
-              alt="ZettaNote"
-              sx={{ width: 86, height: 86, bgcolor: "transparent", boxShadow: `0 6px 18px rgba(21,101,192,0.08)` }}
-            />
-            <Typography variant="h5" align="center" sx={{ color: "#0f1724", fontWeight: 800 }}>
-              ZettaNote
-            </Typography>
-            <Typography variant="body2" align="center" sx={{ color: '#4b5563' }}>
-              Sign in to your account
-            </Typography>
+            <Avatar src="/logo.png" alt="ZettaNote" sx={{ width: 86, height: 86, bgcolor: "transparent" }} />
+            <Typography variant="h5" align="center" sx={{ color: theme.palette.text.primary, fontWeight: 800 }}>ZettaNote</Typography>
+            <Typography variant="body2" align="center" sx={{ color: theme.palette.text.secondary }}>Sign in to your account</Typography>
           </Box>
 
           <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            {errors && (
-              <Typography color="error" variant="body2" align="center">
-                {errors}
-              </Typography>
-            )}
+            {errors && (<Typography color="error" variant="body2" align="center">{errors}</Typography>)}
 
             <TextField
               label="Email"
@@ -111,19 +72,10 @@ export default function Login() {
               required
               fullWidth
               InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Email sx={{ color: '#1976d2' }} />
-                  </InputAdornment>
-                ),
+                startAdornment: (<InputAdornment position="start"><Email sx={{ color: theme.palette.primary.main }} /></InputAdornment>),
                 disableUnderline: true,
               }}
-              sx={{
-                bgcolor: '#ffffff',
-                borderRadius: 2,
-                '& .MuiFilledInput-input': { color: '#0f1724' },
-                boxShadow: 'inset 0 2px 6px rgba(16,24,40,0.04)',
-              }}
+              sx={{ bgcolor: theme.palette.background.paper, borderRadius: 2, '& .MuiFilledInput-input': { color: theme.palette.text.primary } }}
             />
 
             <TextField
@@ -135,26 +87,17 @@ export default function Login() {
               required
               fullWidth
               InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Lock sx={{ color: '#1976d2' }} />
-                  </InputAdornment>
-                ),
+                startAdornment: (<InputAdornment position="start"><Lock sx={{ color: theme.palette.primary.main }} /></InputAdornment>),
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" aria-label="toggle password visibility">
-                      {showPassword ? <VisibilityOff sx={{ color: '#1976d2' }} /> : <Visibility sx={{ color: '#1976d2' }} />}
+                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                      {showPassword ? <VisibilityOff sx={{ color: theme.palette.primary.main }} /> : <Visibility sx={{ color: theme.palette.primary.main }} />}
                     </IconButton>
                   </InputAdornment>
                 ),
                 disableUnderline: true,
               }}
-              sx={{
-                bgcolor: '#ffffff',
-                borderRadius: 2,
-                '& .MuiFilledInput-input': { color: '#0f1724' },
-                boxShadow: 'inset 0 2px 6px rgba(16,24,40,0.04)',
-              }}
+              sx={{ bgcolor: theme.palette.background.paper, borderRadius: 2, '& .MuiFilledInput-input': { color: theme.palette.text.primary } }}
             />
 
             <LoadingButton
@@ -163,112 +106,17 @@ export default function Login() {
               color="primary"
               size="large"
               loading={loading}
-              sx={{
-                bgcolor: '#1976d2',
-                color: 'common.white',
-                fontWeight: 700,
-                boxShadow: '0 8px 20px rgba(25,118,210,0.12)',
-                '&:hover': { bgcolor: '#155fa8', transform: 'translateY(-2px)' },
-                py: 1.25,
-              }}
+              sx={{ bgcolor: theme.palette.primary.main, color: 'common.white', fontWeight: 700, py: 1.25 }}
             >
               Sign In
             </LoadingButton>
 
-            <Typography variant="body2" align="center" sx={{ mt: 2, color: '#4b5563' }}>
+            <Typography variant="body2" align="center" sx={{ mt: 2, color: theme.palette.text.secondary }}>
               Don't have an account?{' '}
-              <MuiLink component={RouterLink} to="/signup" underline="hover" sx={{ color: '#155fa8', fontWeight: 700 }}>
+              <MuiLink component={RouterLink} to="/signup" underline="hover" sx={{ color: theme.palette.primary.main, fontWeight: 700 }}>
                 Create one
               </MuiLink>
             </Typography>
-    setErrors('');
-    let data;
-
-    try {
-      const res = await fetch(API_URL + '/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      data = await res.json();
-      if (res.status !== 200) {
-        setErrors(data.message);
-      } else {
-        localStorage.setItem('token', data.token);
-        navigate('/home');
-      }
-    } catch (err) {
-      setErrors(data.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-      <Navbar />
-      <Container maxWidth="sm" sx={{ pt: 12 }}>
-        <Paper elevation={4} sx={{ p: 4, borderRadius: 3 }}>
-          <Typography variant="h4" align="center" gutterBottom>
-            Login
-          </Typography>
-
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-          >
-            {errors && (
-              <Typography color="error" variant="body2" align="center">
-                {errors}
-              </Typography>
-            )}
-
-            <TextField
-              label="Email"
-              type="email"
-              variant="outlined"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              fullWidth
-            />
-
-            <TextField
-              label="Password"
-              type={showPassword ? 'text' : 'password'}
-              variant="outlined"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              fullWidth
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword(!showPassword)}
-                      edge="end"
-                      aria-label="toggle password visibility"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-
-            <LoadingButton
-              type="submit"
-              variant="contained"
-              color="primary"
-              size="large"
-              loading={loading}
-            >
-              Sign In
-            </LoadingButton>
           </Box>
         </Paper>
       </Container>

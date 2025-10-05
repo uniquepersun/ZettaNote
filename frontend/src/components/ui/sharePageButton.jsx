@@ -1,6 +1,3 @@
-import React, { useState } from "react";
-import {
-  Button,
 import React, { useState } from 'react';
 import {
   IconButton,
@@ -11,36 +8,20 @@ import {
   TextField,
   Checkbox,
   FormControlLabel,
-  CircularProgress,
-  Typography
-} from "@mui/material";
-import ShareIcon from "@mui/icons-material/Share";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-
-import { API_URL } from "../../config";
-
-function SharePageButton({ token, pageId }) {
-  const [open, setOpen] = useState(false);
-  const [email, setEmail] = useState("");
-  const [giveWrite, setGiveWrite] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
-  const [publicLink, setPublicLink] = useState("");
-
-  const handleOpen = () => {
-    setOpen(true);
-    setEmail("");
-    setGiveWrite(false);
-    setMessage("");
-    setPublicLink("");
   Typography,
   Box,
   useTheme,
-  alpha,
   Tooltip,
+  Button,
+  Tabs,
+  Tab,
+  InputAdornment
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import ShareIcon from '@mui/icons-material/Share';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import LinkIcon from '@mui/icons-material/Link';
+import EmailIcon from '@mui/icons-material/Email';
 import { API_URL } from '../../config';
 import { showToast } from '../../utils/toast';
 
@@ -49,33 +30,23 @@ function SharePageButton({ token, pageId }) {
   const [email, setEmail] = useState('');
   const [giveWrite, setGiveWrite] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [publicLink, setPublicLink] = useState('');
+  const [tabValue, setTabValue] = useState(0);
   const theme = useTheme();
 
   const handleOpen = () => {
     setOpen(true);
     setEmail('');
     setGiveWrite(false);
+    setPublicLink('');
+    setTabValue(0);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setMessage("");
-    setPublicLink(""); 
   };
 
-  // Share via email
   const handleShareEmail = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
-
-    try {
-      const res = await fetch(`${API_URL}/api/pages/sharepage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-  };
-
-  const handleShare = async (e) => {
     e.preventDefault();
     if (!email.trim()) {
       showToast.error('Please enter an email address');
@@ -98,71 +69,12 @@ function SharePageButton({ token, pageId }) {
       });
 
       const data = await res.json();
-      setMessage(data.message || "Shared via email!");
-    } catch {
-      setMessage("Error sharing via email.");
-    }
-
-    setLoading(false);
-  };
-
-  // Share public link
-  const handleShareLink = async () => {
-    setLoading(true);
-    setMessage("");
-
-    try {
-      const res = await fetch(`${API_URL}/api/pages/publicshare`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pageId }),
-      });
-
-      const data = await res.json();
-
-      if (data.publicShareId) {
-        setPublicLink(`${API_URL}/api/pages/share/`+data.publicShareId);   
-      }
-      setMessage(data.message || "Public link generated!");
-    } catch {
-      setMessage("Error generating public link.");
-    }
-
-    setLoading(false);
-  };
-
-  const handleCopyLink = async () => {
-  try {
-    await navigator.clipboard.writeText(publicLink);
-    setMessage("Link copied to clipboard!");
-  } catch {
-    setMessage("Failed to copy link.");
-  }
-};
-
-  return (
-    <>
-      <Button
-        variant="outlined"
-        startIcon={<ShareIcon />}
-        onClick={handleOpen}
-        sx={{ ml: 1 }}
-      >
-        Share
-      </Button>
-
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Share Page</DialogTitle>
-
-        <DialogContent>
-          <form onSubmit={handleShareEmail}>
-      const data = await res.json();
-
       showToast.dismiss(loadingToast);
 
       if (res.ok) {
         showToast.success(`Page shared with ${email} successfully!`);
-        handleClose();
+        setEmail('');
+        setGiveWrite(false);
       } else {
         showToast.error(data.message || 'Failed to share page');
       }
@@ -171,6 +83,47 @@ function SharePageButton({ token, pageId }) {
       showToast.error('Error sharing page. Please try again.');
     }
     setLoading(false);
+  };
+
+  const handleGeneratePublicLink = async () => {
+    setLoading(true);
+    const loadingToast = showToast.loading('Generating public link...');
+
+    try {
+      const res = await fetch(`${API_URL}/api/pages/publicshare`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pageId }),
+      });
+
+      const data = await res.json();
+      showToast.dismiss(loadingToast);
+
+      if (res.ok && data.publicShareId) {
+        const link = `${window.location.origin}/share/${data.publicShareId}`;
+        setPublicLink(link);
+        showToast.success('Public link generated!');
+      } else {
+        showToast.error(data.message || 'Failed to generate public link');
+      }
+    } catch {
+      showToast.dismiss(loadingToast);
+      showToast.error('Error generating public link. Please try again.');
+    }
+    setLoading(false);
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(publicLink);
+      showToast.success('Link copied to clipboard!');
+    } catch {
+      showToast.error('Failed to copy link to clipboard');
+    }
+  };
+
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
   };
 
   return (
@@ -190,21 +143,7 @@ function SharePageButton({ token, pageId }) {
         </IconButton>
       </Tooltip>
 
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        maxWidth="sm"
-        fullWidth
-        PaperProps={{
-          sx: {
-            borderRadius: 3,
-            background:
-              theme.palette.mode === 'dark' ? 'rgba(30,30,30,0.95)' : 'rgba(255,255,255,0.95)',
-            backdropFilter: 'blur(20px)',
-            border: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
-          },
-        }}
-      >
+      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
         <DialogTitle>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <ShareIcon sx={{ color: theme.palette.secondary.main }} />
@@ -214,131 +153,126 @@ function SharePageButton({ token, pageId }) {
           </Box>
         </DialogTitle>
 
-        <form onSubmit={handleShare}>
-          <DialogContent sx={{ pb: 2 }}>
-            <Typography
-              variant="body2"
-              sx={{
-                mb: 3,
-                color: theme.palette.text.secondary,
-              }}
-            >
-              Share this page with another user by entering their email address.
-            </Typography>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', px: 3 }}>
+          <Tabs value={tabValue} onChange={handleTabChange}>
+            <Tab icon={<EmailIcon />} label="Share with User" />
+            <Tab icon={<LinkIcon />} label="Public Link" />
+          </Tabs>
+        </Box>
 
-            <TextField
-              label="User Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              fullWidth
-              margin="normal"
-            />
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: 2,
-                },
-              }}
-              placeholder="colleague@example.com"
-            />
-
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={giveWrite}
-                  onChange={(e) => setGiveWrite(e.target.checked)}
-                />
-              }
-              label="Give edit permission"
-            />
-
-            {loading && <CircularProgress size={24} sx={{ ml: 2 }} />}
-            {message && (
-              <Typography
-                color={message.includes("Error") ? "error" : "primary"}
-                sx={{ mt: 1 }}
-              >
-                {message}
+        <DialogContent sx={{ pb: 2 }}>
+          {tabValue === 0 && (
+            <Box component="form" onSubmit={handleShareEmail}>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                Share this page with another user by entering their email address.
               </Typography>
-            )}
 
-            <DialogActions>
-              <Button onClick={handleClose} disabled={loading}>
-                Cancel
-              </Button>
-              <Button type="submit" variant="contained" disabled={loading}>
-                Share via Email
-              </Button>
-              <Button
-                type="button"
-                variant="contained"
-                onClick={handleShareLink}
-                disabled={loading}
-              >
-                Share Public Link
-              </Button>
-              {publicLink && (
-                  <Button
-                    type="button"
-                    variant="outlined"
-                    startIcon={<ContentCopyIcon />}
-                    onClick={handleCopyLink}
-                    disabled={loading}
-                  ></Button>
-                )}
-            </DialogActions>
-          </form>
+              <TextField
+                label="User Email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                fullWidth
+                margin="normal"
+                placeholder="colleague@example.com"
+              />
+
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={giveWrite}
+                    onChange={(e) => setGiveWrite(e.target.checked)}
+                  />
+                }
+                label="Give edit permission"
+                sx={{ mt: 2 }}
+              />
+            </Box>
+          )}
+
+          {tabValue === 1 && (
+            <Box>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                Generate a public link that anyone can use to view this page.
+              </Typography>
+
+              {!publicLink ? (
+                <LoadingButton
+                  variant="contained"
+                  startIcon={<LinkIcon />}
+                  onClick={handleGeneratePublicLink}
+                  loading={loading}
+                  fullWidth
+                  sx={{ py: 1.5 }}
+                >
+                  Generate Public Link
+                </LoadingButton>
+              ) : (
+                <Box>
+                  <TextField
+                    label="Public Link"
+                    value={publicLink}
+                    fullWidth
+                    margin="normal"
+                    InputProps={{
+                      readOnly: true,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Tooltip title="Copy Link">
+                            <IconButton onClick={handleCopyLink} edge="end">
+                              <ContentCopyIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  
+                  <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
+                    <Button
+                      variant="outlined"
+                      startIcon={<ContentCopyIcon />}
+                      onClick={handleCopyLink}
+                      sx={{ flex: 1 }}
+                    >
+                      Copy Link
+                    </Button>
+                    <Button
+                      variant="contained"
+                      startIcon={<LinkIcon />}
+                      onClick={handleGeneratePublicLink}
+                      disabled={loading}
+                      sx={{ flex: 1 }}
+                    >
+                      Regenerate
+                    </Button>
+                  </Box>
+                </Box>
+              )}
+
+              <Typography variant="caption" color="warning.main" sx={{ display: 'block', mt: 2 }}>
+                ⚠️ Anyone with this link can view your page
+              </Typography>
+            </Box>
+          )}
         </DialogContent>
-                  sx={{ color: theme.palette.secondary.main }}
-                />
-              }
-              label="Give edit permission"
-              sx={{ mt: 2 }}
-            />
 
-            <Typography
-              variant="caption"
-              sx={{
-                display: 'block',
-                mt: 1,
-                color: theme.palette.text.secondary,
-                fontStyle: 'italic',
-              }}
-            >
-              {giveWrite
-                ? 'This user will be able to view and edit the page'
-                : 'This user will only be able to view the page'}
-            </Typography>
-          </DialogContent>
-
-          <DialogActions sx={{ px: 3, pb: 3 }}>
+        <DialogActions sx={{ px: 3, pb: 3 }}>
+          <Button onClick={handleClose} disabled={loading}>
+            Cancel
+          </Button>
+          
+          {tabValue === 0 && (
             <LoadingButton
-              onClick={handleClose}
-              disabled={loading}
-              sx={{
-                borderRadius: 2,
-                textTransform: 'none',
-                px: 3,
-              }}
-            >
-              Cancel
-            </LoadingButton>
-            <LoadingButton
-              type="submit"
               variant="contained"
               loading={loading}
-              sx={{
-                borderRadius: 2,
-                textTransform: 'none',
-                px: 3,
-                fontWeight: 600,
-              }}
+              onClick={handleShareEmail}
             >
               Share Page
             </LoadingButton>
-          </DialogActions>
-        </form>
+          )}
+        </DialogActions>
       </Dialog>
     </>
   );

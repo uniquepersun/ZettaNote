@@ -8,7 +8,7 @@ const signupSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email address'),
   password: z.string().min(1, 'Password is required'),
-  confirmPassword: z.string().min(1, 'Confirm password is required'),
+  // confirmPassword: z.string().min(1, 'Confirm password is required'),
 });
 
 export default async function signup(req) {
@@ -20,20 +20,22 @@ export default async function signup(req) {
     // Zod
     const parsed = signupSchema.safeParse(req.body);
     if (!parsed.success) {
+      const errorMessage =
+        parsed.error?.errors?.map((e) => e.message).join(', ') || 'Validation failed';
       return {
         resStatus: 400,
         resMessage: {
-          message: parsed.error.errors.map((e) => e.message).join(', '),
+          message: errorMessage,
         },
       };
     }
 
-    const { name, email, password, confirmPassword } = parsed.data;
+    const { name, email, password } = parsed.data;
 
     // Password match check
-    if (password !== confirmPassword) {
-      return { resStatus: 400, resMessage: { message: 'Passwords do not match' } };
-    }
+    // if (password !== confirmPassword) {
+    //   return { resStatus: 400, resMessage: { message: 'Passwords do not match' } };
+    // }
 
     //validating password
     const validation = validatePass(password);

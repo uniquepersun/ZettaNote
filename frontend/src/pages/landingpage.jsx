@@ -7,10 +7,8 @@ import {
     Paper, 
     Card, 
     CardContent, 
-    Chip,
     Fade,
     Slide,
-    Zoom,
     Grow,
     useTheme
 } from "@mui/material";
@@ -19,8 +17,6 @@ import {
     Folder as FolderIcon,
     Speed as SpeedIcon,
     Security as SecurityIcon,
-    CloudSync as CloudIcon,
-    GitHub as GitHubIcon
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/ui/Navbar";

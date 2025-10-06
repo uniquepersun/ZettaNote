@@ -10,7 +10,10 @@ const router = express.Router();
 
 router.post('/signup', async (req, res) => {
   try {
-    const { resStatus, resMessage } = await signup(req);
+    const { resStatus, resMessage, token } = await signup(req);
+    if (resStatus === 200 && token) {
+      res.cookie('token', token, { httpOnly: true, sameSite: 'strict' });
+    }
     res.status(resStatus).json(resMessage);
   } catch (err) {
     console.log('Signup Error: ', err);
@@ -20,10 +23,23 @@ router.post('/signup', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   try {
-    const { resStatus, resMessage } = await login(req);
+    const { resStatus, resMessage, token } = await login(req);
+    if (resStatus === 200 && token) {
+      res.cookie('token', token, { httpOnly: true, sameSite: 'strict' });
+    }
     res.status(resStatus).json(resMessage);
   } catch (err) {
     console.log('Login Error: ', err);
+    res.status(500).json({ success: false, message: 'Internal Server error.' });
+  }
+});
+
+router.get('/logout', async (req, res) => {
+  try {
+    res.clearCookie('token');
+    res.status(200).json({ success: true, message: 'Logged out successfully.' });
+  } catch (err) {
+    console.log('Logout Error: ', err);
     res.status(500).json({ success: false, message: 'Internal Server error.' });
   }
 });
@@ -38,7 +54,7 @@ router.post('/changepassword', async (req, res) => {
   }
 });
 
-router.post('/getuser', async (req, res) => {
+router.get('/getuser', async (req, res) => {
   try {
     const { resStatus, resMessage } = await getUser(req);
     res.status(resStatus).json(resMessage);

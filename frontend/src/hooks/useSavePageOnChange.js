@@ -1,44 +1,35 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { API_URL } from "../config"; // adjust import path as needed
+import { useState, useEffect, useRef, useCallback } from 'react';
+import axios from 'axios';
+import { API_URL } from '../config'; // adjust import path as needed
 
 export function useSavePageOnChange(delay = 800) {
-  const [saveError, setError] = useState("");
+  const [saveError, setError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const timeoutRef = useRef(null);
 
   const savePage = useCallback(async ({ pageId, content }) => {
-    setError("");
+    setError('');
     setIsSaving(true);
     setIsSaved(false);
 
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`${API_URL}/api/pages/savepage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          token,
+      const res = await axios.post(
+        `${API_URL}/api/pages/savepage`,
+        {
           pageId,
           newPageData: content,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        const message = data.message || "Failed to save page";
-        setError(message);
-        setIsSaving(false);
-        setIsSaved(false);
-        return { success: false, error: message };
-      }
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
       setIsSaving(false);
       setIsSaved(true);
       return { success: true };
-    } catch {
-      const message = "Failed to save page";
+    } catch (err) {
+      const message = err.response?.data?.message || 'Failed to save page';
       setError(message);
       setIsSaving(false);
       setIsSaved(false);

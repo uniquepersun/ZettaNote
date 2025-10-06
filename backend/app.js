@@ -5,6 +5,7 @@ import { DB, PORT } from './config.js';
 
 import authRouter from './routes/auth/auth.js';
 import pageRouter from './routes/pages/pages.js';
+import adminRouter from './routes/admin/admin.js';
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(cors());
 // routes
 app.use('/api/auth', authRouter);
 app.use('/api/pages', pageRouter);
+app.use('/api/admin', adminRouter);
 
 // Root route for quick backend check
 app.get('/', (req, res) => {

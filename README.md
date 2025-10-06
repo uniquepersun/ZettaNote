@@ -88,6 +88,27 @@ Core features are being built and contributions are welcome.
     npm start
    ```
 
+## Admin portal setup (Not required)
+1. **Install dependencies**
+   ```bash
+      cd admin-portal
+      npm i
+   ```
+
+2. **Create the .env**
+   * copy the .env.example as .env
+   * edit the variables inside
+
+3. **Run the admin portal**
+   ```bash
+      npm start
+   ```
+
+4. **Create a default admin user**
+   ```bash
+      cd ZettaNote/backend
+      node createFirstAdmin.js
+   ```
 ## Running with Docker
 
 ### Requirements

@@ -7,7 +7,7 @@ const PageSchema = new mongoose.Schema({
     },
     pageData: {
         type: String,
-        required: true,
+        required: false,
         default: ""
     },
     owner: {

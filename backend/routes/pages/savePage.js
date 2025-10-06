@@ -8,7 +8,7 @@ export default async function savePage(req) {
     const savePageSchema = z.object({
       token: z.string().min(1, 'Token is required'),
       pageId: z.string().min(1, 'Page ID is required'),
-      newPageData: z.string().min(1, 'Page data is required'),
+      newPageData: z.string().min(0, 'Page data is required'),
     });
     const parseResult = savePageSchema.safeParse(req.body);
     if (!parseResult.success) {

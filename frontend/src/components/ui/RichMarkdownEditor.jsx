@@ -182,6 +182,7 @@ const RichMarkdownEditor = ({
                     setIsPreviewMode(!isPreviewMode);
                     break;
                 default:
+                    // No action for other keys
                     break;
             }
         }

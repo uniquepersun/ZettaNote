@@ -10,6 +10,8 @@ import adminRouter from './routes/admin/admin.routes.js';
 
 const app = express();
 
+
+
 // middleware
 app.use(express.json());
 app.use(cookieParser());
@@ -17,7 +19,7 @@ app.use(cookieParser());
 // CORS configuration - properly handle credentials with specific origins
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',')
-  : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:80', 'http://localhost'];
+  : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:80', 'http://localhost:5173'];
 
 app.use(
   cors({

@@ -19,10 +19,7 @@ Core features are being built and contributions are welcome.
 
 ## ✨ Planned Features
 
-- 📝 Notes written with **Markdown**
-- 🔗 Ability to **share notes** with others
-- 📑 **Note templates** for quick setup
-- 🤝 **Real-time collaboration** (multi-user editing)
+**Checkout the planned features on [ZettaNote](https://zettanote.tech/share/7ac81567-c0e7-4286-94f7-5596a3fe07a1)**
 
 ---
 

@@ -11,7 +11,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar bg-base-100 shadow-md px-6 lg:px-10 border-b border-base-300">
+    <nav className="navbar fixed top-0 bg-base-100 shadow-md px-6 lg:px-10 border-b border-base-300">
       {/* Mobile menu */}
       <div className="navbar-start">
         <div className="dropdown lg:hidden">

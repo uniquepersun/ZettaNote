@@ -9,12 +9,12 @@ RUN npm install -g serve
 # Copy pre-built files (built by GitHub Actions)
 COPY build ./build
 
-# Expose port 80
-EXPOSE 3000
+# Expose port 3001
+EXPOSE 3001
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:80/ || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://localhost:3001/ || exit 1
 
-# Serve the app on port 3000
-CMD ["serve", "-s", "build", "-l", "3000"]
+# Serve the app on port 3001
+CMD ["serve", "-s", "build", "-l", "3001"]

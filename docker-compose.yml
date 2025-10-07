@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   backend:
-    image: ghcr.io/mannuvilasara/zettanote-backend:latest
+    image: ghcr.io/braydenidzenga/zettanote-backend:latest
     container_name: zettanote-backend
     ports:
       - "4000:4000"
@@ -31,7 +31,7 @@ services:
       - zettanote-network
 
   frontend:
-    image: ghcr.io/mannuvilasara/zettanote-frontend:latest
+    image: ghcr.io/braydenidzenga/zettanote-frontend:latest
     container_name: zettanote-frontend
     ports:
       - "3000:3000"
@@ -59,7 +59,7 @@ services:
       - zettanote-network
 
   admin-portal:
-    image: ghcr.io/mannuvilasara/zettanote-admin:latest
+    image: ghcr.io/braydenidzenga/zettanote-admin:latest
     container_name: zettanote-admin
     ports:
       - "3001:3001"

@@ -7,18 +7,21 @@ import {
   logSuspiciousActivity,
   securityHeaders,
 } from '../../util/security.js';
-import adminLogin from './adminLogin.js';
-import adminLogout from './adminLogout.js';
-import changeFirstPassword from './changeFirstPassword.js';
-import createAdmin from './createAdmin.js';
-import getTotalUsers from './getTotalUsers.js';
-import getAllUsers from './getAllUsers.js';
-import banUser from './banUser.js';
-import unbanUser from './unbanUser.js';
-import getAnalytics from './getAnalytics.js';
-import getAllAdmins from './getAllAdmins.js';
-import updateAdmin from './updateAdmin.js';
-import deleteAdmin from './deleteAdmin.js';
+
+import {
+  adminLogin,
+  adminLogout,
+  banUser,
+  changeFirstPassword,
+  createAdmin,
+  deleteAdmin,
+  getAllAdmins,
+  getAllUsers,
+  getAdminAnalytics as getAnalytics,
+  getTotalUsers,
+  unbanUser,
+  updateAdmin,
+} from '../../controllers/adminControllers/index.js';
 
 const router = express.Router();
 

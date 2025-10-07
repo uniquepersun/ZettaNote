@@ -1,10 +1,12 @@
 import express from 'express';
 
-import signup from './signup.js';
-import login from './login.js';
-import changePassword from './changePassword.js';
-import getUser from './getUser.js';
-import deleteUser from './deleteUser.js';
+import {
+  signup,
+  login,
+  getUser,
+  changePassword,
+  deleteUser,
+} from '../../controllers/authControllers/index.js';
 
 const router = express.Router();
 

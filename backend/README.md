@@ -15,8 +15,12 @@ backend/
 │   ├── controllers/         # Business logic controllers
 │   │   ├── auth.controller.js
 │   │   ├── page.controller.js
-│   │   └── admin.controller.js
-│   │
+│   │   ├── admin.controller.js
+│   │   └── mailer.controller.js
+│
+│   ├── mailers/             # Email service clients
+│   │   └── resend.client.js # Resend API integration
+│
 │   ├── models/              # Mongoose models
 │   │   ├── User.model.js
 │   │   ├── Page.model.js
@@ -26,8 +30,9 @@ backend/
 │   │   ├── index.js         # Route aggregator
 │   │   ├── auth.routes.js
 │   │   ├── page.routes.js
-│   │   └── admin.routes.js
-│   │
+│   │   ├── admin.routes.js
+│   │   └── mailer.routes.js
+│
 │   ├── middleware/          # Express middleware
 │   │   ├── auth.middleware.js
 │   │   ├── admin.middleware.js
@@ -294,6 +299,44 @@ Content-Type: application/json
 ```http
 GET /api/admin/analytics
 Authorization: Bearer <admin-token>
+```
+
+### Mailer Endpoints
+
+#### Send Email
+
+```http
+POST /api/mailer/send
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "to": "user@example.com",
+  "subject": "Welcome to ZettaNote",
+  "html": "<h1>Welcome!</h1><p>Thank you for joining us.</p>",
+  "text": "Welcome! Thank you for joining us."
+}
+```
+
+**Note:**
+
+- Requires `RESEND_API_KEY` to be configured in `.env`
+- `to` can be a string or array of email addresses
+- Either `html` or `text` (or both) must be provided
+- Requires user authentication
+
+#### Send Test Email
+
+```http
+POST /api/mailer/test
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "to": "test@example.com",
+  "subject": "Test Email",
+  "html": "<p>This is a test email</p>"
+}
 ```
 
 ## 🛠️ Development

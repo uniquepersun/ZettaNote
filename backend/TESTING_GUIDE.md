@@ -153,6 +153,37 @@ curl http://localhost:3001/api/admin/users \
   -b admin-cookies.txt
 ```
 
+### Mailer Endpoints
+
+#### 1. Send Test Email
+
+```bash
+curl -X POST http://localhost:3001/api/mailer/send \
+  -H "Content-Type: application/json" \
+  -b cookies.txt \
+  -d '{
+    "to": "test@example.com",
+    "subject": "Test Email from ZettaNote",
+    "html": "<h1>Hello!</h1><p>This is a test email.</p>",
+    "text": "Hello! This is a test email."
+  }'
+```
+
+**Note:** Make sure `RESEND_API_KEY` and `FROM_MAIL` are configured in your `.env` file.
+
+#### 2. Send Email to Multiple Recipients
+
+```bash
+curl -X POST http://localhost:3001/api/mailer/send \
+  -H "Content-Type: application/json" \
+  -b cookies.txt \
+  -d '{
+    "to": ["user1@example.com", "user2@example.com"],
+    "subject": "Notification",
+    "html": "<p>This is a notification email</p>"
+  }'
+```
+
 ## Testing with Frontend
 
 ### Frontend Configuration

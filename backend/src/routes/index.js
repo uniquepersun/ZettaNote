@@ -7,6 +7,7 @@ import express from 'express';
 import authRoutes from './auth.routes.js';
 import pageRoutes from './page.routes.js';
 import adminRoutes from './admin.routes.js';
+import mailerRoutes from './mailer.routes.js';
 import { STATUS_CODES } from '../constants/statusCodes.js';
 
 const router = express.Router();
@@ -28,5 +29,6 @@ router.get('/health', (req, res) => {
 router.use('/auth', authRoutes);
 router.use('/pages', pageRoutes);
 router.use('/admin', adminRoutes);
+router.use('/mailer', mailerRoutes);
 
 export default router;

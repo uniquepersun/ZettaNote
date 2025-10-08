@@ -8,6 +8,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import CommunityAndContribution from '../components/home/CommunityAndContribution';
 import Hero from '../components/home/Hero';
 import Features from '../components/home/Features';
+import Heading from '../components/home/Heading';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,7 +17,53 @@ const Home = () => {
 
   useGSAP(
     () => {
-      const masterTl = gsap.timeline();
+      // Main heading animations
+      const headingTl = gsap.timeline({ delay: 0.3 });
+      
+      headingTl
+        .from('.heading-word-1', {
+          opacity: 0,
+          y: 100,
+          rotationX: -90,
+          duration: 1.2,
+          ease: 'power3.out',
+        })
+        .from('.heading-word-2', {
+          opacity: 0,
+          y: 100,
+          rotationX: -90,
+          duration: 1.2,
+          ease: 'power3.out',
+        }, '-=0.8')
+        .to('.heading-tagline', {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+        }, '-=0.4')
+        .to('.heading-cta', {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+        }, '-=0.2');
+
+      // Floating dots animation
+      gsap.to('.floating-dot', {
+        y: -20,
+        x: 10,
+        duration: 3,
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: -1,
+        stagger: {
+          each: 0.5,
+          from: 'random'
+        }
+      });
+
+      // Hero section animations
+      const masterTl = gsap.timeline({ delay: 2 });
 
       masterTl
         .from('.hero-avatars > div', {
@@ -144,6 +191,39 @@ const Home = () => {
         repeat: -1,
         stagger: 0.5,
       });
+
+      // Heading button hover animations
+      const buttons = document.querySelectorAll('.heading-cta button');
+      buttons.forEach(button => {
+        button.addEventListener('mouseenter', () => {
+          gsap.to(button, {
+            scale: 1.05,
+            duration: 0.3,
+            ease: 'power2.out'
+          });
+        });
+        
+        button.addEventListener('mouseleave', () => {
+          gsap.to(button, {
+            scale: 1,
+            duration: 0.3,
+            ease: 'power2.out'
+          });
+        });
+      });
+
+      // Scroll-triggered heading fade
+      gsap.to('.heading-container', {
+        scrollTrigger: {
+          trigger: '.heading-container',
+          start: 'bottom 80%',
+          end: 'bottom 20%',
+          scrub: 1,
+        },
+        opacity: 0.3,
+        y: -50,
+        ease: 'none',
+      });
     },
     { scope: containerRef }
   );
@@ -154,6 +234,7 @@ const Home = () => {
       className="min-h-screen mt-20 p-6 lg:p-12"
       style={{ background: 'color:var(--color-base-100)' }}
     >
+      <Heading/>
       <Hero />
       <Features />
       <CommunityAndContribution />

@@ -1,17 +1,19 @@
 import React from 'react'
 import Feature from '../Feature'
+import { IoOptions } from 'react-icons/io5'
 
 const Features = () => {
   return (
     <div>
       <section className="features-section second max-w-6xl mx-auto mt-12">
-        <h2 className="text-xl font-semibold text-[color:var(--color-base-content)]">
-          Core features
+        <h2 className="text-5xl font-semibold text-secondary flex items-center gap-3">
+          <IoOptions />
+         <span className='mb-2'> Core features</span>
         </h2>
         <p className="mt-2 text-sm text-[color:var(--color-neutral-content)] max-w-2xl">
           Designed for writers, students and developers — minimal UI, fast editor and safe sharing.
         </p>
-        <div className="mt-6 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-6 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           <div className="feature-item">
             <Feature
               icon={'🗒️'}

@@ -210,15 +210,15 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Forgot Password Link */}
-            <div className="text-right">
+            {/* Forgot Password Link will add when api is ready */}
+            {/* <div className="text-right">
               <Link
                 to="/forgot-password"
                 className="text-sm text-primary hover:text-primary/80 transition-colors"
               >
                 Forgot your password?
               </Link>
-            </div>
+            </div> */}
 
             {/* Submit Button */}
             <button

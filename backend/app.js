@@ -7,6 +7,7 @@ import { DB, PORT } from './config.js';
 import authRouter from './routes/auth/auth.routes.js';
 import pageRouter from './routes/pages/pages.routes.js';
 import adminRouter from './routes/admin/admin.routes.js';
+import mailerRouter from './routes/mailer.routes.js';
 
 const app = express();
 
@@ -43,6 +44,7 @@ app.use(
 app.use('/api/auth', authRouter);
 app.use('/api/pages', pageRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api', mailerRouter);
 
 // Root route for quick backend check
 app.get('/', (req, res) => {

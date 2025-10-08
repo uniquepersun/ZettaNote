@@ -1,22 +1,37 @@
 import React, { useState } from 'react';
 import { 
   FiShare2, 
-  FiMoreHorizontal, 
   FiEdit3, 
   FiTrash2, 
   FiCopy, 
   FiExternalLink,
   FiSave,
   FiClock,
-  FiFile
+  FiFile,
+  FiLink,
+  FiRefreshCw,
+  FiGlobe,
+  FiLock,
+  FiDownload,
+  FiMessageCircle,
+  FiSettings,
+  FiCheckCircle,
+  FiMenu,
+  FiX
 } from 'react-icons/fi';
 import toast from 'react-hot-toast';
+import axios from 'axios';
 
-const TopBar = ({ activePage, onSave, onDelete, onRename, lastSaved, isLoading }) => {
+const TopBar = ({ activePage, onSave, onDelete, onRename, lastSaved, isLoading, onToggleSidebar, isSidebarOpen }) => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareableLink, setShareableLink] = useState('');
   const [isGeneratingLink, setIsGeneratingLink] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState(false);
+  const [shareSettings, setShareSettings] = useState({
+    isPublic: true,
+    allowComments: false,
+    allowDownload: true,
+    expiresAt: null
+  });
 
 
   const generateShareableLink = async () => {
@@ -24,13 +39,48 @@ const TopBar = ({ activePage, onSave, onDelete, onRename, lastSaved, isLoading }
     
     setIsGeneratingLink(true);
     try {
-      const mockLink = `${window.location.origin}/shared/${activePage.id}`;
-      setShareableLink(mockLink);
-      toast.success('Shareable link generated!');
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/pages/publicshare`, {
+        pageId: activePage.id
+      }, {
+        withCredentials: true
+      });
+      
+      if (response.status === 200 && response.data) {
+        const publicLink = `${window.location.origin}/public/${response.data.publicShareId}`;
+        setShareableLink(publicLink);
+        
+        if (response.data.message === 'Already Shared') {
+          toast.success('🔗 Public link retrieved successfully!');
+        } else {
+          toast.success('🔗 Public link generated successfully!');
+        }
+      } else {
+        throw new Error(response.data?.Error || response.data?.message || 'Failed to generate link');
+      }
     } catch (error) {
-      toast.error('Failed to generate shareable link');
+      console.error('Error generating share link:', error);
+      if (error.response) {
+        toast.error(`❌ Failed to generate link: ${error.response.data?.Error || error.response.data?.message || 'Server error'}`);
+      } else if (error.request) {
+        toast.error('❌ Network error. Please check your connection.');
+      } else {
+        toast.error(`❌ Failed to generate link: ${error.message}`);
+      }
     } finally {
       setIsGeneratingLink(false);
+    }
+  };
+
+  const regenerateLink = async () => {
+    if (!activePage?.id) return;
+    
+    toast.loading('Regenerating link...', { id: 'regenerate' });
+    
+    try {
+      await generateShareableLink();
+      toast.success('New link generated!', { id: 'regenerate' });
+    } catch (error) {
+      toast.error('Failed to regenerate link', { id: 'regenerate' });
     }
   };
 
@@ -62,21 +112,30 @@ const TopBar = ({ activePage, onSave, onDelete, onRename, lastSaved, isLoading }
 
   return (
     <>
-      <div className="h-20 bg-base-100 border-b border-base-300 flex items-center justify-between px-8 sticky top-16 z-30 shadow-sm">
+      <div className="h-16 lg:h-20 bg-base-100 border-b border-base-300 flex items-center justify-between px-4 lg:px-8 sticky top-16 z-30 shadow-sm">
         {/* Left Section - Enhanced Page Info */}
         <div className="flex items-center space-x-6">
+          {/* Mobile Menu Button */}
+          <button
+            onClick={onToggleSidebar}
+            className="btn btn-ghost btn-sm btn-circle lg:hidden hover:btn-primary hover:scale-110 transition-all duration-200"
+            title={isSidebarOpen ? 'Close menu' : 'Open menu'}
+          >
+            {isSidebarOpen ? <FiX className="w-5 h-5" /> : <FiMenu className="w-5 h-5" />}
+          </button>
+
           <div className="flex items-center space-x-4">
             <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/10">
               <FiFile className="w-6 h-6 text-primary" />
             </div>
             <div className="flex flex-col">
-              <h1 className="text-2xl font-bold text-base-content truncate max-w-md">
+              <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-base-content truncate max-w-32 sm:max-w-48 lg:max-w-md">
                 {activePage?.name || 'Select a page'}
               </h1>
-              <div className="flex items-center space-x-3 text-sm">
-                <div className="flex items-center space-x-2 text-base-content/60">
-                  <FiClock className="w-4 h-4" />
-                  <span className="font-medium">{formatLastSaved(lastSaved)}</span>
+              <div className="flex items-center space-x-2 lg:space-x-3 text-xs sm:text-sm">
+                <div className="flex items-center space-x-1 lg:space-x-2 text-base-content/60">
+                  <FiClock className="w-3 h-3 lg:w-4 lg:h-4" />
+                  <span className="font-medium hidden sm:inline">{formatLastSaved(lastSaved)}</span>
                 </div>
                 {isLoading && (
                   <div className="flex items-center space-x-2 text-primary">
@@ -97,97 +156,29 @@ const TopBar = ({ activePage, onSave, onDelete, onRename, lastSaved, isLoading }
 
         {/* Right Section - Enhanced Actions */}
         {activePage && (
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 lg:space-x-4">
             {/* Action Buttons Group */}
-            <div className="flex items-center bg-base-200/50 rounded-2xl p-1.5 border border-base-300/30 shadow-sm">
+            <div className="flex items-center gap-5 bg-base-200/50 rounded-2xl p-1 lg:p-1.5 border border-base-300/30 shadow-sm">
               {/* Save Button */}
               <button
                 onClick={onSave}
-                className="btn btn-ghost btn-sm gap-2 hover:btn-primary hover:scale-105 transition-all duration-200 rounded-xl"
+                className="btn btn-ghost btn-sm gap-1 lg:gap-2 hover:btn-success hover:scale-105 transition-all duration-200 rounded-xl"
                 disabled={isLoading}
                 title="Save page (Ctrl+S)"
               >
                 <FiSave className="w-4 h-4" />
-                <span className="hidden md:inline">Save</span>
+                <span className="hidden sm:inline lg:inline">Save</span>
               </button>
 
               {/* Share Button */}
               <button
                 onClick={handleShare}
-                className="btn btn-primary btn-sm gap-2 hover:scale-105 transition-all duration-200 rounded-xl shadow-lg shadow-primary/25"
-                title="Share page"
+                className="btn btn-primary btn-sm gap-1 lg:gap-2 hover:scale-105 transition-all duration-200 rounded-xl shadow-lg shadow-primary/25"
+                title="Share page publicly"
               >
                 <FiShare2 className="w-4 h-4" />
-                <span className="hidden md:inline">Share</span>
+                <span className="hidden sm:inline">Share</span>
               </button>
-            </div>
-
-            {/* More Options Dropdown */}
-            <div className="dropdown dropdown-end">
-              <div 
-                tabIndex={0} 
-                role="button" 
-                className="btn btn-ghost btn-sm btn-circle hover:btn-primary hover:scale-110 transition-all duration-200"
-                onClick={() => setActiveDropdown(!activeDropdown)}
-              >
-                <FiMoreHorizontal className="w-5 h-5" />
-              </div>
-              {activeDropdown && (
-                <ul className="dropdown-content z-50 menu p-3 shadow-2xl bg-base-100 rounded-2xl w-56 border border-base-300/60 backdrop-blur-xl">
-                  <li className="menu-title">
-                    <span className="text-xs font-semibold text-base-content/60 uppercase tracking-wider">Page Actions</span>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        onRename();
-                        setActiveDropdown(false);
-                      }}
-                      className="flex items-center gap-3 text-sm py-3 px-4 hover:bg-primary/10 rounded-xl transition-colors"
-                    >
-                      <FiEdit3 className="w-4 h-4 text-primary" />
-                      <span>Rename Page</span>
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        copyToClipboard(window.location.href);
-                        setActiveDropdown(false);
-                      }}
-                      className="flex items-center gap-3 text-sm py-3 px-4 hover:bg-secondary/10 rounded-xl transition-colors"
-                    >
-                      <FiCopy className="w-4 h-4 text-secondary" />
-                      <span>Copy Link</span>
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => {
-                        window.open(window.location.href, '_blank');
-                        setActiveDropdown(false);
-                      }}
-                      className="flex items-center gap-3 text-sm py-3 px-4 hover:bg-info/10 rounded-xl transition-colors"
-                    >
-                      <FiExternalLink className="w-4 h-4 text-info" />
-                      <span>Open in New Tab</span>
-                    </button>
-                  </li>
-                  <div className="divider my-2"></div>
-                  <li>
-                    <button
-                      onClick={() => {
-                        onDelete();
-                        setActiveDropdown(false);
-                      }}
-                      className="flex items-center gap-3 text-sm py-3 px-4 hover:bg-error/10 text-error rounded-xl transition-colors"
-                    >
-                      <FiTrash2 className="w-4 h-4" />
-                      <span>Delete Page</span>
-                    </button>
-                  </li>
-                </ul>
-              )}
             </div>
           </div>
         )}
@@ -196,22 +187,22 @@ const TopBar = ({ activePage, onSave, onDelete, onRename, lastSaved, isLoading }
       {/* Enhanced Share Modal */}
       {showShareModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-base-100 rounded-3xl shadow-2xl w-full max-w-lg border border-base-300/60 backdrop-blur-xl overflow-hidden">
+          <div className="bg-base-100 rounded-3xl shadow-2xl w-full max-w-2xl border border-base-300/60 backdrop-blur-xl overflow-hidden animate-in zoom-in-95 duration-300">
             {/* Modal Header */}
-            <div className="p-8 pb-6 bg-base-100 border-b border-base-300">
+            <div className="p-8 pb-6 bg-base-100 border-b border-base-300/60">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center">
-                    <FiShare2 className="w-6 h-6 text-primary" />
+                  <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/20">
+                    <FiGlobe className="w-7 h-7 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-base-content">Share Your Page</h3>
-                    <p className="text-sm text-base-content/60 mt-1">Make your ideas accessible to others</p>
+                    <h3 className="text-2xl font-bold text-base-content">Share "{activePage?.name}"</h3>
+                    <p className="text-sm text-base-content/70 mt-1">Create a public link to share your page with anyone</p>
                   </div>
                 </div>
                 <button
                   onClick={() => setShowShareModal(false)}
-                  className="btn btn-ghost btn-sm btn-circle hover:btn-error hover:scale-110 transition-all"
+                  className="btn btn-ghost btn-sm btn-circle hover:btn-error hover:scale-110 transition-all text-xl"
                 >
                   ×
                 </button>
@@ -219,112 +210,134 @@ const TopBar = ({ activePage, onSave, onDelete, onRename, lastSaved, isLoading }
             </div>
 
             {/* Enhanced Modal Content */}
-            <div className="p-8">
-              <div className="space-y-6">
-                <div className="space-y-3">
-                  <label className="flex items-center gap-2 text-base font-semibold text-base-content">
-                    <FiLink className="w-4 h-4 text-primary" />
-                    Shareable Link
+            <div className="p-8 space-y-8">
+              {/* Public Link Section */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center gap-3 text-lg font-semibold text-base-content">
+                    <FiLink className="w-5 h-5 text-primary" />
+                    Public Link
                   </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      className="input input-bordered w-full pr-16 text-sm bg-base-50 border-2 focus:border-primary rounded-xl"
-                      value={shareableLink}
-                      readOnly
-                      placeholder={isGeneratingLink ? "🔗 Generating secure link..." : "Your shareable link will appear here"}
-                    />
+                  <button
+                    onClick={regenerateLink}
+                    className="btn btn-ghost btn-sm gap-2 hover:btn-primary rounded-xl"
+                    disabled={isGeneratingLink}
+                    title="Generate new link"
+                  >
+                    <FiRefreshCw className={`w-4 h-4 ${isGeneratingLink ? 'animate-spin' : ''}`} />
+                    <span className="hidden sm:inline">New Link</span>
+                  </button>
+                </div>
+                
+                <div className="relative">
+                  <input
+                    type="text"
+                    className="input input-bordered w-full pr-20 text-sm bg-base-50 border-2 focus:border-primary rounded-xl h-12"
+                    value={shareableLink}
+                    readOnly
+                    placeholder={isGeneratingLink ? "🔗 Generating secure public link..." : "Your public link will appear here"}
+                  />
+                  <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-1">
                     <button
                       onClick={() => copyToClipboard(shareableLink)}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 btn btn-primary btn-sm btn-circle hover:scale-110 transition-all"
+                      className="btn btn-primary btn-sm btn-circle hover:scale-110 transition-all"
                       disabled={!shareableLink || isGeneratingLink}
                       title="Copy to clipboard"
                     >
                       <FiCopy className="w-4 h-4" />
                     </button>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-base-content/60">
-                    <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
-                    <span>Anyone with this link can view your page</span>
-                  </div>
-                </div>
-
-                <div className="bg-base-200 rounded-2xl p-6 border border-base-300">
-                  <h4 className="font-semibold text-base-content mb-4 flex items-center gap-2">
-                    <div className="w-2 h-2 bg-secondary rounded-full"></div>
-                    Quick Share Options
-                  </h4>
-                  <div className="grid grid-cols-1 gap-3">
                     <button
-                      onClick={() => {
-                        const text = `📝 Check out my note: "${activePage?.name}"\n\n${shareableLink}\n\nShared via ZettaNote ✨`;
-                        if (navigator.share) {
-                          navigator.share({ title: activePage?.name, text, url: shareableLink });
-                        } else {
-                          copyToClipboard(text);
-                        }
-                      }}
-                      className="btn btn-outline hover:btn-secondary gap-3 justify-start rounded-xl transition-all hover:scale-[1.02]"
-                      disabled={!shareableLink}
+                      onClick={() => window.open(shareableLink, '_blank')}
+                      className="btn btn-secondary btn-sm btn-circle hover:scale-110 transition-all"
+                      disabled={!shareableLink || isGeneratingLink}
+                      title="Open in new tab"
                     >
-                      <FiShare2 className="w-5 h-5" />
-                      <div className="text-left">
-                        <div className="font-medium">Share via System</div>
-                        <div className="text-xs opacity-70">Use your device's share menu</div>
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => {
-                        const subject = `📝 ZettaNote: ${activePage?.name}`;
-                        const body = `Hi there! 👋\n\nI'd like to share this note with you:\n\n"${activePage?.name}"\n\n${shareableLink}\n\nBest regards,\nShared via ZettaNote ✨`;
-                        window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
-                      }}
-                      className="btn btn-outline hover:btn-info gap-3 justify-start rounded-xl transition-all hover:scale-[1.02]"
-                      disabled={!shareableLink}
-                    >
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                      </svg>
-                      <div className="text-left">
-                        <div className="font-medium">Email Link</div>
-                        <div className="text-xs opacity-70">Open your email client</div>
-                      </div>
+                      <FiExternalLink className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
+                
+                {shareableLink && (
+                  <div className="flex items-center gap-2 text-sm text-success">
+                    <FiCheckCircle className="w-4 h-4" />
+                    <span>Public link is active and ready to share</span>
+                  </div>
+                )}
+              </div>
 
-                <div className="bg-primary/10 rounded-2xl p-4 border border-primary/20">
-                  <p className="text-sm text-base-content/80 text-center">
-                    🔐 <strong>Privacy Note:</strong> This link provides read-only access to your page
-                  </p>
+              {/* Share Settings */}
+              <div className="space-y-4">
+                <h4 className="text-lg font-semibold text-base-content flex items-center gap-3">
+                  <FiSettings className="w-5 h-5 text-secondary" />
+                  Sharing Options
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="form-control">
+                    <label className="label cursor-pointer justify-start gap-3">
+                      <input 
+                        type="checkbox" 
+                        className="checkbox checkbox-primary" 
+                        checked={shareSettings.isPublic}
+                        onChange={(e) => setShareSettings({...shareSettings, isPublic: e.target.checked})}
+                      />
+                      <div className="flex items-center gap-2">
+                        <FiGlobe className="w-4 h-4" />
+                        <span className="label-text font-medium">Public Access</span>
+                      </div>
+                    </label>
+                    <p className="text-xs text-base-content/60 ml-8">Anyone with the link can view</p>
+                  </div>
+                  
+                  <div className="form-control">
+                    <label className="label cursor-pointer justify-start gap-3">
+                      <input 
+                        type="checkbox" 
+                        className="checkbox checkbox-secondary" 
+                        checked={shareSettings.allowDownload}
+                        onChange={(e) => setShareSettings({...shareSettings, allowDownload: e.target.checked})}
+                      />
+                      <div className="flex items-center gap-2">
+                        <FiDownload className="w-4 h-4" />
+                        <span className="label-text font-medium">Allow Download</span>
+                      </div>
+                    </label>
+                    <p className="text-xs text-base-content/60 ml-8">Viewers can download as PDF/MD</p>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Enhanced Modal Footer */}
-            <div className="p-8 pt-0 flex justify-between items-center">
-              <div className="text-xs text-base-content/60">
-                Link expires: Never • Access: Read-only
+            <div className="p-8 pt-0 flex justify-between items-center border-t border-base-300/60">
+              <div className="text-sm text-base-content/60 flex items-center gap-2">
+                <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
+                <span>Public sharing is active</span>
               </div>
-              <button
-                onClick={() => setShowShareModal(false)}
-                className="btn btn-primary gap-2 rounded-xl shadow-lg shadow-primary/25 hover:scale-105 transition-all"
-              >
-                <span>All Set!</span>
-                <div className="w-2 h-2 bg-primary-content rounded-full animate-pulse"></div>
-              </button>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowShareModal(false)}
+                  className="btn btn-ghost rounded-xl"
+                >
+                  Close
+                </button>
+                <button
+                  onClick={() => {
+                    copyToClipboard(shareableLink);
+                    setShowShareModal(false);
+                  }}
+                  className="btn btn-primary gap-2 rounded-xl shadow-lg shadow-primary/25 hover:scale-105 transition-all"
+                  disabled={!shareableLink}
+                >
+                  <FiCopy className="w-4 h-4" />
+                  Copy & Close
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Click outside to close dropdown */}
-      {activeDropdown && (
-        <div 
-          className="fixed inset-0 z-40"
-          onClick={() => setActiveDropdown(false)}
-        />
-      )}
+
     </>
   );
 };

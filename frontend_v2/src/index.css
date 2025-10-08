@@ -2,6 +2,15 @@
 @plugin "daisyui";
 
 
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+
 [data-theme="light"] {
   color-scheme: light;
 

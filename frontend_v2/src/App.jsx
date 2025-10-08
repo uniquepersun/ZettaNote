@@ -8,20 +8,24 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import { Toaster } from 'react-hot-toast';
 import Dashboard from './pages/Dashboard';
+import PublicShare from './pages/PublicShare';
+import Documentation from './pages/Documentation';
 
 const App = () => {
   const location = useLocation();
   return (
     <div className="">
-      {location.pathname !== '/login' && location.pathname !== '/signup' && <Navbar />}
+      {location.pathname !== '/login' && location.pathname !== '/signup' && !location.pathname.startsWith('/public/') && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path='/dashboard' element={<Dashboard/>}/>
         <Route path='/dashboard/:pageId' element={<Dashboard/>}/>
+        <Route path='/public/:shareId' element={<PublicShare/>}/>
+        <Route path='/documentation' element={<Documentation/>}/>
       </Routes>
-      {location.pathname !== '/login' && location.pathname !== '/signup' && location.pathname!=='/dashboard' && <Footer />}
+      {location.pathname !== '/login' && location.pathname !== '/signup' && location.pathname !== '/dashboard' && !location.pathname.startsWith('/public/') && <Footer />}
       <Toaster
         position="top-right"
         toastOptions={{

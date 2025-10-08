@@ -99,7 +99,6 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
     const newContent = e.target.value;
     setEditorContent(newContent);
 
-    // Add to history for undo/redo (debounced)
     addToHistory(newContent);
 
     if (onContentChange) {
@@ -119,7 +118,6 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
     setEditorContent(newContent);
     addToHistory(newContent);
 
-    // Update cursor position
     setTimeout(() => {
       textarea.focus();
       textarea.setSelectionRange(start + moveCursor, start + moveCursor);
@@ -390,22 +388,17 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
   ];
 
   const renderMarkdown = (text) => {
-    // Enhanced markdown rendering for preview
     return (
       text
-        // Headers
         .replace(/^### (.*$)/gm, '<h3 class="text-xl font-bold mt-6 mb-3">$1</h3>')
         .replace(/^## (.*$)/gm, '<h2 class="text-2xl font-bold mt-8 mb-4">$1</h2>')
         .replace(/^# (.*$)/gm, '<h1 class="text-3xl font-bold mt-8 mb-6">$1</h1>')
 
-        // Text formatting
         .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-primary">$1</strong>')
         .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="italic">$1</em>')
         .replace(/~~(.*?)~~/g, '<del class="line-through opacity-75">$1</del>')
         .replace(/==(.*?)==/g, '<mark class="bg-yellow-200 px-1 rounded">$1</mark>')
         .replace(/<u>(.*?)<\/u>/g, '<u class="underline">$1</u>')
-
-        // Code
         .replace(
           /`([^`]+)`/g,
           '<code class="bg-base-200 text-primary px-2 py-1 rounded text-sm font-mono">$1</code>'
@@ -415,13 +408,10 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
           '<pre class="bg-base-200 p-4 rounded-lg overflow-auto my-4"><code class="text-sm font-mono">$2</code></pre>'
         )
 
-        // Blockquotes
         .replace(
           /^> (.*$)/gm,
           '<blockquote class="border-l-4 border-primary pl-4 italic my-4 text-base-content/80">$1</blockquote>'
         )
-
-        // Lists
         .replace(
           /^- \[x\] (.*$)/gm,
           '<li class="flex items-center gap-2 my-1"><input type="checkbox" checked disabled class="checkbox checkbox-primary checkbox-sm"> <span class="line-through opacity-75">$1</span></li>'
@@ -436,7 +426,6 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
         )
         .replace(/^\d+\. (.*$)/gm, '<li class="flex items-start gap-2 my-1 ml-4">$1</li>')
 
-        // Links and images
         .replace(
           /\[([^\]]+)\]\(([^\)]+)\)/g,
           '<a href="$2" target="_blank" class="text-primary hover:underline font-medium">$1</a>'
@@ -446,10 +435,8 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
           '<img src="$2" alt="$1" class="max-w-full h-auto rounded-lg shadow-md my-4">'
         )
 
-        // Horizontal rules
         .replace(/^---$/gm, '<hr class="border-base-300 my-8">')
 
-        // Math (basic support)
         .replace(
           /\$\$(.*?)\$\$/g,
           '<div class="bg-base-200 p-4 rounded-lg text-center font-mono my-4">$1</div>'
@@ -458,8 +445,6 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
           /\$([^$]+)\$/g,
           '<span class="bg-base-200 px-2 py-1 rounded font-mono text-sm">$1</span>'
         )
-
-        // Tables (basic)
         .replace(/\|(.+)\|/g, (match) => {
           const cells = match
             .slice(1, -1)
@@ -474,7 +459,6 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
           );
         })
 
-        // Line breaks
         .replace(/\n\n/g, '</p><p class="mb-4">')
         .replace(/\n/g, '<br>')
     );
@@ -509,18 +493,18 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
   return (
     <div className="flex-1 flex flex-col bg-base-100">
       {/* Enhanced Toolbar */}
-      <div className="border-b border-base-300/60 bg-base-100/80 backdrop-blur-xl sticky top-32 z-20 shadow-sm">
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-6">
+      <div className="border-b border-base-300/60 bg-base-100/80 backdrop-blur-xl sticky top-28 lg:top-32 z-20 shadow-sm">
+        <div className="p-2 lg:p-4">
+          <div className="flex items-center justify-between mb-2 lg:mb-4 gap-2">
             {/* Enhanced Toolbar Groups */}
-            <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-0.5 lg:gap-2 overflow-x-auto pb-1 lg:pb-0 scrollbar-hide">
               {toolbarGroups.map((group, groupIndex) => (
                 <div
                   key={group.name}
-                  className="flex items-center bg-base-200/50 rounded-xl p-1 border border-base-300/30"
+                  className="flex items-center bg-base-200/30 rounded-md lg:rounded-lg p-0.5 border border-base-300/20 flex-shrink-0"
                   title={group.name}
                 >
-                  {group.buttons.map((button, buttonIndex) => {
+                  {group.buttons.slice(0, window.innerWidth < 1024 && groupIndex > 2 ? 1 : window.innerWidth < 768 && groupIndex > 1 ? 2 : group.buttons.length).map((button, buttonIndex) => {
                     const Icon = button.icon;
                     const colorClass = `hover:btn-${group.color}`;
 
@@ -529,13 +513,13 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
                         key={buttonIndex}
                         onClick={button.onClick}
                         disabled={button.disabled}
-                        className={`btn btn-ghost btn-sm btn-square ${colorClass} hover:scale-105 transition-all duration-200 relative group ${
+                        className={`btn btn-ghost btn-xs lg:btn-sm btn-square ${colorClass} hover:scale-105 transition-all duration-200 relative group min-h-0 h-7 lg:h-8 w-7 lg:w-8 ${
                           button.disabled ? 'opacity-40 cursor-not-allowed' : ''
                         }`}
                         title={button.title}
                       >
                         <Icon
-                          className={`w-4 h-4 ${
+                          className={`w-2.5 h-2.5 lg:w-3.5 lg:h-3.5 ${
                             button.variant === 'h2'
                               ? 'scale-90'
                               : button.variant === 'h3'
@@ -558,28 +542,28 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
             </div>
 
             {/* Enhanced Preview Toggle */}
-            <div className="flex items-center bg-base-200/50 rounded-xl p-1 border border-base-300/30">
+            <div className="flex items-center gap-5 bg-base-200/30 rounded-md lg:rounded-lg p-0.5 border border-base-300/20 flex-shrink-0">
               <button
                 onClick={() => setIsPreview(false)}
-                className={`btn btn-sm gap-2 transition-all duration-300 ${
+                className={`btn btn-xs lg:btn-sm gap-1 transition-all duration-300 min-h-0 h-7 lg:h-8 ${
                   !isPreview
-                    ? 'btn-primary shadow-lg shadow-primary/25'
+                    ? 'btn-primary shadow-md shadow-primary/20'
                     : 'btn-ghost hover:btn-primary/20'
                 }`}
               >
-                <FiEdit className="w-4 h-4" />
-                <span className="hidden sm:inline">Edit</span>
+                <FiEdit className="w-2.5 h-2.5 lg:w-3.5 lg:h-3.5" />
+                <span className="hidden md:inline text-xs lg:text-sm">Edit</span>
               </button>
               <button
                 onClick={() => setIsPreview(true)}
-                className={`btn btn-sm gap-2 transition-all duration-300 ${
+                className={`btn btn-xs lg:btn-sm gap-1 transition-all duration-300 min-h-0 h-7 lg:h-8 ${
                   isPreview
-                    ? 'btn-primary shadow-lg shadow-primary/25'
+                    ? 'btn-primary shadow-md shadow-primary/20'
                     : 'btn-ghost hover:btn-primary/20'
                 }`}
               >
-                <FiEye className="w-4 h-4" />
-                <span className="hidden sm:inline">Preview</span>
+                <FiEye className="w-2.5 h-2.5 lg:w-3.5 lg:h-3.5" />
+                <span className="hidden md:inline text-xs lg:text-sm">Preview</span>
               </button>
             </div>
           </div>
@@ -608,7 +592,7 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
       </div>
 
       {/* Enhanced Editor/Preview Area */}
-      <div className="flex-1 p-8">
+      <div className="flex-1 p-2 lg:p-6">
         <div className="max-w-5xl mx-auto">
           {isPreview ? (
             <div className="relative">
@@ -627,7 +611,7 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
               {/* Enhanced Preview Content */}
               <div className="bg-base-100 rounded-2xl border border-base-300 shadow-lg overflow-hidden">
                 <div
-                  className="max-w-none p-8 lg:p-12 min-h-[32rem] leading-relaxed"
+                  className="max-w-none p-4 lg:p-8 xl:p-12 min-h-[24rem] lg:min-h-[32rem] leading-relaxed text-sm lg:text-base"
                   dangerouslySetInnerHTML={{
                     __html: `<p class="mb-4">${renderMarkdown(editorContent)}</p>`,
                   }}
@@ -652,15 +636,16 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
               </div>
 
               {/* Enhanced Editor */}
-              <div className="bg-base-100 rounded-2xl border border-base-300 shadow-lg overflow-hidden relative">
+              <div className="bg-base-100 rounded-2xl border border-base-300 shadow-lg overflow-hidden relative flex">
                 {/* Line Numbers */}
-                <div className="absolute left-0 top-0 w-16 h-full bg-base-200/30 border-r border-base-300/50 flex flex-col py-8 text-xs text-base-content/40 font-mono">
+                <div className="hidden lg:flex flex-col w-16 bg-base-200/30 border-r border-base-300/50 py-4 text-xs text-base-content/40 font-mono flex-shrink-0">
                   {Array.from(
                     { length: Math.max(20, editorContent.split('\n').length) },
                     (_, i) => (
                       <div
                         key={i + 1}
-                        className="px-2 leading-relaxed h-6 flex items-center justify-end"
+                        className="px-2 h-6 flex items-center justify-end"
+                        style={{ lineHeight: '1.6' }}
                       >
                         {i + 1}
                       </div>
@@ -688,7 +673,7 @@ Start writing here... You can use Markdown for rich formatting:
 
 Press Ctrl+B for bold, Ctrl+I for italic, Ctrl+Z for undo!
 Happy writing! 🚀"
-                  className="w-full h-[32rem] pl-20 pr-8 py-8 bg-transparent border-none resize-none focus:outline-none text-base leading-relaxed placeholder:text-base-content/40 placeholder:leading-relaxed"
+                  className="flex-1 h-[24rem] lg:h-[32rem] px-4 lg:px-6 py-4 lg:py-6 bg-transparent border-none resize-none focus:outline-none text-sm lg:text-base leading-relaxed placeholder:text-base-content/40 placeholder:leading-relaxed"
                   style={{
                     fontFamily:
                       'ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace',

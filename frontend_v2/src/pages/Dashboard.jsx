@@ -12,6 +12,7 @@ const Dashboard = () => {
   const [pageContent, setPageContent] = useState('');
   const [lastSaved, setLastSaved] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   
   useEffect(() => {
@@ -110,12 +111,28 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-base-100 via-base-100 to-base-200/20 pt-16">
+    <div className="flex min-h-screen bg-gradient-to-br from-base-100 via-base-100 to-base-200/20 pt-16 relative">
+      {/* Mobile Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Enhanced Sidebar */}
-      <Sidebar onPageSelect={setActivePage} selectedPageId={activePage?.id} />
+      <Sidebar 
+        onPageSelect={(page) => {
+          setActivePage(page);
+          setIsSidebarOpen(false); // Close sidebar on mobile when page is selected
+        }} 
+        selectedPageId={activePage?.id}
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
       
       {/* Main Content Area */}
-      <div className="flex-1 ml-72 flex flex-col">
+      <div className="flex-1 lg:ml-72 flex flex-col">
         {/* Enhanced Top Bar */}
         <TopBar 
           activePage={activePage}
@@ -124,6 +141,8 @@ const Dashboard = () => {
           onRename={handleRenamePage}
           lastSaved={lastSaved}
           isLoading={isLoading}
+          onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+          isSidebarOpen={isSidebarOpen}
         />
         
         {/* Enhanced Note Editor */}

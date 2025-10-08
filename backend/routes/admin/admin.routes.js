@@ -28,44 +28,54 @@ const router = express.Router();
 // Apply security middleware to all admin routes
 router.use(securityHeaders);
 router.use(logSuspiciousActivity);
+router.use(adminApiLimiter); // Moved here so it's applied globally (fix)
 
 // Public admin routes (no authentication required)
 router.post('/login', adminLoginLimiter, async (req, res) => {
   try {
-    const { resStatus, resMessage } = await adminLogin(req);
+    const result = await adminLogin(req);
+    const resStatus = result?.resStatus || 500;
+    const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
     res.status(resStatus).json(resMessage);
   } catch (err) {
     console.log('Admin Login Error: ', err);
-    res.status(500).json({ success: false, message: 'Internal Server error.' });
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 });
 
-router.post('/change-first-password', adminApiLimiter, async (req, res) => {
+router.post('/change-first-password', async (req, res) => {
   try {
-    const { resStatus, resMessage } = await changeFirstPassword(req);
+    const result = await changeFirstPassword(req);
+    const resStatus = result?.resStatus || 500;
+    const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
     res.status(resStatus).json(resMessage);
   } catch (err) {
     console.log('Change First Password Error: ', err);
-    res.status(500).json({ success: false, message: 'Internal Server error.' });
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 });
 
 // Protected admin routes (authentication required)
-router.use(adminApiLimiter); // Apply rate limiting to all protected routes
 
 router.post('/logout', requireAdminAuth, async (req, res) => {
   try {
-    const { resStatus, resMessage } = await adminLogout(req);
+    const result = await adminLogout(req);
+    const resStatus = result?.resStatus || 500;
+    const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
     res.status(resStatus).json(resMessage);
   } catch (err) {
     console.log('Admin Logout Error: ', err);
-    res.status(500).json({ success: false, message: 'Internal Server error.' });
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 });
 
 // Get current admin info
 router.get('/me', requireAdminAuth, async (req, res) => {
   try {
+    if (!req.admin) {
+      return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+
     res.status(200).json({
       success: true,
       admin: {
@@ -80,7 +90,7 @@ router.get('/me', requireAdminAuth, async (req, res) => {
     });
   } catch (err) {
     console.log('Get Admin Info Error: ', err);
-    res.status(500).json({ success: false, message: 'Internal Server error.' });
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 });
 
@@ -93,12 +103,14 @@ router.post(
   async (req, res) => {
     try {
       // Add the creating admin's ID to the request
-      req.body.createdBy = req.admin._id;
-      const { resStatus, resMessage } = await createAdmin(req);
+      req.body.createdBy = req.admin?._id;
+      const result = await createAdmin(req);
+      const resStatus = result?.resStatus || 500;
+      const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
       res.status(resStatus).json(resMessage);
     } catch (err) {
       console.log('Create Admin Error: ', err);
-      res.status(500).json({ success: false, message: 'Internal Server error.' });
+      return res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
   }
 );
@@ -110,11 +122,13 @@ router.get(
   requirePermission('read_analytics'),
   async (req, res) => {
     try {
-      const { resStatus, resMessage } = await getTotalUsers(req);
+      const result = await getTotalUsers(req);
+      const resStatus = result?.resStatus || 500;
+      const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
       res.status(resStatus).json(resMessage);
     } catch (err) {
       console.log('Get Total Users Error: ', err);
-      res.status(500).json({ success: false, message: 'Internal Server error.' });
+      return res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
   }
 );
@@ -125,11 +139,13 @@ router.get(
   requirePermission('read_analytics'),
   async (req, res) => {
     try {
-      const { resStatus, resMessage } = await getAnalytics(req);
+      const result = await getAnalytics(req);
+      const resStatus = result?.resStatus || 500;
+      const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
       res.status(resStatus).json(resMessage);
     } catch (err) {
       console.log('Get Analytics Error: ', err);
-      res.status(500).json({ success: false, message: 'Internal Server error.' });
+      return res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
   }
 );
@@ -137,11 +153,13 @@ router.get(
 // User management routes
 router.get('/users', requireAdminAuth, requirePermission('read_users'), async (req, res) => {
   try {
-    const { resStatus, resMessage } = await getAllUsers(req);
+    const result = await getAllUsers(req);
+    const resStatus = result?.resStatus || 500;
+    const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
     res.status(resStatus).json(resMessage);
   } catch (err) {
     console.log('Get All Users Error: ', err);
-    res.status(500).json({ success: false, message: 'Internal Server error.' });
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 });
 
@@ -151,11 +169,13 @@ router.post(
   requirePermission('ban_users'),
   async (req, res) => {
     try {
-      const { resStatus, resMessage } = await banUser(req);
+      const result = await banUser(req);
+      const resStatus = result?.resStatus || 500;
+      const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
       res.status(resStatus).json(resMessage);
     } catch (err) {
       console.log('Ban User Error: ', err);
-      res.status(500).json({ success: false, message: 'Internal Server error.' });
+      return res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
   }
 );
@@ -166,11 +186,13 @@ router.post(
   requirePermission('ban_users'),
   async (req, res) => {
     try {
-      const { resStatus, resMessage } = await unbanUser(req);
+      const result = await unbanUser(req);
+      const resStatus = result?.resStatus || 500;
+      const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
       res.status(resStatus).json(resMessage);
     } catch (err) {
       console.log('Unban User Error: ', err);
-      res.status(500).json({ success: false, message: 'Internal Server error.' });
+      return res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
   }
 );
@@ -178,31 +200,37 @@ router.post(
 // Admin management routes (Super Admin only)
 router.get('/admins', requireAdminAuth, requireSuperAdmin, async (req, res) => {
   try {
-    const { resStatus, resMessage } = await getAllAdmins(req);
+    const result = await getAllAdmins(req);
+    const resStatus = result?.resStatus || 500;
+    const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
     res.status(resStatus).json(resMessage);
   } catch (err) {
     console.log('Get All Admins Error: ', err);
-    res.status(500).json({ success: false, message: 'Internal Server error.' });
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 });
 
 router.put('/admins/:adminId', requireAdminAuth, requireSuperAdmin, async (req, res) => {
   try {
-    const { resStatus, resMessage } = await updateAdmin(req);
+    const result = await updateAdmin(req);
+    const resStatus = result?.resStatus || 500;
+    const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
     res.status(resStatus).json(resMessage);
   } catch (err) {
     console.log('Update Admin Error: ', err);
-    res.status(500).json({ success: false, message: 'Internal Server error.' });
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 });
 
 router.delete('/admins/:adminId', requireAdminAuth, requireSuperAdmin, async (req, res) => {
   try {
-    const { resStatus, resMessage } = await deleteAdmin(req);
+    const result = await deleteAdmin(req);
+    const resStatus = result?.resStatus || 500;
+    const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
     res.status(resStatus).json(resMessage);
   } catch (err) {
     console.log('Delete Admin Error: ', err);
-    res.status(500).json({ success: false, message: 'Internal Server error.' });
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 });
 

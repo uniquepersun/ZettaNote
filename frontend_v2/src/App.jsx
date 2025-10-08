@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import { Toaster } from 'react-hot-toast';
+import Dashboard from './pages/Dashboard';
 
 const App = () => {
   const location = useLocation();
@@ -17,8 +18,10 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path='/dashboard' element={<Dashboard/>}/>
+        <Route path='/dashboard/:pageId' element={<Dashboard/>}/>
       </Routes>
-      {location.pathname !== '/login' && location.pathname !== '/signup' && <Footer />}
+      {location.pathname !== '/login' && location.pathname !== '/signup' && location.pathname!=='/dashboard' && <Footer />}
       <Toaster
         position="top-right"
         toastOptions={{

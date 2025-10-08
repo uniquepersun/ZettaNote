@@ -1,0 +1,652 @@
+import { v4 as uuidv4 } from 'uuid';
+import Page from '../models/Page.model.js';
+import User from '../models/User.model.js';
+import { verifyToken } from '../utils/token.utils.js';
+import { validate } from '../utils/validator.utils.js';
+import { STATUS_CODES } from '../constants/statusCodes.js';
+import { MESSAGES } from '../constants/messages.js';
+import { z } from 'zod';
+
+/**
+ * Helper function to get page name and ID
+ */
+const getPageNameAndId = async (pageId) => {
+  const page = await Page.findById(pageId);
+  if (!page) {
+    return null;
+  }
+  return {
+    name: page.pageName,
+    id: page._id,
+  };
+};
+
+/**
+ * Create Page Controller
+ * Creates a new page for the user
+ */
+export const createPage = async (req) => {
+  try {
+    const token = req.cookies?.token;
+    if (!token) {
+      return {
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { message: MESSAGES.AUTH.UNAUTHORIZED },
+      };
+    }
+
+    // Validate input
+    const createPageSchema = z.object({
+      pageName: z.string().min(1, 'Page name is required'),
+    });
+    const parseResult = createPageSchema.safeParse(req.body);
+    if (!parseResult.success) {
+      return {
+        resStatus: STATUS_CODES.BAD_REQUEST,
+        resMessage: { message: parseResult.error.errors.map((e) => e.message).join(', ') },
+      };
+    }
+    const { pageName } = parseResult.data;
+
+    // Verify user
+    const user = await verifyToken(token);
+    if (!user) {
+      return {
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { message: MESSAGES.AUTH.INVALID_TOKEN },
+      };
+    }
+
+    // Create new page
+    const newPage = new Page({
+      pageName,
+      pageData: '',
+      owner: user._id,
+    });
+    await newPage.save();
+
+    // Add page to user's pages
+    user.pages.push(newPage._id);
+    await user.save();
+
+    return {
+      resStatus: STATUS_CODES.CREATED,
+      resMessage: {
+        message: MESSAGES.PAGE.CREATED,
+        Page: newPage,
+      },
+    };
+  } catch (err) {
+    console.error('Create page error:', err);
+    return {
+      resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
+      resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
+    };
+  }
+};
+
+/**
+ * Get Single Page Controller
+ * Returns page details if user has access
+ */
+export const getPage = async (req) => {
+  try {
+    const token = req.cookies?.token;
+    if (!token) {
+      return {
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { message: MESSAGES.AUTH.UNAUTHORIZED },
+      };
+    }
+
+    // Validate input
+    const getPageSchema = z.object({
+      pageId: z.string().min(1, 'Page ID is required'),
+    });
+    const parseResult = getPageSchema.safeParse(req.body);
+    if (!parseResult.success) {
+      return {
+        resStatus: STATUS_CODES.BAD_REQUEST,
+        resMessage: { message: parseResult.error.errors.map((e) => e.message).join(', ') },
+      };
+    }
+    const { pageId } = parseResult.data;
+
+    // Verify user
+    const user = await verifyToken(token);
+    if (!user) {
+      return {
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { message: MESSAGES.AUTH.INVALID_TOKEN },
+      };
+    }
+
+    // Find page
+    const page = await Page.findById(pageId);
+    if (!page) {
+      return {
+        resStatus: STATUS_CODES.NOT_FOUND,
+        resMessage: { Error: MESSAGES.PAGE.NOT_FOUND },
+      };
+    }
+
+    // Check permissions
+    const isOwner = page.owner.equals(user._id);
+    const isShared = page.sharedTo.some((id) => id.equals(user._id));
+
+    if (!isOwner && !isShared) {
+      return {
+        resStatus: STATUS_CODES.FORBIDDEN,
+        resMessage: { Error: MESSAGES.PAGE.ACCESS_DENIED },
+      };
+    }
+
+    return {
+      resStatus: STATUS_CODES.OK,
+      resMessage: { Page: page },
+    };
+  } catch (err) {
+    console.error('Get page error:', err);
+    return {
+      resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
+      resMessage: { Error: MESSAGES.GENERAL.SERVER_ERROR },
+    };
+  }
+};
+
+/**
+ * Get All Pages Controller
+ * Returns list of owned and shared pages
+ */
+export const getPages = async (req) => {
+  try {
+    const token = req.cookies?.token;
+    if (!token) {
+      return {
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { message: MESSAGES.AUTH.UNAUTHORIZED },
+      };
+    }
+
+    // Verify user
+    const user = await verifyToken(token);
+    if (!user) {
+      return {
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { message: MESSAGES.AUTH.INVALID_TOKEN },
+      };
+    }
+
+    // Get owned pages
+    const ownedPages = [];
+    for (const id of user.pages) {
+      const page = await getPageNameAndId(id);
+      if (page !== null) {
+        ownedPages.push(page);
+      }
+    }
+
+    // Get shared pages
+    const sharedPages = [];
+    for (const id of user.sharedPages) {
+      const page = await getPageNameAndId(id);
+      if (page !== null) {
+        sharedPages.push(page);
+      }
+    }
+
+    return {
+      resStatus: STATUS_CODES.OK,
+      resMessage: {
+        OwnedPages: ownedPages,
+        SharedPages: sharedPages,
+      },
+    };
+  } catch (err) {
+    console.error('Get pages error:', err);
+    return {
+      resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
+      resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
+    };
+  }
+};
+
+/**
+ * Save Page Controller
+ * Updates page content
+ */
+export const savePage = async (req) => {
+  try {
+    const token = req.cookies?.token;
+    if (!token) {
+      return {
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { message: MESSAGES.AUTH.UNAUTHORIZED },
+      };
+    }
+
+    // Validate input
+    const savePageSchema = z.object({
+      pageId: z.string().min(1, 'Page ID is required'),
+      newPageData: z.string().min(0, 'Page data is required'),
+    });
+    const parseResult = savePageSchema.safeParse(req.body);
+    if (!parseResult.success) {
+      return {
+        resStatus: STATUS_CODES.BAD_REQUEST,
+        resMessage: { message: parseResult.error.errors.map((e) => e.message).join(', ') },
+      };
+    }
+    const { pageId, newPageData } = parseResult.data;
+
+    // Verify user
+    const user = await verifyToken(token);
+    if (!user) {
+      return {
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { message: MESSAGES.AUTH.INVALID_TOKEN },
+      };
+    }
+
+    // Find page
+    const page = await Page.findById(pageId);
+    if (!page) {
+      return {
+        resStatus: STATUS_CODES.NOT_FOUND,
+        resMessage: { message: MESSAGES.PAGE.NOT_FOUND },
+      };
+    }
+
+    // Check if user is owner
+    if (!page.owner.equals(user._id)) {
+      return {
+        resStatus: STATUS_CODES.FORBIDDEN,
+        resMessage: { message: MESSAGES.PAGE.ACCESS_DENIED },
+      };
+    }
+
+    // Update page
+    page.pageData = newPageData;
+    await page.save();
+
+    return {
+      resStatus: STATUS_CODES.OK,
+      resMessage: {
+        message: MESSAGES.PAGE.UPDATED,
+        'Updated Page': page,
+      },
+    };
+  } catch (err) {
+    console.error('Save page error:', err);
+    return {
+      resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
+      resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
+    };
+  }
+};
+
+/**
+ * Rename Page Controller
+ * Updates page name
+ */
+export const renamePage = async (req) => {
+  try {
+    const token = req.cookies?.token;
+    if (!token) {
+      return {
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { message: MESSAGES.AUTH.UNAUTHORIZED },
+      };
+    }
+
+    // Validate input
+    const renamePageSchema = z.object({
+      pageId: z.string().min(1, 'Page ID is required'),
+      newPageName: z.string().min(1, 'New page name is required'),
+    });
+    const parseResult = renamePageSchema.safeParse(req.body);
+    if (!parseResult.success) {
+      return {
+        resStatus: STATUS_CODES.BAD_REQUEST,
+        resMessage: { message: parseResult.error.errors.map((e) => e.message).join(', ') },
+      };
+    }
+    const { pageId, newPageName } = parseResult.data;
+
+    // Verify user
+    const user = await verifyToken(token);
+    if (!user) {
+      return {
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { message: MESSAGES.AUTH.INVALID_TOKEN },
+      };
+    }
+
+    // Find page
+    const page = await Page.findById(pageId);
+    if (!page) {
+      return {
+        resStatus: STATUS_CODES.NOT_FOUND,
+        resMessage: { message: MESSAGES.PAGE.NOT_FOUND },
+      };
+    }
+
+    // Check if user is owner
+    if (!page.owner.equals(user._id)) {
+      return {
+        resStatus: STATUS_CODES.FORBIDDEN,
+        resMessage: { message: MESSAGES.PAGE.ACCESS_DENIED },
+      };
+    }
+
+    // Update page name
+    page.pageName = newPageName;
+    await page.save();
+
+    return {
+      resStatus: STATUS_CODES.OK,
+      resMessage: {
+        message: MESSAGES.PAGE.RENAMED,
+        'Updated Page': page,
+      },
+    };
+  } catch (err) {
+    console.error('Rename page error:', err);
+    return {
+      resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
+      resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
+    };
+  }
+};
+
+/**
+ * Delete Page Controller
+ * Deletes a page
+ */
+export const deletePage = async (req) => {
+  try {
+    const token = req.cookies?.token;
+    if (!token) {
+      return {
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { message: MESSAGES.AUTH.UNAUTHORIZED },
+      };
+    }
+
+    // Validate input
+    const deletePageSchema = z.object({
+      pageId: z.string().min(1, 'Page ID is required'),
+    });
+    const parseResult = deletePageSchema.safeParse(req.body);
+    if (!parseResult.success) {
+      return {
+        resStatus: STATUS_CODES.BAD_REQUEST,
+        resMessage: { message: parseResult.error.errors.map((e) => e.message).join(', ') },
+      };
+    }
+    const { pageId } = parseResult.data;
+
+    // Verify user
+    const user = await verifyToken(token);
+    if (!user) {
+      return {
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { message: MESSAGES.AUTH.INVALID_TOKEN },
+      };
+    }
+
+    // Find page
+    const page = await Page.findById(pageId);
+    if (!page) {
+      return {
+        resStatus: STATUS_CODES.NOT_FOUND,
+        resMessage: { message: MESSAGES.PAGE.NOT_FOUND },
+      };
+    }
+
+    // Check if user is owner
+    if (!page.owner.equals(user._id)) {
+      return {
+        resStatus: STATUS_CODES.FORBIDDEN,
+        resMessage: { message: MESSAGES.PAGE.ACCESS_DENIED },
+      };
+    }
+
+    // Delete page
+    const pageDeleted = await Page.findByIdAndDelete(pageId);
+    if (!pageDeleted) {
+      return {
+        resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
+        resMessage: { message: 'Failed to delete page' },
+      };
+    }
+
+    // Remove from user's pages
+    user.pages.pull(page._id);
+    await user.save();
+
+    return {
+      resStatus: STATUS_CODES.OK,
+      resMessage: { message: MESSAGES.PAGE.DELETED },
+    };
+  } catch (err) {
+    console.error('Delete page error:', err);
+    return {
+      resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
+      resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
+    };
+  }
+};
+
+/**
+ * Share Page Controller
+ * Shares page with another user
+ */
+export const sharePage = async (req) => {
+  try {
+    const token = req.cookies?.token;
+    if (!token) {
+      return {
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { message: MESSAGES.AUTH.UNAUTHORIZED },
+      };
+    }
+
+    // Validate input
+    const sharePageSchema = z.object({
+      pageId: z.string().min(1, 'Page ID is required'),
+      userEmail: z.string().email('Invalid email address'),
+      giveWritePermission: z.boolean().optional(),
+    });
+    const parseResult = sharePageSchema.safeParse(req.body);
+    if (!parseResult.success) {
+      return {
+        resStatus: STATUS_CODES.BAD_REQUEST,
+        resMessage: { message: parseResult.error.errors.map((e) => e.message).join(', ') },
+      };
+    }
+    const { pageId, userEmail, giveWritePermission } = parseResult.data;
+
+    // Verify user
+    const user = await verifyToken(token);
+    if (!user) {
+      return {
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { Error: MESSAGES.AUTH.INVALID_TOKEN },
+      };
+    }
+
+    // Find page
+    const page = await Page.findById(pageId);
+    if (!page) {
+      return {
+        resStatus: STATUS_CODES.NOT_FOUND,
+        resMessage: { Error: MESSAGES.PAGE.NOT_FOUND },
+      };
+    }
+
+    // Check if user owns the page
+    if (!page.owner.equals(user._id)) {
+      return {
+        resStatus: STATUS_CODES.FORBIDDEN,
+        resMessage: { message: MESSAGES.PAGE.ACCESS_DENIED },
+      };
+    }
+
+    // Find user to share with
+    const sharedUser = await User.findOne({ email: userEmail });
+    if (!sharedUser) {
+      return {
+        resStatus: STATUS_CODES.NOT_FOUND,
+        resMessage: { message: 'User does not exist' },
+      };
+    }
+
+    // Check if already shared
+    const pageAlreadyShared = page.sharedTo.some((id) => id.equals(sharedUser._id));
+    if (pageAlreadyShared) {
+      return {
+        resStatus: STATUS_CODES.BAD_REQUEST,
+        resMessage: { message: 'Page already shared with this user' },
+      };
+    }
+
+    // Share page
+    page.sharedTo.push(sharedUser._id);
+    if (giveWritePermission) {
+      page.usersWithWritePermission.push(sharedUser._id);
+    }
+    await page.save();
+
+    // Add to shared user's pages
+    sharedUser.sharedPages.push(page._id);
+    await sharedUser.save();
+
+    return {
+      resStatus: STATUS_CODES.OK,
+      resMessage: { message: MESSAGES.PAGE.SHARED },
+    };
+  } catch (err) {
+    console.error('Share page error:', err);
+    return {
+      resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
+      resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
+    };
+  }
+};
+
+/**
+ * Public Share Controller
+ * Generates public share link for page
+ */
+export const publicShare = async (req) => {
+  try {
+    const token = req.cookies?.token;
+    if (!token) {
+      return {
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { message: MESSAGES.AUTH.UNAUTHORIZED },
+      };
+    }
+
+    // Verify user
+    const user = await verifyToken(token);
+    if (!user) {
+      return {
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { message: MESSAGES.AUTH.INVALID_TOKEN },
+      };
+    }
+
+    const { pageId } = req.body;
+    const page = await Page.findById(pageId);
+
+    if (!page) {
+      return {
+        resStatus: STATUS_CODES.NOT_FOUND,
+        resMessage: { Error: MESSAGES.PAGE.NOT_FOUND },
+      };
+    }
+
+    // Check if user owns the page
+    if (!page.owner.equals(user._id)) {
+      return {
+        resStatus: STATUS_CODES.FORBIDDEN,
+        resMessage: { Error: 'Not authorized to share this page' },
+      };
+    }
+
+    // Check if already has public share ID
+    if (page.publicShareId) {
+      return {
+        resStatus: STATUS_CODES.OK,
+        resMessage: {
+          message: 'Already shared publicly',
+          publicShareId: page.publicShareId,
+        },
+      };
+    }
+
+    // Generate and save public share ID
+    const uniqueShareId = uuidv4();
+    page.publicShareId = uniqueShareId;
+    await page.save();
+
+    return {
+      resStatus: STATUS_CODES.OK,
+      resMessage: {
+        message: 'Successfully shared publicly',
+        publicShareId: page.publicShareId,
+      },
+    };
+  } catch (err) {
+    console.error('Public share error:', err);
+    return {
+      resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
+      resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
+    };
+  }
+};
+
+/**
+ * Get Public Share Controller
+ * Returns publicly shared page content
+ */
+export const getPublicShare = async (shareId) => {
+  try {
+    const page = await Page.findOne({ publicShareId: shareId });
+
+    if (!page) {
+      return {
+        resStatus: STATUS_CODES.NOT_FOUND,
+        resMessage: { Error: MESSAGES.PAGE.NOT_FOUND },
+      };
+    }
+
+    return {
+      resStatus: STATUS_CODES.OK,
+      resMessage: {
+        title: page.pageName,
+        content: page.pageData,
+      },
+    };
+  } catch (err) {
+    console.error('Get public share error:', err);
+    return {
+      resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
+      resMessage: { Error: MESSAGES.GENERAL.SERVER_ERROR },
+    };
+  }
+};
+
+export default {
+  createPage,
+  getPage,
+  getPages,
+  savePage,
+  renamePage,
+  deletePage,
+  sharePage,
+  publicShare,
+  getPublicShare,
+};

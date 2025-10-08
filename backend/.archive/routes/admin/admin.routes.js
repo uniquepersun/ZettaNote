@@ -35,7 +35,10 @@ router.post('/login', adminLoginLimiter, async (req, res) => {
   try {
     const result = await adminLogin(req);
     const resStatus = result?.resStatus || 500;
-    const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
+    const resMessage = result?.resMessage || {
+      success: false,
+      message: 'Unexpected response format',
+    };
     res.status(resStatus).json(resMessage);
   } catch (err) {
     console.log('Admin Login Error: ', err);
@@ -47,7 +50,10 @@ router.post('/change-first-password', async (req, res) => {
   try {
     const result = await changeFirstPassword(req);
     const resStatus = result?.resStatus || 500;
-    const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
+    const resMessage = result?.resMessage || {
+      success: false,
+      message: 'Unexpected response format',
+    };
     res.status(resStatus).json(resMessage);
   } catch (err) {
     console.log('Change First Password Error: ', err);
@@ -61,7 +67,10 @@ router.post('/logout', requireAdminAuth, async (req, res) => {
   try {
     const result = await adminLogout(req);
     const resStatus = result?.resStatus || 500;
-    const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
+    const resMessage = result?.resMessage || {
+      success: false,
+      message: 'Unexpected response format',
+    };
     res.status(resStatus).json(resMessage);
   } catch (err) {
     console.log('Admin Logout Error: ', err);
@@ -106,7 +115,10 @@ router.post(
       req.body.createdBy = req.admin?._id;
       const result = await createAdmin(req);
       const resStatus = result?.resStatus || 500;
-      const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
+      const resMessage = result?.resMessage || {
+        success: false,
+        message: 'Unexpected response format',
+      };
       res.status(resStatus).json(resMessage);
     } catch (err) {
       console.log('Create Admin Error: ', err);
@@ -124,7 +136,10 @@ router.get(
     try {
       const result = await getTotalUsers(req);
       const resStatus = result?.resStatus || 500;
-      const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
+      const resMessage = result?.resMessage || {
+        success: false,
+        message: 'Unexpected response format',
+      };
       res.status(resStatus).json(resMessage);
     } catch (err) {
       console.log('Get Total Users Error: ', err);
@@ -141,7 +156,10 @@ router.get(
     try {
       const result = await getAnalytics(req);
       const resStatus = result?.resStatus || 500;
-      const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
+      const resMessage = result?.resMessage || {
+        success: false,
+        message: 'Unexpected response format',
+      };
       res.status(resStatus).json(resMessage);
     } catch (err) {
       console.log('Get Analytics Error: ', err);
@@ -155,7 +173,10 @@ router.get('/users', requireAdminAuth, requirePermission('read_users'), async (r
   try {
     const result = await getAllUsers(req);
     const resStatus = result?.resStatus || 500;
-    const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
+    const resMessage = result?.resMessage || {
+      success: false,
+      message: 'Unexpected response format',
+    };
     res.status(resStatus).json(resMessage);
   } catch (err) {
     console.log('Get All Users Error: ', err);
@@ -171,7 +192,10 @@ router.post(
     try {
       const result = await banUser(req);
       const resStatus = result?.resStatus || 500;
-      const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
+      const resMessage = result?.resMessage || {
+        success: false,
+        message: 'Unexpected response format',
+      };
       res.status(resStatus).json(resMessage);
     } catch (err) {
       console.log('Ban User Error: ', err);
@@ -188,7 +212,10 @@ router.post(
     try {
       const result = await unbanUser(req);
       const resStatus = result?.resStatus || 500;
-      const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
+      const resMessage = result?.resMessage || {
+        success: false,
+        message: 'Unexpected response format',
+      };
       res.status(resStatus).json(resMessage);
     } catch (err) {
       console.log('Unban User Error: ', err);
@@ -202,7 +229,10 @@ router.get('/admins', requireAdminAuth, requireSuperAdmin, async (req, res) => {
   try {
     const result = await getAllAdmins(req);
     const resStatus = result?.resStatus || 500;
-    const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
+    const resMessage = result?.resMessage || {
+      success: false,
+      message: 'Unexpected response format',
+    };
     res.status(resStatus).json(resMessage);
   } catch (err) {
     console.log('Get All Admins Error: ', err);
@@ -214,7 +244,10 @@ router.put('/admins/:adminId', requireAdminAuth, requireSuperAdmin, async (req, 
   try {
     const result = await updateAdmin(req);
     const resStatus = result?.resStatus || 500;
-    const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
+    const resMessage = result?.resMessage || {
+      success: false,
+      message: 'Unexpected response format',
+    };
     res.status(resStatus).json(resMessage);
   } catch (err) {
     console.log('Update Admin Error: ', err);
@@ -226,7 +259,10 @@ router.delete('/admins/:adminId', requireAdminAuth, requireSuperAdmin, async (re
   try {
     const result = await deleteAdmin(req);
     const resStatus = result?.resStatus || 500;
-    const resMessage = result?.resMessage || { success: false, message: 'Unexpected response format' };
+    const resMessage = result?.resMessage || {
+      success: false,
+      message: 'Unexpected response format',
+    };
     res.status(resStatus).json(resMessage);
   } catch (err) {
     console.log('Delete Admin Error: ', err);

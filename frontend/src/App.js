@@ -15,21 +15,27 @@ import { ProtectedRoute, AuthRoute } from './components/ProtectedRoute';
 function AxiosProgressBinder() {
   useEffect(() => {
     NProgress.configure({ showSpinner: false });
-    const reqInterceptor = axios.interceptors.request.use((config) => {
-      NProgress.start();
-      return config;
-    }, (error) => {
-      NProgress.done();
-      return Promise.reject(error);
-    });
+    const reqInterceptor = axios.interceptors.request.use(
+      (config) => {
+        NProgress.start();
+        return config;
+      },
+      (error) => {
+        NProgress.done();
+        return Promise.reject(error);
+      }
+    );
 
-    const resInterceptor = axios.interceptors.response.use((response) => {
-      NProgress.done();
-      return response;
-    }, (error) => {
-      NProgress.done();
-      return Promise.reject(error);
-    });
+    const resInterceptor = axios.interceptors.response.use(
+      (response) => {
+        NProgress.done();
+        return response;
+      },
+      (error) => {
+        NProgress.done();
+        return Promise.reject(error);
+      }
+    );
 
     return () => {
       axios.interceptors.request.eject(reqInterceptor);

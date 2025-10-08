@@ -41,7 +41,7 @@ router.post('/logout', async (req, res) => {
     res.cookie('token', '', {
       httpOnly: true,
       sameSite: 'strict', // match login
-      secure: false,      // dev me false
+      secure: false, // dev me false
       expires: new Date(0), // immediately expire
     });
     res.status(200).json({ success: true, message: 'Logged out successfully.' });
@@ -50,7 +50,6 @@ router.post('/logout', async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal Server error.' });
   }
 });
-
 
 router.post('/changepassword', async (req, res) => {
   try {

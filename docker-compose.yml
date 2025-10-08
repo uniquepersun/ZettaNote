@@ -1,20 +1,30 @@
-version: '3.9'
+version: "4.0"
 
 services:
   backend:
     image: ghcr.io/braydenidzenga/zettanote-backend:latest
     container_name: zettanote-backend
     ports:
-      - '4000:4000'
+      - "4000:4000"
     environment:
       - NODE_ENV=production
       - PORT=4000
       - DB=${DB}
       - JWT_SECRET=${JWT_SECRET}
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - FROM_EMAIL=${FROM_EMAIL}
     restart: unless-stopped
     healthcheck:
-      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:4000/']
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:4000/",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -26,7 +36,7 @@ services:
     image: ghcr.io/braydenidzenga/zettanote-frontend:latest
     container_name: zettanote-frontend
     ports:
-      - '3000:3000'
+      - "3000:3000"
     environment:
       - NODE_ENV=production
       - PORT=3000
@@ -35,7 +45,15 @@ services:
       - backend
     restart: unless-stopped
     healthcheck:
-      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost/']
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost/",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -46,7 +64,7 @@ services:
     image: ghcr.io/braydenidzenga/zettanote-admin:latest
     container_name: zettanote-admin
     ports:
-      - '3001:3001'
+      - "3001:3001"
     environment:
       - NODE_ENV=production
       - PORT=3001
@@ -55,7 +73,15 @@ services:
       - backend
     restart: unless-stopped
     healthcheck:
-      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:3001/']
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:3001/",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3

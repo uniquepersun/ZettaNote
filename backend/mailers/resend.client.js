@@ -12,7 +12,7 @@ if (!RESEND_API_KEY) {
  * sendMail
  * @param {{from?: string, to: string|string[], subject: string, html?: string, text?: string}} options
  */
-export const sendMail = async ({ from = 'no-reply@zetta.example', to, subject, html, text }) => {
+export const sendMail = async ({ from = process.env.FROM_MAIL || 'no-reply@zetta.example', to, subject, html, text }) => {
   if (!RESEND_API_KEY) {
     return { success: false, message: 'Resend API key not configured' };
   }

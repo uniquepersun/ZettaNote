@@ -24,11 +24,6 @@ const PageSchema = new mongoose.Schema({
     required: true,
     default: [],
   },
-  usersWithWritePermission: {
-    type: [mongoose.Types.ObjectId],
-    required: true,
-    default: [],
-  },
   publicShareId: {
     type: String,
     default: '',

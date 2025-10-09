@@ -257,8 +257,8 @@ export const savePage = async (req) => {
       };
     }
 
-    // Check if user is owner
-    if (!page.owner.equals(user._id)) {
+    // Check if user is owner or has write permission
+    if ((!page.owner.equals(user._id)) && (!page.sharedTo.some((id) => id.equals(user._id)))) {
       return {
         resStatus: STATUS_CODES.FORBIDDEN,
         resMessage: { message: MESSAGES.PAGE.ACCESS_DENIED },
@@ -456,7 +456,6 @@ export const sharePage = async (req) => {
     const sharePageSchema = z.object({
       pageId: z.string().min(1, 'Page ID is required'),
       userEmail: z.string().email('Invalid email address'),
-      giveWritePermission: z.boolean().optional(),
     });
     const parseResult = sharePageSchema.safeParse(req.body);
     if (!parseResult.success) {
@@ -465,7 +464,7 @@ export const sharePage = async (req) => {
         resMessage: { message: parseResult.error.errors.map((e) => e.message).join(', ') },
       };
     }
-    const { pageId, userEmail, giveWritePermission } = parseResult.data;
+    const { pageId, userEmail } = parseResult.data;
 
     // Verify user
     const user = await verifyToken(token);
@@ -513,9 +512,6 @@ export const sharePage = async (req) => {
 
     // Share page
     page.sharedTo.push(sharedUser._id);
-    if (giveWritePermission) {
-      page.usersWithWritePermission.push(sharedUser._id);
-    }
     await page.save();
 
     // Add to shared user's pages

@@ -53,8 +53,6 @@
 - 🔄 **Real-time Collaboration** for teams
 - 📁 **Flexible Organization** with tags and folders
 - 🔍 **Advanced Search & Filter** across all notes
-- 📄 **Export Options** (PDF, HTML, Markdown)
-- 📱 **Mobile App** - iOS and Android
 - 🔌 **API Integration** - Third-party app support
 
 ---
@@ -100,7 +98,7 @@ docker-compose up -d
 cd backend && npm install && npm run dev
 
 # Frontend (in new terminal)
-cd frontend_v2 && npm install && npm run dev
+cd frontend && npm install && npm run dev
 ```
 
 Visit `http://localhost:5173` to access the application!
@@ -151,7 +149,7 @@ Ensure you have the following installed:
 1. Open **Postman**
 2. Click **Import**
 3. Select `backend/docs/postman_collection.json`
-4. Start testing endpoints (ensure backend is running at `http://localhost:5000`)
+4. Start testing endpoints (ensure backend is running at `http://localhost:4000`)
 
 ---
 
@@ -160,7 +158,7 @@ Ensure you have the following installed:
 1. **Navigate to frontend directory**
 
    ```bash
-   cd ZettaNote/frontend_v2
+   cd ZettaNote/frontend
    ```
 
 2. **Install dependencies**
@@ -173,7 +171,7 @@ Ensure you have the following installed:
 
    ```bash
    # Create .env file and add your backend URL
-   echo "VITE_API_URL=http://localhost:5000" > .env
+   echo "VITE_API_URL=http://localhost:4000" > .env
    ```
 
 4. **Start the development server**
@@ -252,41 +250,13 @@ The frontend is built with:
 4. **Run containers**
    ```bash
    docker run -d -p 5000:5000 --name zettanote-backend zettanote-backend
-   docker run -d -p 5173:5173 --name zettanote-frontend zettanote-frontend
+   docker run -d -p 3000:3000 --name zettanote-frontend zettanote-frontend
    ```
 
 5. **Or use Docker Compose** (recommended)
    ```bash
    docker-compose up -d
    ```
-
----
-
-## 🏗️ Project Architecture
-
-ZettaNote follows a modern full-stack architecture:
-
-**Frontend (React + Vite)**
-- Component-based architecture with React 18
-- State management using React Context API
-- Modern styling with Tailwind CSS and DaisyUI
-- Real-time features with axios and hot-toast notifications
-- Responsive design for mobile and desktop
-
-**Backend (Node.js + Express)**
-- RESTful API design with Express.js
-- MongoDB with Mongoose ODM
-- JWT-based authentication
-- Secure password hashing with bcrypt
-- CORS configured for cross-origin requests
-
-**Security Features**
-- JWT token authentication with httpOnly cookies
-- Password strength validation
-- Protected API routes with middleware
-- CORS protection
-- Input validation and sanitization
-- Secure session management
 
 ---
 

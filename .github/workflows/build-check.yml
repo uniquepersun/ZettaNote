@@ -28,7 +28,7 @@ jobs:
 
       - name: check if build folder exists
         run: |
-          if [ -d "frontend/build" ]; then
+          if [ -d "frontend/dist" ]; then
               echo "Build folder exists."
           else
               echo "Build folder does not exist."
@@ -36,11 +36,11 @@ jobs:
           fi
 
       - name: List build folder contents
-        run: ls -la frontend/build
+        run: ls -la frontend/dist
 
       - name: Verify build output
         run: |
-          if [ -f "frontend/build/index.html" ]; then
+          if [ -f "frontend/dist/index.html" ]; then
               echo "Build output is valid."
           else
               echo "Build output is invalid."

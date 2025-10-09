@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Eye, EyeOff, FileText } from 'lucide-react';
 import axios from 'axios';
@@ -15,7 +15,7 @@ const Signup = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
-  const { user, setuser } = useContext(authContext);
+  const { setuser } = useContext(authContext);
 
   // Password validation function
   const validatePassword = (pass) => {
@@ -64,7 +64,6 @@ const Signup = () => {
       setSuccess('Account created successfully! Welcome to ZettaNote!');
       setuser(res.data.user);
       localStorage.setItem('zetta_user', JSON.stringify(res.data.user));
-      console.log('Signup successful:', res.data);
       navigate('/');
       toast.success('Account created successfully!');
     } catch (err) {

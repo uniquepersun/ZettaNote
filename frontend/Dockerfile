@@ -1,4 +1,4 @@
-# Production Dockerfile - serves pre-built React app with serve
+# Production Dockerfile - serves pre-built Vite app with serve
 FROM node:20-alpine
 
 WORKDIR /app
@@ -7,9 +7,9 @@ WORKDIR /app
 RUN npm install -g serve
 
 # Copy pre-built files (built by GitHub Actions)
-COPY build ./dist
+COPY dist ./dist
 
-# Expose port 80
+# Expose port 3000
 EXPOSE 3000
 
 # Health check

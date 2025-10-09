@@ -11,6 +11,7 @@ import {
 } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import { VITE_API_URL } from '../env';
 
 const PublicShare = () => {
   const { shareId } = useParams();
@@ -29,7 +30,7 @@ const PublicShare = () => {
 
       try {
         console.log('Fetching shared page with ID:', shareId);
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/pages/share/${shareId}`);
+        const response = await axios.get(`${VITE_API_URL}/api/pages/share/${shareId}`);
         
         console.log('Response status:', response.status, 'Data:', response.data);
 

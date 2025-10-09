@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react';
-import { 
-  FiShare2, 
-  FiEdit3, 
-  FiTrash2, 
-  FiCopy, 
+import {
+  FiShare2,
+  FiEdit3,
+  FiTrash2,
+  FiCopy,
   FiExternalLink,
   FiSave,
   FiClock,
@@ -17,19 +17,29 @@ import {
   FiSettings,
   FiCheckCircle,
   FiMenu,
-  FiX
+  FiX,
 } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import authContext from '../../context/AuthProvider';
+import { VITE_API_URL } from '../../env';
 
-const TopBar = ({ activePage, onSave, onDelete, onRename, lastSaved, isLoading, onToggleSidebar, isSidebarOpen }) => {
+const TopBar = ({
+  activePage,
+  onSave,
+  onDelete,
+  onRename,
+  lastSaved,
+  isLoading,
+  onToggleSidebar,
+  isSidebarOpen,
+}) => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareableLink, setShareableLink] = useState('');
   const [isGeneratingLink, setIsGeneratingLink] = useState(false);
-  const navigate=useNavigate()
-  const {user,setuser}=useContext(authContext)
+  const navigate = useNavigate();
+  const { user, setuser } = useContext(authContext);
 
   const handleUnauthorized = (error) => {
     if (error.response && error.response.status === 401) {
@@ -47,38 +57,47 @@ const TopBar = ({ activePage, onSave, onDelete, onRename, lastSaved, isLoading, 
     isPublic: true,
     allowComments: false,
     allowDownload: true,
-    expiresAt: null
+    expiresAt: null,
   });
-
 
   const generateShareableLink = async () => {
     if (!activePage?.id) return;
-    
+
     setIsGeneratingLink(true);
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/pages/publicshare`, {
-        pageId: activePage.id
-      }, {
-        withCredentials: true
-      });
-      
+      const response = await axios.post(
+        `${VITE_API_URL}/api/pages/publicshare`,
+        {
+          pageId: activePage.id,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
       if (response.status === 200 && response.data) {
         const publicLink = `${window.location.origin}/public/${response.data.publicShareId}`;
         setShareableLink(publicLink);
-        
+
         if (response.data.message === 'Already Shared') {
           toast.success('🔗 Public link retrieved successfully!');
         } else {
           toast.success('🔗 Public link generated successfully!');
         }
       } else {
-        throw new Error(response.data?.Error || response.data?.message || 'Failed to generate link');
+        throw new Error(
+          response.data?.Error || response.data?.message || 'Failed to generate link'
+        );
       }
     } catch (error) {
       if (handleUnauthorized(error)) return;
       console.error('Error generating share link:', error);
       if (error.response) {
-        toast.error(`❌ Failed to generate link: ${error.response.data?.Error || error.response.data?.message || 'Server error'}`);
+        toast.error(
+          `❌ Failed to generate link: ${
+            error.response.data?.Error || error.response.data?.message || 'Server error'
+          }`
+        );
       } else if (error.request) {
         toast.error('❌ Network error. Please check your connection.');
       } else {
@@ -91,9 +110,9 @@ const TopBar = ({ activePage, onSave, onDelete, onRename, lastSaved, isLoading, 
 
   const regenerateLink = async () => {
     if (!activePage?.id) return;
-    
+
     toast.loading('Regenerating link...', { id: 'regenerate' });
-    
+
     try {
       await generateShareableLink();
       toast.success('New link generated!', { id: 'regenerate' });
@@ -121,7 +140,7 @@ const TopBar = ({ activePage, onSave, onDelete, onRename, lastSaved, isLoading, 
     const now = new Date();
     const saved = new Date(timestamp);
     const diffInSeconds = Math.floor((now - saved) / 1000);
-    
+
     if (diffInSeconds < 60) return 'Saved just now';
     if (diffInSeconds < 3600) return `Saved ${Math.floor(diffInSeconds / 60)}m ago`;
     if (diffInSeconds < 86400) return `Saved ${Math.floor(diffInSeconds / 3600)}h ago`;
@@ -214,8 +233,12 @@ const TopBar = ({ activePage, onSave, onDelete, onRename, lastSaved, isLoading, 
                     <FiGlobe className="w-7 h-7 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-base-content">Share "{activePage?.name}"</h3>
-                    <p className="text-sm text-base-content/70 mt-1">Create a public link to share your page with anyone</p>
+                    <h3 className="text-2xl font-bold text-base-content">
+                      Share "{activePage?.name}"
+                    </h3>
+                    <p className="text-sm text-base-content/70 mt-1">
+                      Create a public link to share your page with anyone
+                    </p>
                   </div>
                 </div>
                 <button
@@ -246,14 +269,18 @@ const TopBar = ({ activePage, onSave, onDelete, onRename, lastSaved, isLoading, 
                     <span className="hidden sm:inline">New Link</span>
                   </button>
                 </div>
-                
+
                 <div className="relative">
                   <input
                     type="text"
                     className="input input-bordered w-full pr-20 text-sm bg-base-50 border-2 focus:border-primary rounded-xl h-12"
                     value={shareableLink}
                     readOnly
-                    placeholder={isGeneratingLink ? "🔗 Generating secure public link..." : "Your public link will appear here"}
+                    placeholder={
+                      isGeneratingLink
+                        ? '🔗 Generating secure public link...'
+                        : 'Your public link will appear here'
+                    }
                   />
                   <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-1">
                     <button
@@ -274,7 +301,7 @@ const TopBar = ({ activePage, onSave, onDelete, onRename, lastSaved, isLoading, 
                     </button>
                   </div>
                 </div>
-                
+
                 {shareableLink && (
                   <div className="flex items-center gap-2 text-sm text-success">
                     <FiCheckCircle className="w-4 h-4" />
@@ -292,34 +319,42 @@ const TopBar = ({ activePage, onSave, onDelete, onRename, lastSaved, isLoading, 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="form-control">
                     <label className="label cursor-pointer justify-start gap-3">
-                      <input 
-                        type="checkbox" 
-                        className="checkbox checkbox-primary" 
+                      <input
+                        type="checkbox"
+                        className="checkbox checkbox-primary"
                         checked={shareSettings.isPublic}
-                        onChange={(e) => setShareSettings({...shareSettings, isPublic: e.target.checked})}
+                        onChange={(e) =>
+                          setShareSettings({ ...shareSettings, isPublic: e.target.checked })
+                        }
                       />
                       <div className="flex items-center gap-2">
                         <FiGlobe className="w-4 h-4" />
                         <span className="label-text font-medium">Public Access</span>
                       </div>
                     </label>
-                    <p className="text-xs text-base-content/60 ml-8">Anyone with the link can view</p>
+                    <p className="text-xs text-base-content/60 ml-8">
+                      Anyone with the link can view
+                    </p>
                   </div>
-                  
+
                   <div className="form-control">
                     <label className="label cursor-pointer justify-start gap-3">
-                      <input 
-                        type="checkbox" 
-                        className="checkbox checkbox-secondary" 
+                      <input
+                        type="checkbox"
+                        className="checkbox checkbox-secondary"
                         checked={shareSettings.allowDownload}
-                        onChange={(e) => setShareSettings({...shareSettings, allowDownload: e.target.checked})}
+                        onChange={(e) =>
+                          setShareSettings({ ...shareSettings, allowDownload: e.target.checked })
+                        }
                       />
                       <div className="flex items-center gap-2">
                         <FiDownload className="w-4 h-4" />
                         <span className="label-text font-medium">Allow Download</span>
                       </div>
                     </label>
-                    <p className="text-xs text-base-content/60 ml-8">Viewers can download as PDF/MD</p>
+                    <p className="text-xs text-base-content/60 ml-8">
+                      Viewers can download as PDF/MD
+                    </p>
                   </div>
                 </div>
               </div>
@@ -354,8 +389,6 @@ const TopBar = ({ activePage, onSave, onDelete, onRename, lastSaved, isLoading, 
           </div>
         </div>
       )}
-
-
     </>
   );
 };

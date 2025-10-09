@@ -6,6 +6,7 @@ import authContext from '../context/AuthProvider';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { VITE_API_URL } from '../env';
 
 const Dashboard = () => {
   const { user, setuser } = useContext(authContext);
@@ -14,7 +15,7 @@ const Dashboard = () => {
   const [lastSaved, setLastSaved] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const navigate=useNavigate()
+  const navigate = useNavigate();
 
   const handleUnauthorized = (error) => {
     if (error.response && error.response.status === 401) {
@@ -29,7 +30,6 @@ const Dashboard = () => {
     return false;
   };
 
-  
   useEffect(() => {
     if (activePage?.id) {
       loadPageContent(activePage.id);
@@ -42,11 +42,11 @@ const Dashboard = () => {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/pages/getpage`,
+        `${VITE_API_URL}/api/pages/getpage`,
         { pageId },
         { withCredentials: true }
       );
-      
+
       if (response.data.Page) {
         setPageContent(response.data.Page.pageData || '');
         setLastSaved(response.data.Page.updatedAt);
@@ -73,18 +73,18 @@ const Dashboard = () => {
 
   const handleSave = async (content = pageContent) => {
     if (!activePage?.id) return;
-    
+
     try {
       setIsLoading(true);
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/pages/savepage`,
+        `${VITE_API_URL}/api/pages/savepage`,
         {
           pageId: activePage.id,
-          newPageData: content
+          newPageData: content,
         },
         { withCredentials: true }
       );
-      
+
       if (response.data.success) {
         setLastSaved(new Date().toISOString());
         toast.success('Page saved successfully!');
@@ -103,18 +103,15 @@ const Dashboard = () => {
 
   const handleDeletePage = async () => {
     if (!activePage?.id) return;
-    
+
     if (!confirm(`Are you sure you want to delete "${activePage.name}"?`)) return;
-    
+
     try {
-      const response = await axios.delete(
-        `${import.meta.env.VITE_API_URL}/api/pages/deletepage`,
-        {
-          data: { pageId: activePage.id },
-          withCredentials: true
-        }
-      );
-      
+      const response = await axios.delete(`${VITE_API_URL}/api/pages/deletepage`, {
+        data: { pageId: activePage.id },
+        withCredentials: true,
+      });
+
       if (response.data.success || response.data.message?.includes('deleted')) {
         toast.success('Page deleted successfully!');
         setActivePage(null);
@@ -141,27 +138,27 @@ const Dashboard = () => {
     <div className="flex min-h-screen bg-gradient-to-br from-base-100 via-base-100 to-base-200/20 pt-16 relative">
       {/* Mobile Overlay */}
       {isSidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
       {/* Enhanced Sidebar */}
-      <Sidebar 
+      <Sidebar
         onPageSelect={(page) => {
           setActivePage(page);
-          setIsSidebarOpen(false); 
-        }} 
+          setIsSidebarOpen(false);
+        }}
         selectedPageId={activePage?.id}
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
       />
-      
+
       {/* Main Content Area */}
       <div className="flex-1 lg:ml-72 flex flex-col">
         {/* Enhanced Top Bar */}
-        <TopBar 
+        <TopBar
           activePage={activePage}
           onSave={() => handleSave()}
           onDelete={handleDeletePage}
@@ -171,9 +168,9 @@ const Dashboard = () => {
           onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
           isSidebarOpen={isSidebarOpen}
         />
-        
+
         {/* Enhanced Note Editor */}
-        <Note 
+        <Note
           activePage={activePage}
           content={pageContent}
           onContentChange={handleContentChange}

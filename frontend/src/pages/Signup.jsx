@@ -4,6 +4,7 @@ import { ArrowLeft, Eye, EyeOff, FileText } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import authContext from '../context/AuthProvider';
+import { VITE_API_URL } from '../env';
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,8 +14,8 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const navigate=useNavigate()
-  const {user,setuser}=useContext(authContext)
+  const navigate = useNavigate();
+  const { user, setuser } = useContext(authContext);
 
   // Password validation function
   const validatePassword = (pass) => {
@@ -51,26 +52,27 @@ const Signup = () => {
     }
 
     const formdata = { name: name.trim(), email: email.trim(), password };
-    
+
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/signup`, formdata, {
+      const res = await axios.post(`${VITE_API_URL}/api/auth/signup`, formdata, {
         withCredentials: true,
         headers: {
           'Content-Type': 'application/json',
         },
       });
-      
+
       setSuccess('Account created successfully! Welcome to ZettaNote!');
       setuser(res.data.newUser);
-      localStorage.setItem("zetta_user",JSON.stringify(res.data.newUser));
+      localStorage.setItem('zetta_user', JSON.stringify(res.data.newUser));
       console.log('Signup successful:', res.data);
       navigate('/');
       toast.success('Account created successfully!');
     } catch (err) {
       console.error('Signup error:', err);
-      
+
       if (err.response) {
-        const errorMessage = err.response.data?.message || err.response.data?.Error || 'Signup failed';
+        const errorMessage =
+          err.response.data?.message || err.response.data?.Error || 'Signup failed';
         setError(errorMessage);
         toast.error(errorMessage);
       } else if (err.request) {
@@ -254,21 +256,33 @@ const Signup = () => {
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
-              
+
               {/* Password Requirements */}
               {password && (
                 <div className="mt-2 text-xs space-y-1">
                   <p className="text-base-content/60">Password requirements:</p>
                   <ul className="space-y-1">
-                    <li className={`flex items-center gap-2 ${password.length >= 12 ? 'text-green-600' : 'text-red-600'}`}>
+                    <li
+                      className={`flex items-center gap-2 ${
+                        password.length >= 12 ? 'text-green-600' : 'text-red-600'
+                      }`}
+                    >
                       <span className="w-1 h-1 rounded-full bg-current"></span>
                       At least 12 characters
                     </li>
-                    <li className={`flex items-center gap-2 ${/\d/.test(password) ? 'text-green-600' : 'text-red-600'}`}>
+                    <li
+                      className={`flex items-center gap-2 ${
+                        /\d/.test(password) ? 'text-green-600' : 'text-red-600'
+                      }`}
+                    >
                       <span className="w-1 h-1 rounded-full bg-current"></span>
                       At least 1 number
                     </li>
-                    <li className={`flex items-center gap-2 ${/[^a-zA-Z0-9]/.test(password) ? 'text-green-600' : 'text-red-600'}`}>
+                    <li
+                      className={`flex items-center gap-2 ${
+                        /[^a-zA-Z0-9]/.test(password) ? 'text-green-600' : 'text-red-600'
+                      }`}
+                    >
                       <span className="w-1 h-1 rounded-full bg-current"></span>
                       At least 1 special character (!@#$%^&*)
                     </li>

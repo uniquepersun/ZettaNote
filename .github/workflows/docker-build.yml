@@ -68,26 +68,6 @@ jobs:
         env:
           OWNER: ${{ github.repository_owner }}
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 8
-
-      - name: Install frontend dependencies
-        working-directory: ./frontend
-        run: pnpm install
-
-      - name: Build frontend
-        working-directory: ./frontend
-        env:
-          REACT_APP_API_URL: ${{ secrets.BACKEND_API_URL || 'http://localhost:4000' }}
-        run: pnpm run build
-
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -113,6 +93,8 @@ jobs:
           push: true
           tags: ${{ steps.meta-frontend.outputs.tags }}
           labels: ${{ steps.meta-frontend.outputs.labels }}
+          build-args: |
+            VITE_API_URL=${{ secrets.BACKEND_API_URL || 'http://localhost:4000' }}
 
   build-and-push-admin:
     runs-on: ubuntu-latest
@@ -129,26 +111,6 @@ jobs:
         run: echo "owner_lc=${OWNER,,}" >> $GITHUB_OUTPUT
         env:
           OWNER: ${{ github.repository_owner }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 8
-
-      - name: Install admin-portal dependencies
-        working-directory: ./admin-portal
-        run: pnpm install
-
-      - name: Build admin-portal
-        working-directory: ./admin-portal
-        env:
-          REACT_APP_API_URL: ${{ secrets.BACKEND_API_URL || 'http://localhost:4000' }}
-        run: pnpm run build
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -175,6 +137,8 @@ jobs:
           push: true
           tags: ${{ steps.meta-admin.outputs.tags }}
           labels: ${{ steps.meta-admin.outputs.labels }}
+          build-args: |
+            REACT_APP_API_URL=${{ secrets.BACKEND_API_URL || 'http://localhost:4000' }}
 
   deploy:
     runs-on: ubuntu-latest

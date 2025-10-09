@@ -13,6 +13,7 @@ import {
 import authContext from '../context/AuthProvider';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { VITE_API_URL } from '../env';
 
 const Navbar = () => {
   const { theme, settheme } = useContext(themeContext);
@@ -26,7 +27,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/auth/logout`,
+        `${VITE_API_URL}/api/auth/logout`,
         {},
         {
           withCredentials: true,
@@ -45,7 +46,6 @@ const Navbar = () => {
     }
   };
 
-  
   const getNavigationItems = () => {
     const commonItems = [
       { name: 'Home', to: '/', icon: <FaHome className="mr-2" /> },

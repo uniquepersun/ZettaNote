@@ -17,10 +17,11 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import authContext from '../../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
+import { VITE_API_URL } from '../../env';
 
 const Sidebar = ({ onPageSelect, selectedPageId, isOpen, onClose }) => {
   const { user, setuser } = useContext(authContext);
-  const navigate=useNavigate()
+  const navigate = useNavigate();
 
   const handleUnauthorized = (error) => {
     if (error.response && error.response.status === 401) {
@@ -53,7 +54,7 @@ const Sidebar = ({ onPageSelect, selectedPageId, isOpen, onClose }) => {
     try {
       setLoading(true);
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/pages/getpages`,
+        `${VITE_API_URL}/api/pages/getpages`,
         {},
         { withCredentials: true }
       );
@@ -109,7 +110,7 @@ const Sidebar = ({ onPageSelect, selectedPageId, isOpen, onClose }) => {
     try {
       setIsCreating(true);
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/pages/createpage`,
+        `${VITE_API_URL}/api/pages/createpage`,
         {
           pageName: newPageName.trim(),
         },
@@ -150,7 +151,7 @@ const Sidebar = ({ onPageSelect, selectedPageId, isOpen, onClose }) => {
     try {
       setIsDeleting(true);
 
-      const response = await axios.delete(`${import.meta.env.VITE_API_URL}/api/pages/deletepage`, {
+      const response = await axios.delete(`${VITE_API_URL}/api/pages/deletepage`, {
         data: { pageId },
         withCredentials: true,
       });
@@ -200,7 +201,7 @@ const Sidebar = ({ onPageSelect, selectedPageId, isOpen, onClose }) => {
       setIsRenaming(true);
 
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/pages/renamepage`,
+        `${VITE_API_URL}/api/pages/renamepage`,
         {
           pageId: renamePageId,
           newPageName: renamePageName.trim(),
@@ -244,10 +245,6 @@ const Sidebar = ({ onPageSelect, selectedPageId, isOpen, onClose }) => {
       fetchPages();
     }
   }, [user]);
-
-
-
-
 
   const filteredPages = pages.filter((page) =>
     page.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -400,16 +397,16 @@ const Sidebar = ({ onPageSelect, selectedPageId, isOpen, onClose }) => {
                           {/* Page Actions Dropdown */}
                           <div className="flex-shrink-0">
                             <div className="dropdown dropdown-end">
-                              <div 
-                                tabIndex={0} 
-                                role="button" 
+                              <div
+                                tabIndex={0}
+                                role="button"
                                 className="btn btn-ghost btn-xs btn-circle opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                                 onClick={(e) => e.stopPropagation()}
                               >
                                 <FiMoreHorizontal className="w-4 h-4" />
                               </div>
-                              <ul 
-                                tabIndex={0} 
+                              <ul
+                                tabIndex={0}
                                 className="dropdown-content menu bg-base-100 rounded-box z-[1] w-44 p-2 shadow-xl border border-base-300"
                                 onClick={(e) => e.stopPropagation()}
                               >

@@ -1,4 +1,29 @@
-# Production Dockerfile - serves pre-built Vite app with serve
+# Multi-stage build for production
+# Stage 1: Build the application
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Install pnpm
+RUN npm install -g pnpm
+
+# Copy package files
+COPY package.json pnpm-lock.yaml ./
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy source code
+COPY . .
+
+# Build argument for API URL
+ARG VITE_API_URL=http://localhost:4000
+ENV VITE_API_URL=$VITE_API_URL
+
+# Build the application
+RUN pnpm run build
+
+# Stage 2: Production server
 FROM node:20-alpine
 
 WORKDIR /app
@@ -6,8 +31,8 @@ WORKDIR /app
 # Install serve globally
 RUN npm install -g serve
 
-# Copy pre-built files (built by GitHub Actions)
-COPY dist ./dist
+# Copy built files from builder stage
+COPY --from=builder /app/dist ./dist
 
 # Expose port 3000
 EXPOSE 3000

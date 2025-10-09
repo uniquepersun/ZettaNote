@@ -4,6 +4,7 @@ import { ArrowLeft, Eye, EyeOff, FileText } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import authContext from '../context/AuthProvider';
+import { VITE_API_URL } from '../env';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -34,7 +35,7 @@ const Login = () => {
     const formdata = { email: email.trim(), password };
     
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, formdata, {
+      const res = await axios.post(`${VITE_API_URL}/api/auth/login`, formdata, {
         withCredentials: true,
         headers: {
           'Content-Type': 'application/json',

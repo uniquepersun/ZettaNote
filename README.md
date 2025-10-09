@@ -11,7 +11,7 @@
 
 **An open-source note-taking application** inspired by Notion, focusing on **Markdown-based notes**, **real-time collaboration**, and **flexible organization** while remaining lightweight and developer-friendly.
 
-[Features](#-planned-features) • [Tech Stack](#-tech-stack) • [Getting Started](#-getting-started) • [Docker](#-running-with-docker) • [Contributing](#-contributing)
+[Features](#-features) • [Tech Stack](#-tech-stack) • [Getting Started](#-getting-started) • [Docker](#-running-with-docker) • [Contributing](#-contributing)
 
 </div>
 
@@ -29,7 +29,7 @@
 
 ---
 
-## ✨ Planned Features
+## ✨ Features
 
 <div align="center">
 
@@ -37,14 +37,25 @@
 
 </div>
 
-Core functionality being developed:
+### 🚀 Currently Available
 
-- **Markdown Editor** with live preview
-- **Real-time Collaboration** for teams
-- **Flexible Organization** with tags and folders
-- **Search & Filter** across all notes
-- **Export Options** (PDF, HTML, Markdown)
-- **Dark Mode** support
+- ✅ **Modern Markdown Editor** with syntax highlighting
+- ✅ **Auto-save Functionality** - Never lose your work
+- ✅ **Responsive Dashboard** - Mobile-friendly design  
+- ✅ **Page Management** - Create, rename, delete pages
+- ✅ **Public Sharing** - Share pages with secure links
+- ✅ **Dark/Light Theme** - Switch between themes
+- ✅ **User Authentication** - Secure login and registration
+- ✅ **Admin Portal** - User management interface
+
+### 🔮 Coming Soon
+
+- 🔄 **Real-time Collaboration** for teams
+- 📁 **Flexible Organization** with tags and folders
+- 🔍 **Advanced Search & Filter** across all notes
+- 📄 **Export Options** (PDF, HTML, Markdown)
+- 📱 **Mobile App** - iOS and Android
+- 🔌 **API Integration** - Third-party app support
 
 ---
 
@@ -61,7 +72,9 @@ Core functionality being developed:
 ### Frontend
 
 ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
-![Material UI](https://img.shields.io/badge/Material_UI-007FFF?style=for-the-badge&logo=mui&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![DaisyUI](https://img.shields.io/badge/daisyUI-5A0EF8?style=for-the-badge&logo=daisyui&logoColor=white)
 
 ### DevOps
 
@@ -69,6 +82,28 @@ Core functionality being developed:
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 
 </div>
+
+---
+
+## ⚡ Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/braydenidzenga/zettanote.git
+cd ZettaNote
+
+# Start with Docker Compose (Recommended)
+docker-compose up -d
+
+# Or start manually:
+# Backend
+cd backend && npm install && npm run dev
+
+# Frontend (in new terminal)
+cd frontend_v2 && npm install && npm run dev
+```
+
+Visit `http://localhost:5173` to access the application!
 
 ---
 
@@ -125,7 +160,7 @@ Ensure you have the following installed:
 1. **Navigate to frontend directory**
 
    ```bash
-   cd ZettaNote/frontend
+   cd ZettaNote/frontend_v2
    ```
 
 2. **Install dependencies**
@@ -134,16 +169,23 @@ Ensure you have the following installed:
    npm install
    ```
 
-3. **Update configuration**
+3. **Configure environment variables**
 
    ```bash
-   # Edit config.js to point to your backend instance
+   # Create .env file and add your backend URL
+   echo "VITE_API_URL=http://localhost:5000" > .env
    ```
 
 4. **Start the development server**
    ```bash
-   npm start
+   npm run dev
    ```
+
+The frontend is built with:
+- ⚡ **Vite** - Fast build tool and development server
+- 🎨 **Tailwind CSS** - Utility-first CSS framework
+- 🧩 **DaisyUI** - Component library for Tailwind CSS
+- ⚛️ **React 18** - Modern React with hooks and context
 
 ---
 
@@ -204,14 +246,47 @@ Ensure you have the following installed:
 
    ```bash
    docker build -t zettanote-backend ./backend
-   docker build -t zettanote-frontend ./frontend
+   docker build -t zettanote-frontend ./frontend_v2
    ```
 
 4. **Run containers**
    ```bash
    docker run -d -p 5000:5000 --name zettanote-backend zettanote-backend
-   docker run -d -p 3000:3000 --name zettanote-frontend zettanote-frontend
+   docker run -d -p 5173:5173 --name zettanote-frontend zettanote-frontend
    ```
+
+5. **Or use Docker Compose** (recommended)
+   ```bash
+   docker-compose up -d
+   ```
+
+---
+
+## 🏗️ Project Architecture
+
+ZettaNote follows a modern full-stack architecture:
+
+**Frontend (React + Vite)**
+- Component-based architecture with React 18
+- State management using React Context API
+- Modern styling with Tailwind CSS and DaisyUI
+- Real-time features with axios and hot-toast notifications
+- Responsive design for mobile and desktop
+
+**Backend (Node.js + Express)**
+- RESTful API design with Express.js
+- MongoDB with Mongoose ODM
+- JWT-based authentication
+- Secure password hashing with bcrypt
+- CORS configured for cross-origin requests
+
+**Security Features**
+- JWT token authentication with httpOnly cookies
+- Password strength validation
+- Protected API routes with middleware
+- CORS protection
+- Input validation and sanitization
+- Secure session management
 
 ---
 

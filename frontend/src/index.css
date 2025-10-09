@@ -1,0 +1,156 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* Base background & surfaces */
+  --color-base-100: oklch(99% 0.003 100); /* clean white background */
+  --color-base-200: oklch(97% 0.004 100); /* subtle contrast layer */
+  --color-base-300: oklch(93% 0.006 100); /* borders / shadows */
+  --color-base-content: oklch(24% 0.007 270); /* primary text - dark slate */
+
+  /* Primary (blue accent for links/buttons) */
+  --color-primary: oklch(63% 0.18 255); /* calm blue - Notion link style */
+  --color-primary-content: oklch(98% 0.01 255);
+
+  /* Secondary (neutral accent for highlights) */
+  --color-secondary: oklch(82% 0.03 80); /* warm gray */
+  --color-secondary-content: oklch(28% 0.015 80);
+
+  /* Accent (soft desaturated turquoise-ish) */
+  --color-accent: oklch(82% 0.09 190); 
+  --color-accent-content: oklch(25% 0.05 190);
+
+  /* Feedback colors */
+  --color-info: oklch(70% 0.14 250);
+  --color-success: oklch(70% 0.17 140);
+  --color-warning: oklch(80% 0.18 80);
+  --color-error: oklch(65% 0.18 30);
+
+  /* Neutral borders & text balance */
+  --color-neutral: oklch(90% 0.005 260);
+  --color-neutral-content: oklch(35% 0.005 260);
+
+  /* Layout variables */
+  --radius-selector: 0.5rem;
+  --radius-field: 0.4rem;
+  --radius-box: 0.6rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0.1;
+}
+
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Background layers */
+  --color-base-100: oklch(17% 0.005 260); /* main background - deep slate */
+  --color-base-200: oklch(23% 0.005 260);
+  --color-base-300: oklch(28% 0.006 260);
+  --color-base-content: oklch(95% 0.005 260); /* text white-ish slate */
+
+  /* Primary (calm blue for links/buttons) */
+  --color-primary: oklch(70% 0.15 250);
+  --color-primary-content: oklch(20% 0.01 250);
+
+  /* Secondary (muted gray highlights) */
+  --color-secondary: oklch(40% 0.03 80);
+  --color-secondary-content: oklch(90% 0.02 80);
+
+  /* Accent (soft turquoise glow) */
+  --color-accent: oklch(65% 0.12 180);
+  --color-accent-content: oklch(15% 0.05 190);
+
+  /* Feedback colors */
+  --color-info: oklch(70% 0.16 240);
+  --color-success: oklch(72% 0.18 150);
+  --color-warning: oklch(80% 0.17 80);
+  --color-error: oklch(65% 0.17 25);
+
+  /* Neutrals */
+  --color-neutral: oklch(26% 0.005 260);
+  --color-neutral-content: oklch(90% 0.005 260);
+
+  /* Layout */
+  --radius-selector: 0.5rem;
+  --radius-field: 0.4rem;
+  --radius-box: 0.6rem;
+  --border: 1.5px;
+  --depth: 1;
+  --noise: 0.2;
+}
+
+
+/* Custom navbar enhancements */
+.navbar {
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.navbar .btn {
+  transition: all 0.2s ease-in-out;
+}
+
+.navbar .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Gradient text effect for brand */
+.bg-gradient-to-r {
+  background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+}
+
+/* Mobile dropdown improvements */
+.dropdown-content {
+  backdrop-filter: blur(10px);
+}
+
+/* Active link enhancements */
+.menu li > a.active,
+.menu li > a:focus,
+.menu li > a:active {
+  transform: translateX(2px);
+}
+
+/* Smooth transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* NavLink smooth underline animation */
+.nav-link-desktop {
+  position: relative;
+}
+
+.nav-link-desktop::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: hsl(var(--color-primary));
+  transition: width 0.3s ease-in-out;
+  border-radius: 1px;
+}
+
+.nav-link-desktop:hover::after {
+  width: 100%;
+}
+
+.nav-link-desktop.active-link::after {
+  width: 100%;
+}

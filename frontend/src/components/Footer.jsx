@@ -1,5 +1,5 @@
-import React from "react";
-import { Github, Globe, Files } from "lucide-react";
+import React from 'react';
+import { Github, Globe, Files } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -9,8 +9,8 @@ const Footer = () => {
         <div className="text-center md:text-left">
           <h2 className="text-lg font-semibold text-base-content">ZettaNote</h2>
           <p className="max-w-md text-sm mt-1">
-            An open-source note-taking platform — create, edit, and share notes effortlessly.  
-            Built with ❤️ by the community.
+            An open-source note-taking platform — create, edit, and share notes effortlessly. Built
+            with ❤️ by the community.
           </p>
         </div>
 
@@ -33,7 +33,7 @@ const Footer = () => {
             <Files size={16} /> Documentation
           </a>
           <a
-            href="https://zettanote.vercel.app"
+            href="https://zettanote.tech"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-primary flex items-center gap-1"
@@ -46,7 +46,7 @@ const Footer = () => {
         <div className="text-xs text-center md:text-right text-base-content/60">
           <p>© {new Date().getFullYear()} ZettaNote. All rights reserved.</p>
           <p>
-            Contributions welcome on{" "}
+            Contributions welcome on{' '}
             <a
               href="https://github.com/ikeshav26/ZettaNote"
               target="_blank"

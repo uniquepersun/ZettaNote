@@ -29,10 +29,8 @@ const PublicShare = () => {
       }
 
       try {
-        console.log('Fetching shared page with ID:', shareId);
         const response = await axios.get(`${VITE_API_URL}/api/pages/share/${shareId}`);
         
-        console.log('Response status:', response.status, 'Data:', response.data);
 
         if (response.status === 200 && response.data) {
           setPageData(response.data);

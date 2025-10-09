@@ -44,7 +44,6 @@ const Login = () => {
       setuser(res.data.user);
       localStorage.setItem("zetta_user",JSON.stringify(res.data.user));
       
-      console.log('Login successful:', res.data);
       navigate('/');
       toast.success('Login successful!');
     } catch (err) {

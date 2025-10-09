@@ -62,8 +62,8 @@ const Signup = () => {
       });
 
       setSuccess('Account created successfully! Welcome to ZettaNote!');
-      setuser(res.data.newUser);
-      localStorage.setItem('zetta_user', JSON.stringify(res.data.newUser));
+      setuser(res.data.user);
+      localStorage.setItem('zetta_user', JSON.stringify(res.data.user));
       console.log('Signup successful:', res.data);
       navigate('/');
       toast.success('Account created successfully!');

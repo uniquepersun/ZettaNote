@@ -244,7 +244,7 @@ The frontend is built with:
 
    ```bash
    docker build -t zettanote-backend ./backend
-   docker build -t zettanote-frontend ./frontend_v2
+   docker build -t zettanote-frontend ./frontend
    ```
 
 4. **Run containers**

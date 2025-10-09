@@ -234,6 +234,13 @@ We welcome contributions from the community!
 
 ---
 
+## Contributors
+
+<!-- readme: collaborators,contributors -start -->
+<!-- readme: collaborators,contributors -end -->
+
+---
+
 ## 📄 License
 
 <div align="center">

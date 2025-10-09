@@ -80,11 +80,11 @@ router.post(
 );
 
 /**
- * @route   POST /api/pages/deletepage
+ * @route   DELETE /api/pages/deletepage
  * @desc    Delete a page
  * @access  Private
  */
-router.post(
+router.delete(
   '/deletepage',
   asyncHandler(async (req, res) => {
     const { resStatus, resMessage } = await deletePage(req);

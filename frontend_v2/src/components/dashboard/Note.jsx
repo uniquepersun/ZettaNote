@@ -480,11 +480,6 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
               Select a page from the sidebar or create a new one to start your creative journey
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mt-8">
-            <div className="px-4 py-2 bg-base-200/50 rounded-full text-sm text-base-content/60 border border-base-300/50">
-              💡 Pro tip: Use Markdown for rich formatting
-            </div>
-          </div>
         </div>
       </div>
     );

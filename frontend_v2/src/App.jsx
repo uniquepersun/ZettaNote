@@ -1,31 +1,52 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import { Routes, useLocation } from 'react-router-dom';
+import { Navigate, Routes, useLocation } from 'react-router-dom';
 import { Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import Dashboard from './pages/Dashboard';
 import PublicShare from './pages/PublicShare';
-import Documentation from './pages/Documentation';
+import authContext from './context/AuthProvider';
 
 const App = () => {
   const location = useLocation();
+  const { user } = useContext(authContext);
+
+  function AlreadyLoggedInRedirect() {
+    useEffect(() => {
+      toast.error('You are already logged in');
+    }, []);
+
+    return <Navigate to="/dashboard" />;
+  }
+
+  function LogInRedirect() {
+    useEffect(() => {
+      toast.error('Login to access the dashboard');
+    }, []);
+
+    return <Navigate to="/login" />;
+  }
   return (
     <div className="">
-      {location.pathname !== '/login' && location.pathname !== '/signup' && !location.pathname.startsWith('/public/') && <Navbar />}
+      {location.pathname !== '/login' &&
+        location.pathname !== '/signup' &&
+        !location.pathname.startsWith('/public/') && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path='/dashboard' element={<Dashboard/>}/>
-        <Route path='/dashboard/:pageId' element={<Dashboard/>}/>
-        <Route path='/public/:shareId' element={<PublicShare/>}/>
-        <Route path='/documentation' element={<Documentation/>}/>
+        <Route path="/login" element={!user ? <Login /> : <AlreadyLoggedInRedirect />} />
+        <Route path="/signup" element={!user ? <Signup /> : <AlreadyLoggedInRedirect />} />
+        <Route path="/dashboard" element={user ? <Dashboard /> : <LogInRedirect />} />
+        <Route path="/dashboard/:pageId" element={user ? <Dashboard /> : <LogInRedirect />} />
+        <Route path="/public/:shareId" element={<PublicShare />} />
       </Routes>
-      {location.pathname !== '/login' && location.pathname !== '/signup' && location.pathname !== '/dashboard' && !location.pathname.startsWith('/public/') && <Footer />}
+      {location.pathname !== '/login' &&
+        location.pathname !== '/signup' &&
+        location.pathname !== '/dashboard' &&
+        !location.pathname.startsWith('/public/') && <Footer />}
       <Toaster
         position="top-right"
         toastOptions={{

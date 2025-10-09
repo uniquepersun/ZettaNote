@@ -5,14 +5,29 @@ import Note from '../components/dashboard/Note';
 import authContext from '../context/AuthProvider';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
-  const { user } = useContext(authContext);
+  const { user, setuser } = useContext(authContext);
   const [activePage, setActivePage] = useState(null);
   const [pageContent, setPageContent] = useState('');
   const [lastSaved, setLastSaved] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const navigate=useNavigate()
+
+  const handleUnauthorized = (error) => {
+    if (error.response && error.response.status === 401) {
+      setuser(null);
+      localStorage.removeItem('zetta_user');
+      toast.error('Session expired. Please login again.');
+      setTimeout(() => {
+        navigate('/login');
+      }, 1500);
+      return true;
+    }
+    return false;
+  };
 
   
   useEffect(() => {
@@ -37,6 +52,10 @@ const Dashboard = () => {
         setLastSaved(response.data.Page.updatedAt);
       }
     } catch (error) {
+      if (error.response?.status === 401) {
+        handleUnauthorized();
+        return;
+      }
       toast.error('Failed to load page content');
       console.error('Error loading page:', error);
     } finally {
@@ -71,6 +90,10 @@ const Dashboard = () => {
         toast.success('Page saved successfully!');
       }
     } catch (error) {
+      if (error.response?.status === 401) {
+        handleUnauthorized();
+        return;
+      }
       toast.error('Failed to save page');
       console.error('Error saving page:', error);
     } finally {
@@ -98,6 +121,10 @@ const Dashboard = () => {
         setPageContent('');
       }
     } catch (error) {
+      if (error.response?.status === 401) {
+        handleUnauthorized();
+        return;
+      }
       toast.error('Failed to delete page');
       console.error('Error deleting page:', error);
     }
@@ -124,7 +151,7 @@ const Dashboard = () => {
       <Sidebar 
         onPageSelect={(page) => {
           setActivePage(page);
-          setIsSidebarOpen(false); // Close sidebar on mobile when page is selected
+          setIsSidebarOpen(false); 
         }} 
         selectedPageId={activePage?.id}
         isOpen={isSidebarOpen}

@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { Link } from 'react-router-dom'
+import authContext from '../../context/AuthProvider'
 
 const Heading = () => {
+  const {user}=useContext(authContext)
   return (
     <section className='w-full min-h-[60vh] flex items-center justify-center px-4'>
       <div className='text-center max-w-4xl mx-auto'>
@@ -22,12 +25,16 @@ const Heading = () => {
         {/* Minimalist CTA */}
         <div className='heading-cta opacity-0'>
           <div className='flex flex-col sm:flex-row gap-4 justify-center items-center'>
+           <Link to={user?"/dashboard":"/login"}>
             <button className='btn btn-primary btn-lg px-8 py-3 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1'>
               Start Writing
             </button>
+            </Link>
+            <Link to='https://github.com/braydenidzenga/ZettaNote'>
             <button className='btn btn-ghost btn-lg px-8 py-3 bg-secondary rounded-full text-lg font-semibold text-base-content/70 hover:text-base-content transition-all duration-300'>
               Learn More
             </button>
+            </Link>
           </div>
         </div>
 

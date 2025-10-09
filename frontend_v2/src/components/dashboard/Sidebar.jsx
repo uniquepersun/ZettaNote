@@ -16,9 +16,24 @@ import {
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import authContext from '../../context/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 const Sidebar = ({ onPageSelect, selectedPageId, isOpen, onClose }) => {
-  const { user } = useContext(authContext);
+  const { user, setuser } = useContext(authContext);
+  const navigate=useNavigate()
+
+  const handleUnauthorized = (error) => {
+    if (error.response && error.response.status === 401) {
+      setuser(null);
+      localStorage.removeItem('zetta_user');
+      toast.error('Session expired. Please login again.');
+      setTimeout(() => {
+        navigate('/login');
+      }, 1500);
+      return true;
+    }
+    return false;
+  };
   const [pages, setPages] = useState([]);
   const [sharedPages, setSharedPages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -66,6 +81,7 @@ const Sidebar = ({ onPageSelect, selectedPageId, isOpen, onClose }) => {
         setSharedPages(transformedSharedPages);
       }
     } catch (error) {
+      if (handleUnauthorized(error)) return;
       console.error('Error fetching pages:', error);
       toast.error('Failed to load pages');
     } finally {
@@ -118,6 +134,7 @@ const Sidebar = ({ onPageSelect, selectedPageId, isOpen, onClose }) => {
         closeCreateModal();
       }
     } catch (error) {
+      if (handleUnauthorized(error)) return;
       const errorMsg = error.response?.data?.message || 'Failed to create page';
       toast.error(errorMsg);
       console.error('Error creating page:', error);
@@ -146,6 +163,7 @@ const Sidebar = ({ onPageSelect, selectedPageId, isOpen, onClose }) => {
         }
       }
     } catch (error) {
+      if (handleUnauthorized(error)) return;
       const errorMsg = error.response?.data?.message || 'Failed to delete page';
       toast.error(errorMsg);
       console.error('Error deleting page:', error);
@@ -212,6 +230,7 @@ const Sidebar = ({ onPageSelect, selectedPageId, isOpen, onClose }) => {
         }
       }
     } catch (error) {
+      if (handleUnauthorized(error)) return;
       const errorMsg = error.response?.data?.message || 'Failed to rename page';
       toast.error(errorMsg);
       console.error('Error renaming page:', error);

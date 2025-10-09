@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import authContext from '../../context/AuthProvider';
 
 const CommunityAndContribution = () => {
+  const {user}=useContext(authContext)
   return (
     <div>
       {/* COMMUNITY & CONTRIBUTION */}
@@ -96,7 +98,7 @@ const CommunityAndContribution = () => {
 
           <div className="flex flex-wrap gap-3 mt-6">
             <a
-              href="https://github.com/ikeshav26/ZettaNote"
+              href="https://github.com/braydenidzenga/ZettaNote"
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-[color:var(--color-base-300)] hover:bg-[color:var(--color-base-100)] transition-colors"
@@ -107,7 +109,7 @@ const CommunityAndContribution = () => {
               View Repository
             </a>
             <Link
-              to="/signup"
+              to={user?"/dashboard":"/login"}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[color:var(--color-primary)] text-[color:var(--color-primary-content)] hover:opacity-90 transition-opacity"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

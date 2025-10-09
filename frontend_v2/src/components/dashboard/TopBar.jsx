@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { 
   FiShare2, 
   FiEdit3, 
@@ -21,11 +21,28 @@ import {
 } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import authContext from '../../context/AuthProvider';
 
 const TopBar = ({ activePage, onSave, onDelete, onRename, lastSaved, isLoading, onToggleSidebar, isSidebarOpen }) => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareableLink, setShareableLink] = useState('');
   const [isGeneratingLink, setIsGeneratingLink] = useState(false);
+  const navigate=useNavigate()
+  const {user,setuser}=useContext(authContext)
+
+  const handleUnauthorized = (error) => {
+    if (error.response && error.response.status === 401) {
+      setuser(null);
+      localStorage.removeItem('zetta_user');
+      toast.error('Session expired. Please login again.');
+      setTimeout(() => {
+        navigate('/login');
+      }, 1500);
+      return true;
+    }
+    return false;
+  };
   const [shareSettings, setShareSettings] = useState({
     isPublic: true,
     allowComments: false,
@@ -58,6 +75,7 @@ const TopBar = ({ activePage, onSave, onDelete, onRename, lastSaved, isLoading, 
         throw new Error(response.data?.Error || response.data?.message || 'Failed to generate link');
       }
     } catch (error) {
+      if (handleUnauthorized(error)) return;
       console.error('Error generating share link:', error);
       if (error.response) {
         toast.error(`❌ Failed to generate link: ${error.response.data?.Error || error.response.data?.message || 'Server error'}`);

@@ -17,7 +17,7 @@ const Footer = () => {
         {/* Middle Section */}
         <div className="flex flex-col md:flex-row items-center gap-2 md:gap-6 text-sm">
           <a
-            href="https://github.com/ikeshav26/ZettaNote"
+            href="https://github.com/braydenidzenga/ZettaNote"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-primary flex items-center gap-1"

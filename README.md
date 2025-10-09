@@ -418,6 +418,13 @@ We welcome contributions from the community!
 		</tr>
 		<tr>
             <td align="center">
+                <a href="https://github.com/AnirbanNath-dev">
+                    <img src="https://avatars.githubusercontent.com/u/116329986?v=4" width="100;" alt="AnirbanNath-dev"/>
+                    <br />
+                    <sub><b>AnirbanNath-dev</b></sub>
+                </a>
+            </td>
+            <td align="center">
                 <a href="https://github.com/21aansh06">
                     <img src="https://avatars.githubusercontent.com/u/178574389?v=4" width="100;" alt="21aansh06"/>
                     <br />
@@ -452,6 +459,8 @@ We welcome contributions from the community!
                     <sub><b>manumay1962</b></sub>
                 </a>
             </td>
+		</tr>
+		<tr>
             <td align="center">
                 <a href="https://github.com/matheusdcunha">
                     <img src="https://avatars.githubusercontent.com/u/91388782?v=4" width="100;" alt="matheusdcunha"/>
@@ -459,8 +468,6 @@ We welcome contributions from the community!
                     <sub><b>matheusdcunha</b></sub>
                 </a>
             </td>
-		</tr>
-		<tr>
             <td align="center">
                 <a href="https://github.com/siddxharth1">
                     <img src="https://avatars.githubusercontent.com/u/91618085?v=4" width="100;" alt="siddxharth1"/>

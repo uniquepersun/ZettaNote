@@ -1,9 +1,10 @@
-import React, { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useContext, useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, Eye, EyeOff, FileText } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import authContext from '../context/AuthProvider';
+import OAuthButtons from '../components/OAuthButtons';
 import { VITE_API_URL } from '../env';
 
 const Login = () => {
@@ -13,7 +14,21 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, setuser } = useContext(authContext);
+
+  // Handle OAuth errors from URL parameters
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const oauthError = params.get('error');
+    const errorMessage = params.get('message');
+
+    if (oauthError === 'oauth_failed') {
+      toast.error(errorMessage || 'OAuth authentication failed. Please try again.');
+      // Clean URL
+      navigate('/login', { replace: true });
+    }
+  }, [location, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -237,6 +252,9 @@ const Login = () => {
               )}
             </button>
           </form>
+
+          {/* OAuth Buttons */}
+          <OAuthButtons />
 
           {/* Signup Link */}
           <div className="text-center mt-8">

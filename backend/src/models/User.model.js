@@ -20,7 +20,31 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    validate: {
+      validator: function (value) {
+        // Require password if authProvider is 'local'
+        if (this.authProvider === 'local') {
+          return typeof value === 'string' && value.length > 0;
+        }
+        return true;
+      },
+      message: 'Password is required for local authentication users.',
+    },
+  },
+  authProvider: {
+    type: String,
+    enum: ['local', 'google', 'github'],
+    default: 'local',
+  },
+  providerId: {
+    type: String,
+  },
+  avatar: {
+    type: String,
+  },
+  emailVerified: {
+    type: Boolean,
+    default: false,
   },
   pages: {
     type: [mongoose.Types.ObjectId],
@@ -43,5 +67,12 @@ const UserSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
+
+// Indexes for optimized queries
+// Compound index for OAuth provider lookups
+UserSchema.index({ providerId: 1, authProvider: 1 }, { sparse: true });
+
+// Individual index on providerId for partial matches (sparse since not all users have providerId)
+UserSchema.index({ providerId: 1 }, { sparse: true });
 
 export default mongoose.model('User', UserSchema);

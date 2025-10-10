@@ -46,7 +46,7 @@ export const signup = async (req) => {
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, email, password: hashedPassword });
+    const newUser = new User({ name, email, password: hashedPassword, authProvider: 'local' });
 
     try {
       await newUser.save();
@@ -118,6 +118,27 @@ export const login = async (req) => {
       return {
         resStatus: STATUS_CODES.FORBIDDEN,
         resMessage: { message: 'Your account has been banned. Please contact support.' },
+      };
+    }
+
+    // Check if user signed up with OAuth
+    if (user.authProvider && user.authProvider !== 'local') {
+      return {
+        resStatus: STATUS_CODES.BAD_REQUEST,
+        resMessage: {
+          message: `This account was created with OAuth. Please sign in using Google or GitHub.`,
+          authProvider: user.authProvider,
+        },
+      };
+    }
+
+    // Check if password exists (for OAuth accounts that might not have password)
+    if (!user.password) {
+      return {
+        resStatus: STATUS_CODES.BAD_REQUEST,
+        resMessage: {
+          message: `This account was created with OAuth. Please sign in using Google or GitHub.`,
+        },
       };
     }
 

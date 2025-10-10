@@ -455,16 +455,16 @@ export const sharePage = async (req) => {
     // Validate input
     const sharePageSchema = z.object({
       pageId: z.string().min(1, 'Page ID is required'),
-      userEmail: z.string().email('Invalid email address'),
+      email: z.string().email('Invalid email address'),
     });
     const parseResult = sharePageSchema.safeParse(req.body);
     if (!parseResult.success) {
       return {
         resStatus: STATUS_CODES.BAD_REQUEST,
-        resMessage: { message: parseResult.error.errors.map((e) => e.message).join(', ') },
+        resMessage: { message: parseResult.error?.errors?.map((e) => e.message).join(', ') || 'Invalid input' },
       };
     }
-    const { pageId, userEmail } = parseResult.data;
+    const { pageId, email: userEmail } = parseResult.data;
 
     // Verify user
     const user = await verifyToken(token);

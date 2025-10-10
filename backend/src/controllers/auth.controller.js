@@ -337,10 +337,69 @@ export const deleteUser = async (req) => {
   }
 };
 
+/**
+ * Get User By ID Controller
+ * Returns user information by user ID
+ */
+export const getUserById = async (req) => {
+  try {
+    const token = req.cookies?.token;
+    if (!token) {
+      return {
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { message: MESSAGES.AUTH.UNAUTHORIZED },
+      };
+    }
+
+    const requestingUser = await verifyToken(token);
+    if (!requestingUser) {
+      return {
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { message: MESSAGES.AUTH.INVALID_TOKEN },
+      };
+    }
+
+    const { userId } = req.body;
+    if (!userId) {
+      return {
+        resStatus: STATUS_CODES.BAD_REQUEST,
+        resMessage: { message: 'User ID is required' },
+      };
+    }
+
+    const user = await User.findById(userId).select('name email createdAt');
+    if (!user) {
+      return {
+        resStatus: STATUS_CODES.NOT_FOUND,
+        resMessage: { message: 'User not found' },
+      };
+    }
+
+    return {
+      resStatus: STATUS_CODES.OK,
+      resMessage: {
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          createdAt: user.createdAt,
+        },
+      },
+    };
+  } catch (err) {
+    console.error('Get user by ID error:', err);
+    return {
+      resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
+      resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
+    };
+  }
+};
+
 export default {
   signup,
   login,
   getUser,
   changePassword,
   deleteUser,
+  getUserById,
 };

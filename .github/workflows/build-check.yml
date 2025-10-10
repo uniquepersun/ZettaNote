@@ -11,9 +11,48 @@ on:
       - ".github/workflows/**"
 
 jobs:
+  lint:
+    name: Lint All Projects
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Frontend Lint
+      - name: Lint Frontend
+        if: hashFiles('frontend/package.json') != ''
+        run: |
+          cd frontend
+          npm install
+          npm run lint --if-present
+
+      # Admin Portal Lint
+      - name: Lint Admin Portal
+        if: hashFiles('admin-portal/package.json') != ''
+        run: |
+          cd admin-portal
+          npm install
+          npm run lint --if-present
+
+      # Backend Lint
+      - name: Lint Backend
+        if: hashFiles('backend/package.json') != ''
+        run: |
+          cd backend
+          npm install
+          npm run lint --if-present
+
+# ---------------- FRONTEND BUILD ----------------
   frontend-build:
     name: Build Project
     runs-on: ubuntu-latest
+    needs: lint
     if: contains(toJson(github.event.pull_request.changed_files), 'frontend/')
     steps:
       - name: Checkout code
@@ -59,9 +98,12 @@ jobs:
               echo "Build output is invalid."
               exit 1
           fi
+
+# ---------------- ADMIN BUILD ----------------
   admin-build:
     name: Build Project
     runs-on: ubuntu-latest
+    needs: lint
     if: contains(toJson(github.event.pull_request.changed_files), 'admin-portal/')
     steps:
       - name: Checkout code
@@ -102,19 +144,14 @@ jobs:
               echo "Build output is invalid."
               exit 1
           fi
+
+# ---------------- BACKEND BUILD ----------------
   backend-check:
     name: Test Backend
     runs-on: ubuntu-latest
+    needs: lint
     if: contains(toJson(github.event.pull_request.changed_files), 'backend/')
-    env:
-      NODE_ENV: test
-      DB: ${{ secrets.DB }}
-      JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      PORT: 4000
-      ALLOWED_ORIGINS: ${{ secrets.ALLOWED_ORIGINS }}
-      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-      FROM_MAIL: ${{ secrets.FROM_MAIL }}
-
+        
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -126,8 +163,4 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./backend
-
-      - name: Lint Test
-        run: npm run lint --if-present
         working-directory: ./backend

@@ -13,7 +13,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const {user,setuser}=useContext(authContext)
+  const { user, setuser } = useContext(authContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,7 +33,7 @@ const Login = () => {
     }
 
     const formdata = { email: email.trim(), password };
-    
+
     try {
       const res = await axios.post(`${VITE_API_URL}/api/auth/login`, formdata, {
         withCredentials: true,
@@ -42,15 +42,16 @@ const Login = () => {
         },
       });
       setuser(res.data.user);
-      localStorage.setItem("zetta_user",JSON.stringify(res.data.user));
-      
+      localStorage.setItem('zetta_user', JSON.stringify(res.data.user));
+
       navigate('/');
       toast.success('Login successful!');
     } catch (err) {
       console.error('Login error:', err);
-      
+
       if (err.response) {
-        const errorMessage = err.response.data?.message || err.response.data?.Error || 'Login failed';
+        const errorMessage =
+          err.response.data?.message || err.response.data?.Error || 'Login failed';
         setError(errorMessage);
         toast.error(errorMessage);
       } else if (err.request) {
@@ -175,7 +176,7 @@ const Login = () => {
                 name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-base-content/50 focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                className="w-full px-4 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-base-content/50 focus:ring-2 focus:ring-primary focus:border-transparent focus:outline-none transition-all"
                 placeholder="Enter your email"
                 required
               />
@@ -196,7 +197,7 @@ const Login = () => {
                   name="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-base-content/50 focus:ring-2 focus:ring-primary focus:border-transparent transition-all pr-12"
+                  className="w-full px-4 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-base-content/50 focus:ring-2 focus:ring-primary focus:border-transparent focus:outline-none transition-all pr-12"
                   placeholder="Enter your password"
                   required
                 />
@@ -240,7 +241,7 @@ const Login = () => {
           {/* Signup Link */}
           <div className="text-center mt-8">
             <p className="text-base-content/70">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link
                 to="/signup"
                 className="text-primary hover:text-primary/80 font-medium transition-colors"

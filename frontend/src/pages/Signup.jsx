@@ -205,7 +205,7 @@ const Signup = () => {
                 name="name"
                 value={name}
                 onChange={(e) => setname(e.target.value)}
-                className="w-full px-4 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-base-content/50 focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                className="w-full px-4 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-base-content/50 focus:ring-2 focus:ring-primary focus:border-transparent focus:outline-none transition-all"
                 placeholder="Enter your Username"
                 required
               />
@@ -222,7 +222,7 @@ const Signup = () => {
                 name="email"
                 value={email}
                 onChange={(e) => setemail(e.target.value)}
-                className="w-full px-4 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-base-content/50 focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                className="w-full px-4 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-base-content/50 focus:ring-2 focus:ring-primary focus:border-transparent focus:outline-none transition-all"
                 placeholder="Enter your email"
                 required
               />
@@ -243,7 +243,7 @@ const Signup = () => {
                   name="password"
                   value={password}
                   onChange={(e) => setpassword(e.target.value)}
-                  className="w-full px-4 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-base-content/50 focus:ring-2 focus:ring-primary focus:border-transparent transition-all pr-12"
+                  className="w-full px-4 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-base-content/50 focus:ring-2 focus:ring-primary focus:border-transparent focus:outline-none transition-all pr-12"
                   placeholder="Create a password"
                   required
                 />

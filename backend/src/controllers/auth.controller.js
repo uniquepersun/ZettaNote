@@ -46,7 +46,7 @@ export const signup = async (req) => {
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, email, password: hashedPassword });
+    const newUser = new User({ name, email, password: hashedPassword, authProvider: 'local' });
 
     try {
       await newUser.save();
@@ -118,6 +118,27 @@ export const login = async (req) => {
       return {
         resStatus: STATUS_CODES.FORBIDDEN,
         resMessage: { message: 'Your account has been banned. Please contact support.' },
+      };
+    }
+
+    // Check if user signed up with OAuth
+    if (user.authProvider && user.authProvider !== 'local') {
+      return {
+        resStatus: STATUS_CODES.BAD_REQUEST,
+        resMessage: {
+          message: `This account was created with OAuth. Please sign in using Google or GitHub.`,
+          authProvider: user.authProvider,
+        },
+      };
+    }
+
+    // Check if password exists (for OAuth accounts that might not have password)
+    if (!user.password) {
+      return {
+        resStatus: STATUS_CODES.BAD_REQUEST,
+        resMessage: {
+          message: `This account was created with OAuth. Please sign in using Google or GitHub.`,
+        },
       };
     }
 
@@ -316,10 +337,69 @@ export const deleteUser = async (req) => {
   }
 };
 
+/**
+ * Get User By ID Controller
+ * Returns user information by user ID
+ */
+export const getUserById = async (req) => {
+  try {
+    const token = req.cookies?.token;
+    if (!token) {
+      return {
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { message: MESSAGES.AUTH.UNAUTHORIZED },
+      };
+    }
+
+    const requestingUser = await verifyToken(token);
+    if (!requestingUser) {
+      return {
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { message: MESSAGES.AUTH.INVALID_TOKEN },
+      };
+    }
+
+    const { userId } = req.body;
+    if (!userId) {
+      return {
+        resStatus: STATUS_CODES.BAD_REQUEST,
+        resMessage: { message: 'User ID is required' },
+      };
+    }
+
+    const user = await User.findById(userId).select('name email createdAt');
+    if (!user) {
+      return {
+        resStatus: STATUS_CODES.NOT_FOUND,
+        resMessage: { message: 'User not found' },
+      };
+    }
+
+    return {
+      resStatus: STATUS_CODES.OK,
+      resMessage: {
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          createdAt: user.createdAt,
+        },
+      },
+    };
+  } catch (err) {
+    console.error('Get user by ID error:', err);
+    return {
+      resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
+      resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
+    };
+  }
+};
+
 export default {
   signup,
   login,
   getUser,
   changePassword,
   deleteUser,
+  getUserById,
 };

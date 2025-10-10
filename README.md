@@ -337,17 +337,17 @@ We welcome contributions from the community!
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/deepshikhatutorials">
-                    <img src="https://avatars.githubusercontent.com/u/233038862?v=4" width="100;" alt="deepshikhatutorials"/>
-                    <br />
-                    <sub><b>deepshikhatutorials</b></sub>
-                </a>
-            </td>
-            <td align="center">
                 <a href="https://github.com/kaushalyap">
                     <img src="https://avatars.githubusercontent.com/u/24698778?v=4" width="100;" alt="kaushalyap"/>
                     <br />
                     <sub><b>kaushalyap</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/deepshikhatutorials">
+                    <img src="https://avatars.githubusercontent.com/u/233038862?v=4" width="100;" alt="deepshikhatutorials"/>
+                    <br />
+                    <sub><b>deepshikhatutorials</b></sub>
                 </a>
             </td>
             <td align="center">
@@ -425,54 +425,10 @@ We welcome contributions from the community!
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/21aansh06">
-                    <img src="https://avatars.githubusercontent.com/u/178574389?v=4" width="100;" alt="21aansh06"/>
+                <a href="https://github.com/sudoyasir">
+                    <img src="https://avatars.githubusercontent.com/u/94890956?v=4" width="100;" alt="sudoyasir"/>
                     <br />
-                    <sub><b>21aansh06</b></sub>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/AsadAhmedSaiyed">
-                    <img src="https://avatars.githubusercontent.com/u/166991578?v=4" width="100;" alt="AsadAhmedSaiyed"/>
-                    <br />
-                    <sub><b>AsadAhmedSaiyed</b></sub>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/komalsathvik">
-                    <img src="https://avatars.githubusercontent.com/u/170125200?v=4" width="100;" alt="komalsathvik"/>
-                    <br />
-                    <sub><b>komalsathvik</b></sub>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/mahenoorsalat">
-                    <img src="https://avatars.githubusercontent.com/u/167444338?v=4" width="100;" alt="mahenoorsalat"/>
-                    <br />
-                    <sub><b>mahenoorsalat</b></sub>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/manumay1962">
-                    <img src="https://avatars.githubusercontent.com/u/132794868?v=4" width="100;" alt="manumay1962"/>
-                    <br />
-                    <sub><b>manumay1962</b></sub>
-                </a>
-            </td>
-		</tr>
-		<tr>
-            <td align="center">
-                <a href="https://github.com/matheusdcunha">
-                    <img src="https://avatars.githubusercontent.com/u/91388782?v=4" width="100;" alt="matheusdcunha"/>
-                    <br />
-                    <sub><b>matheusdcunha</b></sub>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/siddxharth1">
-                    <img src="https://avatars.githubusercontent.com/u/91618085?v=4" width="100;" alt="siddxharth1"/>
-                    <br />
-                    <sub><b>siddxharth1</b></sub>
+                    <sub><b>sudoyasir</b></sub>
                 </a>
             </td>
             <td align="center">
@@ -483,10 +439,68 @@ We welcome contributions from the community!
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/sudoyasir">
-                    <img src="https://avatars.githubusercontent.com/u/94890956?v=4" width="100;" alt="sudoyasir"/>
+                <a href="https://github.com/siddxharth1">
+                    <img src="https://avatars.githubusercontent.com/u/91618085?v=4" width="100;" alt="siddxharth1"/>
                     <br />
-                    <sub><b>sudoyasir</b></sub>
+                    <sub><b>siddxharth1</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Riya922003">
+                    <img src="https://avatars.githubusercontent.com/u/139098932?v=4" width="100;" alt="Riya922003"/>
+                    <br />
+                    <sub><b>Riya922003</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/matheusdcunha">
+                    <img src="https://avatars.githubusercontent.com/u/91388782?v=4" width="100;" alt="matheusdcunha"/>
+                    <br />
+                    <sub><b>matheusdcunha</b></sub>
+                </a>
+            </td>
+		</tr>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/manumay1962">
+                    <img src="https://avatars.githubusercontent.com/u/132794868?v=4" width="100;" alt="manumay1962"/>
+                    <br />
+                    <sub><b>manumay1962</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/mahenoorsalat">
+                    <img src="https://avatars.githubusercontent.com/u/167444338?v=4" width="100;" alt="mahenoorsalat"/>
+                    <br />
+                    <sub><b>mahenoorsalat</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/komalsathvik">
+                    <img src="https://avatars.githubusercontent.com/u/170125200?v=4" width="100;" alt="komalsathvik"/>
+                    <br />
+                    <sub><b>komalsathvik</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/DikshantJangra">
+                    <img src="https://avatars.githubusercontent.com/u/76596000?v=4" width="100;" alt="DikshantJangra"/>
+                    <br />
+                    <sub><b>DikshantJangra</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/AsadAhmedSaiyed">
+                    <img src="https://avatars.githubusercontent.com/u/166991578?v=4" width="100;" alt="AsadAhmedSaiyed"/>
+                    <br />
+                    <sub><b>AsadAhmedSaiyed</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/21aansh06">
+                    <img src="https://avatars.githubusercontent.com/u/178574389?v=4" width="100;" alt="21aansh06"/>
+                    <br />
+                    <sub><b>21aansh06</b></sub>
                 </a>
             </td>
 		</tr>

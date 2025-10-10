@@ -5,7 +5,11 @@ backend/.env
 
 frontend/node_modules
 frontend/build
+frontend/src/.env
 
 admin-portal/node_modules
 admin-portal/build
 admin-portal/.env
+
+
+**/package-lock.json

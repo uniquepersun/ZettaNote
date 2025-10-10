@@ -1,10 +1,12 @@
-import React, { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useContext, useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, Eye, EyeOff, FileText } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import authContext from '../context/AuthProvider';
+import OAuthButtons from '../components/OAuthButtons';
 import { VITE_API_URL } from '../env';
+import Input from '../components/ui/Input';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,7 +15,21 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const {user,setuser}=useContext(authContext)
+  const location = useLocation();
+  const { user, setuser } = useContext(authContext);
+
+  // Handle OAuth errors from URL parameters
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const oauthError = params.get('error');
+    const errorMessage = params.get('message');
+
+    if (oauthError === 'oauth_failed') {
+      toast.error(errorMessage || 'OAuth authentication failed. Please try again.');
+      // Clean URL
+      navigate('/login', { replace: true });
+    }
+  }, [location, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,7 +49,7 @@ const Login = () => {
     }
 
     const formdata = { email: email.trim(), password };
-    
+
     try {
       const res = await axios.post(`${VITE_API_URL}/api/auth/login`, formdata, {
         withCredentials: true,
@@ -42,15 +58,16 @@ const Login = () => {
         },
       });
       setuser(res.data.user);
-      localStorage.setItem("zetta_user",JSON.stringify(res.data.user));
-      
+      localStorage.setItem('zetta_user', JSON.stringify(res.data.user));
+
       navigate('/');
       toast.success('Login successful!');
     } catch (err) {
       console.error('Login error:', err);
-      
+
       if (err.response) {
-        const errorMessage = err.response.data?.message || err.response.data?.Error || 'Login failed';
+        const errorMessage =
+          err.response.data?.message || err.response.data?.Error || 'Login failed';
         setError(errorMessage);
         toast.error(errorMessage);
       } else if (err.request) {
@@ -169,15 +186,13 @@ const Login = () => {
               <label htmlFor="email" className="block text-sm font-medium text-base-content mb-2">
                 Email Address
               </label>
-              <input
+              <Input
                 type="email"
                 id="email"
                 name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-base-content/50 focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                 placeholder="Enter your email"
-                required
               />
             </div>
 
@@ -190,15 +205,13 @@ const Login = () => {
                 Password
               </label>
               <div className="relative">
-                <input
+                <Input
                   type={showPassword ? 'text' : 'password'}
                   id="password"
                   name="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-base-content/50 focus:ring-2 focus:ring-primary focus:border-transparent transition-all pr-12"
                   placeholder="Enter your password"
-                  required
                 />
                 <button
                   type="button"
@@ -237,10 +250,13 @@ const Login = () => {
             </button>
           </form>
 
+          {/* OAuth Buttons */}
+          <OAuthButtons />
+
           {/* Signup Link */}
           <div className="text-center mt-8">
             <p className="text-base-content/70">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link
                 to="/signup"
                 className="text-primary hover:text-primary/80 font-medium transition-colors"

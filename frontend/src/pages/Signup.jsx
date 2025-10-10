@@ -1,10 +1,12 @@
-import { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useContext, useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, Eye, EyeOff, FileText } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import authContext from '../context/AuthProvider';
+import OAuthButtons from '../components/OAuthButtons';
 import { VITE_API_URL } from '../env';
+import Input from '../components/ui/Input';
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -15,7 +17,20 @@ const Signup = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
   const { setuser } = useContext(authContext);
+
+  // Handle OAuth errors from URL params
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const oauthError = params.get('error');
+    const errorMessage = params.get('message');
+
+    if (oauthError === 'oauth_failed') {
+      toast.error(errorMessage || 'OAuth authentication failed. Please try again.');
+      navigate('/signup', { replace: true });
+    }
+  }, [location, navigate]);
 
   // Password validation function
   const validatePassword = (pass) => {
@@ -199,15 +214,13 @@ const Signup = () => {
               >
                 Username
               </label>
-              <input
+              <Input
                 type="text"
                 id="name"
                 name="name"
                 value={name}
                 onChange={(e) => setname(e.target.value)}
-                className="w-full px-4 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-base-content/50 focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                placeholder="Enter your Username"
-                required
+                placeholder="Enter your username"
               />
             </div>
 
@@ -216,15 +229,13 @@ const Signup = () => {
               <label htmlFor="email" className="block text-sm font-medium text-base-content mb-2">
                 Email Address
               </label>
-              <input
+              <Input
                 type="email"
                 id="email"
                 name="email"
                 value={email}
                 onChange={(e) => setemail(e.target.value)}
-                className="w-full px-4 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-base-content/50 focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                 placeholder="Enter your email"
-                required
               />
             </div>
 
@@ -237,15 +248,13 @@ const Signup = () => {
                 Password
               </label>
               <div className="relative">
-                <input
+                <Input
                   type={showPassword ? 'text' : 'password'}
                   id="password"
                   name="password"
                   value={password}
                   onChange={(e) => setpassword(e.target.value)}
-                  className="w-full px-4 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-base-content/50 focus:ring-2 focus:ring-primary focus:border-transparent transition-all pr-12"
-                  placeholder="Create a password"
-                  required
+                  placeholder="Enter your password"
                 />
                 <button
                   type="button"
@@ -306,6 +315,9 @@ const Signup = () => {
               )}
             </button>
           </form>
+
+          {/* OAuth Buttons */}
+          <OAuthButtons />
 
           {/* Login Link */}
           <div className="text-center mt-8">

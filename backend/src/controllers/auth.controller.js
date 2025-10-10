@@ -121,6 +121,27 @@ export const login = async (req) => {
       };
     }
 
+    // Check if user signed up with OAuth
+    if (user.authProvider && user.authProvider !== 'local') {
+      return {
+        resStatus: STATUS_CODES.BAD_REQUEST,
+        resMessage: {
+          message: `This account was created with OAuth. Please sign in using Google or GitHub.`,
+          authProvider: user.authProvider,
+        },
+      };
+    }
+
+    // Check if password exists (for OAuth accounts that might not have password)
+    if (!user.password) {
+      return {
+        resStatus: STATUS_CODES.BAD_REQUEST,
+        resMessage: {
+          message: `This account was created with OAuth. Please sign in using Google or GitHub.`,
+        },
+      };
+    }
+
     // Verify password
     const passwordsMatch = await bcrypt.compare(password, user.password);
     if (!passwordsMatch) {

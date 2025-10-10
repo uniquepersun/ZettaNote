@@ -26,11 +26,22 @@ passport.use(
         let user = await User.findOne({ providerId: profile.id, authProvider: 'google' });
 
         if (!user) {
-          // Check if email already exists (link to existing account)
+          // Check if email already exists
           user = await User.findOne({ email });
 
           if (user) {
-            // Link Google account to existing user
+            // User exists with this email
+            if (user.authProvider === 'local' && user.password) {
+              // User has a local account with password - don't allow OAuth login
+              return done(
+                new Error(
+                  'An account with this email already exists. Please sign in with your email and password instead.'
+                ),
+                null
+              );
+            }
+
+            // Link Google account to existing user (OAuth to OAuth linking allowed)
             user.authProvider = 'google';
             user.providerId = profile.id;
             user.avatar =
@@ -90,11 +101,22 @@ passport.use(
         let user = await User.findOne({ providerId: profile.id, authProvider: 'github' });
 
         if (!user) {
-          // Check if email already exists (link to existing account)
+          // Check if email already exists
           user = await User.findOne({ email });
 
           if (user) {
-            // Link GitHub account to existing user
+            // User exists with this email
+            if (user.authProvider === 'local' && user.password) {
+              // User has a local account with password - don't allow OAuth login
+              return done(
+                new Error(
+                  'An account with this email already exists. Please sign in with your email and password instead.'
+                ),
+                null
+              );
+            }
+
+            // Link GitHub account to existing user (OAuth to OAuth linking allowed)
             user.authProvider = 'github';
             user.providerId = profile.id;
             user.avatar =

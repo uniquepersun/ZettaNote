@@ -19,18 +19,12 @@ router.get('/google/callback', (req, res, next) => {
     if (err) {
       console.error('Google OAuth error:', err);
       return res.redirect(
-        `${config.frontendUrl}/login?error=oauth_failed&message=${encodeURIComponent(
-          err.message || 'Authentication failed'
-        )}`
+        `${config.frontendUrl}/login?error=oauth_failed&message="Authentication failed"`
       );
     }
 
     if (!user) {
-      return res.redirect(
-        `${config.frontendUrl}/login?error=oauth_failed&message=${encodeURIComponent(
-          info?.message || 'No user returned'
-        )}`
-      );
+      return res.redirect(`${config.frontendUrl}/login?error=oauth_failed&message="No user found"`);
     }
 
     // Successful authentication, generate token
@@ -61,18 +55,12 @@ router.get('/github/callback', (req, res, next) => {
     if (err) {
       console.error('GitHub OAuth error:', err);
       return res.redirect(
-        `${config.frontendUrl}/login?error=oauth_failed&message=${encodeURIComponent(
-          err.message || 'Authentication failed'
-        )}`
+        `${config.frontendUrl}/login?error=oauth_failed&message="Authentication failed"`
       );
     }
 
     if (!user) {
-      return res.redirect(
-        `${config.frontendUrl}/login?error=oauth_failed&message=${encodeURIComponent(
-          info?.message || 'No user returned'
-        )}`
-      );
+      return res.redirect(`${config.frontendUrl}/login?error=oauth_failed&message="No user found"`);
     }
 
     // Successful authentication, generate token

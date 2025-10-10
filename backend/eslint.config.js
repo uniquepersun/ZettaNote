@@ -15,6 +15,7 @@ export default [
     rules: {
       ...js.configs.recommended.rules,
 
+      'no-console': 'warn',
       'no-unused-vars': 'warn',
       'no-undef': 'error',
       'eqeqeq': ['error', 'always'],

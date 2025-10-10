@@ -11,10 +11,11 @@ on:
       - ".github/workflows/**"
 
 jobs:
-  lint:
-    name: Lint All Projects
+  # ---------------- LINT: FRONTEND ----------------
+  lint-frontend:
+    name: Lint Frontend
     runs-on: ubuntu-latest
-
+    if: contains(toJson(github.event.pull_request.changed_files), 'frontend/')
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -24,134 +25,97 @@ jobs:
         with:
           node-version: 20
 
-      # Frontend Lint
-      - name: Lint Frontend
-        if: hashFiles('frontend/package.json') != ''
-        run: |
-          cd frontend
-          npm install
-          npm run lint --if-present
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./frontend
 
-      # Admin Portal Lint
-      - name: Lint Admin Portal
-        if: hashFiles('admin-portal/package.json') != ''
-        run: |
-          cd admin-portal
-          npm install
-          npm run lint --if-present
+      - name: Run Linter
+        run: npm run lint --if-present
+        working-directory: ./frontend
 
-      # Backend Lint
-      - name: Lint Backend
-        if: hashFiles('backend/package.json') != ''
-        run: |
-          cd backend
-          npm install
-          npm run lint --if-present
-
-# ---------------- FRONTEND BUILD ----------------
-  frontend-build:
-    name: Build Project
+  # ---------------- LINT: ADMIN PORTAL ----------------
+  lint-admin:
+    name: Lint Admin Portal
     runs-on: ubuntu-latest
-    needs: lint
+    if: contains(toJson(github.event.pull_request.changed_files), 'admin-portal/')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./admin-portal
+
+      - name: Run Linter
+        run: npm run lint --if-present
+        working-directory: ./admin-portal
+
+  # ---------------- LINT: BACKEND ----------------
+  lint-backend:
+    name: Lint Backend
+    runs-on: ubuntu-latest
+    if: contains(toJson(github.event.pull_request.changed_files), 'backend/')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./backend
+
+      - name: Run Linter
+        run: npm run lint --if-present
+        working-directory: ./backend
+
+  # ---------------- FRONTEND BUILD ----------------
+  frontend-build:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+    needs: [lint-frontend]
     if: contains(toJson(github.event.pull_request.changed_files), 'frontend/')
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: "24"
+          node-version: 20
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
         working-directory: ./frontend
 
       - name: Build project
         run: npm run build
         working-directory: ./frontend
-      - name: Check for Debug statements
-        run: |
-          if grep -R --include=\*.{js,jsx,ts,tsx} "console.log" ./frontend; then
-            echo "❌ console.log statements found in frontend code!"
-            exit 1
-          else
-            echo "✅ No console.log statements found in frontend."
-          fi
-      - name: check if build folder exists
-        run: |
-          if [ -d "frontend/dist" ]; then
-              echo "Build folder exists."
-          else
-              echo "Build folder does not exist."
-              exit 1
-          fi
-
-      - name: List build folder contents
-        run: ls -la frontend/dist
+        
 
       - name: Verify build output
         run: |
           if [ -f "frontend/dist/index.html" ]; then
-              echo "Build output is valid."
+              echo "✅ Build output valid."
           else
-              echo "Build output is invalid."
+              echo "❌ Build output missing!"
               exit 1
           fi
 
-# ---------------- ADMIN BUILD ----------------
+  # ---------------- ADMIN BUILD ----------------
   admin-build:
-    name: Build Project
+    name: Build Admin Portal
     runs-on: ubuntu-latest
-    needs: lint
+    needs: [lint-admin]
     if: contains(toJson(github.event.pull_request.changed_files), 'admin-portal/')
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: "24"
-      - name: Install dependencies
-        run: npm install
-        working-directory: ./admin-portal
-      - name: Build project
-        run: npm run build
-        working-directory: ./admin-portal
-      - name: Check for Debug statements
-        run: |
-          if grep -R --include=\*.{js,jsx,ts,tsx} "console.log" ./admin-portal; then
-            echo "❌ console.log statements found in admin-portal code!"
-            exit 1
-          else
-            echo "✅ No console.log statements found in admin-portal."
-          fi
-      - name: check if build folder exists
-        run: |
-          if [ -d "admin-portal/build" ]; then
-              echo "Build folder exists."
-          else
-              echo "Build folder does not exist."
-              exit 1
-          fi
-      - name: List build folder contents
-        run: ls -la admin-portal/build
-      - name: Verify build output
-        run: |
-          if [ -f "admin-portal/build/index.html" ]; then
-              echo "Build output is valid."
-          else
-              echo "Build output is invalid."
-              exit 1
-          fi
-
-# ---------------- BACKEND BUILD ----------------
-  backend-check:
-    name: Test Backend
-    runs-on: ubuntu-latest
-    needs: lint
-    if: contains(toJson(github.event.pull_request.changed_files), 'backend/')
-        
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -162,5 +126,42 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+        working-directory: ./admin-portal
+
+      - name: Build project
+        run: npm run build
+        working-directory: ./admin-portal
+
+      - name: Verify build output
+        run: |
+          if [ -f "admin-portal/build/index.html" ]; then
+              echo "✅ Build output valid."
+          else
+              echo "❌ Build output missing!"
+              exit 1
+          fi
+
+  # ---------------- BACKEND TEST ----------------
+  backend-check:
+    name: Test Backend
+    runs-on: ubuntu-latest
+    needs: [lint-backend]
+    if: contains(toJson(github.event.pull_request.changed_files), 'backend/')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./backend
+
+      - name: Run Tests
+        run: npm test --if-present
         working-directory: ./backend

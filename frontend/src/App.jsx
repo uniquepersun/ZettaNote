@@ -15,21 +15,7 @@ const App = () => {
   const location = useLocation();
   const { user } = useContext(authContext);
 
-  function AlreadyLoggedInRedirect() {
-    useEffect(() => {
-      toast.error('You are already logged in');
-    }, []);
-
-    return <Navigate to="/dashboard" />;
-  }
-
-  function LogInRedirect() {
-    useEffect(() => {
-      toast.error('Login to access the dashboard');
-    }, []);
-
-    return <Navigate to="/login" />;
-  }
+  
   return (
     <div className="">
       {location.pathname !== '/login' &&
@@ -37,10 +23,10 @@ const App = () => {
         !location.pathname.startsWith('/public/') && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={!user ? <Login /> : <AlreadyLoggedInRedirect />} />
-        <Route path="/signup" element={!user ? <Signup /> : <AlreadyLoggedInRedirect />} />
-        <Route path="/dashboard" element={user ? <Dashboard /> : <LogInRedirect />} />
-        <Route path="/dashboard/:pageId" element={user ? <Dashboard /> : <LogInRedirect />} />
+        <Route path="/login" element={!user ? <Login /> : <Navigate to="/dashboard" />} />
+        <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/dashboard" />} />
+        <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/" />} />
+        <Route path="/dashboard/:pageId" element={user ? <Dashboard /> :  <Navigate to="/" />} />
         <Route path="/public/:shareId" element={<PublicShare />} />
       </Routes>
       {location.pathname !== '/login' &&
@@ -48,7 +34,7 @@ const App = () => {
         location.pathname !== '/dashboard' &&
         !location.pathname.startsWith('/public/') && <Footer />}
       <Toaster
-        position="top-right"
+        position="bottom-right"
         toastOptions={{
           style: {
             borderRadius: '0.75rem',

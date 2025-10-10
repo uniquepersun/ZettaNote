@@ -20,7 +20,21 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+  },
+  authProvider: {
+    type: String,
+    enum: ['local', 'google', 'github'],
+    default: 'local',
+  },
+  providerId: {
+    type: String,
+  },
+  avatar: {
+    type: String,
+  },
+  emailVerified: {
+    type: Boolean,
+    default: false,
   },
   pages: {
     type: [mongoose.Types.ObjectId],

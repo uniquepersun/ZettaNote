@@ -446,12 +446,21 @@ We welcome contributions from the community!
                 </a>
             </td>
             <td align="center">
+                <a href="https://github.com/Riya922003">
+                    <img src="https://avatars.githubusercontent.com/u/139098932?v=4" width="100;" alt="Riya922003"/>
+                    <br />
+                    <sub><b>Riya922003</b></sub>
+                </a>
+            </td>
+            <td align="center">
                 <a href="https://github.com/matheusdcunha">
                     <img src="https://avatars.githubusercontent.com/u/91388782?v=4" width="100;" alt="matheusdcunha"/>
                     <br />
                     <sub><b>matheusdcunha</b></sub>
                 </a>
             </td>
+		</tr>
+		<tr>
             <td align="center">
                 <a href="https://github.com/manumay1962">
                     <img src="https://avatars.githubusercontent.com/u/132794868?v=4" width="100;" alt="manumay1962"/>
@@ -459,8 +468,6 @@ We welcome contributions from the community!
                     <sub><b>manumay1962</b></sub>
                 </a>
             </td>
-		</tr>
-		<tr>
             <td align="center">
                 <a href="https://github.com/mahenoorsalat">
                     <img src="https://avatars.githubusercontent.com/u/167444338?v=4" width="100;" alt="mahenoorsalat"/>

@@ -6,6 +6,7 @@ dotenv.config();
 const config = {
   // Server Configuration
   server: {
+    url: process.env.BACKEND_URL || 'http://localhost:4000',
     port: process.env.PORT || 4000,
     nodeEnv: process.env.NODE_ENV || 'development',
   },
@@ -28,14 +29,14 @@ const config = {
     allowedOrigins: process.env.CORS_ORIGIN
       ? process.env.CORS_ORIGIN.split(',')
       : process.env.ALLOWED_ORIGINS
-        ? process.env.ALLOWED_ORIGINS.split(',')
-        : [
-            'http://localhost:3000',
-            'http://localhost:3001',
-            'http://localhost:3002',
-            'http://localhost:80',
-            'http://localhost:5173',
-          ],
+      ? process.env.ALLOWED_ORIGINS.split(',')
+      : [
+          'http://localhost:3000',
+          'http://localhost:3001',
+          'http://localhost:3002',
+          'http://localhost:80',
+          'http://localhost:5173',
+        ],
   },
 
   // Cookie Configuration
@@ -46,6 +47,22 @@ const config = {
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     domain: process.env.COOKIE_DOMAIN || undefined,
   },
+
+  // OAuth Configuration
+  oauth: {
+    google: {
+      clientID: process.env.GOOGLE_CLIENT_ID || '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+      callbackURL: process.env.GOOGLE_CALLBACK_URL || '/api/auth/google/callback',
+    },
+    github: {
+      clientID: process.env.GITHUB_CLIENT_ID || '',
+      clientSecret: process.env.GITHUB_CLIENT_SECRET || '',
+      callbackURL: process.env.GITHUB_CALLBACK_URL || '/api/auth/github/callback',
+    },
+  },
+  // Frontend URL
+  frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
 };
 
 export default config;

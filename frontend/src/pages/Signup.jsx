@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import authContext from '../context/AuthProvider';
 import OAuthButtons from '../components/OAuthButtons';
 import { VITE_API_URL } from '../env';
+import Input from '../components/ui/Input';
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -213,15 +214,13 @@ const Signup = () => {
               >
                 Username
               </label>
-              <input
+              <Input
                 type="text"
                 id="name"
                 name="name"
                 value={name}
                 onChange={(e) => setname(e.target.value)}
-                className="w-full px-4 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-base-content/50 focus:ring-2 focus:ring-primary focus:border-transparent focus:outline-none transition-all"
-                placeholder="Enter your Username"
-                required
+                placeholder="Enter your username"
               />
             </div>
 
@@ -230,15 +229,13 @@ const Signup = () => {
               <label htmlFor="email" className="block text-sm font-medium text-base-content mb-2">
                 Email Address
               </label>
-              <input
+              <Input
                 type="email"
                 id="email"
                 name="email"
                 value={email}
                 onChange={(e) => setemail(e.target.value)}
-                className="w-full px-4 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-base-content/50 focus:ring-2 focus:ring-primary focus:border-transparent focus:outline-none transition-all"
                 placeholder="Enter your email"
-                required
               />
             </div>
 
@@ -251,15 +248,13 @@ const Signup = () => {
                 Password
               </label>
               <div className="relative">
-                <input
+                <Input
                   type={showPassword ? 'text' : 'password'}
                   id="password"
                   name="password"
                   value={password}
                   onChange={(e) => setpassword(e.target.value)}
-                  className="w-full px-4 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-base-content/50 focus:ring-2 focus:ring-primary focus:border-transparent focus:outline-none transition-all pr-12"
-                  placeholder="Create a password"
-                  required
+                  placeholder="Enter your password"
                 />
                 <button
                   type="button"

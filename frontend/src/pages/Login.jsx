@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import authContext from '../context/AuthProvider';
 import OAuthButtons from '../components/OAuthButtons';
 import { VITE_API_URL } from '../env';
+import Input from '../components/ui/Input';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -185,15 +186,13 @@ const Login = () => {
               <label htmlFor="email" className="block text-sm font-medium text-base-content mb-2">
                 Email Address
               </label>
-              <input
+              <Input
                 type="email"
                 id="email"
                 name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-base-content/50 focus:ring-2 focus:ring-primary focus:border-transparent focus:outline-none transition-all"
                 placeholder="Enter your email"
-                required
               />
             </div>
 
@@ -206,15 +205,13 @@ const Login = () => {
                 Password
               </label>
               <div className="relative">
-                <input
+                <Input
                   type={showPassword ? 'text' : 'password'}
                   id="password"
                   name="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-base-content/50 focus:ring-2 focus:ring-primary focus:border-transparent focus:outline-none transition-all pr-12"
                   placeholder="Enter your password"
-                  required
                 />
                 <button
                   type="button"

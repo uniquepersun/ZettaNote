@@ -258,7 +258,7 @@ export const savePage = async (req) => {
     }
 
     // Check if user is owner or has write permission
-    if ((!page.owner.equals(user._id)) && (!page.sharedTo.some((id) => id.equals(user._id)))) {
+    if (!page.owner.equals(user._id) && !page.sharedTo.some((id) => id.equals(user._id))) {
       return {
         resStatus: STATUS_CODES.FORBIDDEN,
         resMessage: { message: MESSAGES.PAGE.ACCESS_DENIED },

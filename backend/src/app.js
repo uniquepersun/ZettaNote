@@ -2,7 +2,7 @@
  * Express Application Setup
  * Configures middleware, routes, and error handlers
  */
-
+import passport from './config/passport.js';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import { configureCors } from './config/cors.js';
@@ -23,6 +23,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Cookie parser
 app.use(cookieParser());
+app.use(passport.initialize());
 
 // API Routes
 app.use('/api', routes);

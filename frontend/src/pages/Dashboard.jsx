@@ -5,7 +5,7 @@ import Note from '../components/dashboard/Note';
 import authContext from '../context/AuthProvider';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { VITE_API_URL } from '../env';
 
 const Dashboard = () => {
@@ -16,6 +16,37 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Handle OAuth success - fetch user data
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const oauthSuccess = params.get('oauth');
+
+    if (oauthSuccess === 'success' && !user) {
+      // Fetch user data from backend using the cookie
+      const fetchUserData = async () => {
+        try {
+          const response = await axios.get(`${VITE_API_URL}/api/auth/getuser`, {
+            withCredentials: true,
+          });
+
+          if (response.data.user) {
+            setuser(response.data.user);
+            localStorage.setItem('zetta_user', JSON.stringify(response.data.user));
+            toast.success('Successfully logged in!');
+            navigate('/dashboard', { replace: true });
+          }
+        } catch (error) {
+          console.error('Failed to fetch user data:', error);
+          toast.error('Failed to complete login. Please try again.');
+          navigate('/login', { replace: true });
+        }
+      };
+
+      fetchUserData();
+    }
+  }, [location, navigate, user, setuser]);
 
   const handleUnauthorized = (error) => {
     if (error.response && error.response.status === 401) {

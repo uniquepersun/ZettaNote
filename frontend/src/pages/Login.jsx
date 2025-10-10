@@ -1,9 +1,10 @@
-import React, { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useContext, useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, Eye, EyeOff, FileText } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import authContext from '../context/AuthProvider';
+import OAuthButtons from '../components/OAuthButtons';
 import { VITE_API_URL } from '../env';
 
 const Login = () => {
@@ -13,7 +14,21 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const {user,setuser}=useContext(authContext)
+  const location = useLocation();
+  const { user, setuser } = useContext(authContext);
+
+  // Handle OAuth errors from URL parameters
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const oauthError = params.get('error');
+    const errorMessage = params.get('message');
+
+    if (oauthError === 'oauth_failed') {
+      toast.error(errorMessage || 'OAuth authentication failed. Please try again.');
+      // Clean URL
+      navigate('/login', { replace: true });
+    }
+  }, [location, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,7 +48,7 @@ const Login = () => {
     }
 
     const formdata = { email: email.trim(), password };
-    
+
     try {
       const res = await axios.post(`${VITE_API_URL}/api/auth/login`, formdata, {
         withCredentials: true,
@@ -42,15 +57,16 @@ const Login = () => {
         },
       });
       setuser(res.data.user);
-      localStorage.setItem("zetta_user",JSON.stringify(res.data.user));
-      
+      localStorage.setItem('zetta_user', JSON.stringify(res.data.user));
+
       navigate('/');
       toast.success('Login successful!');
     } catch (err) {
       console.error('Login error:', err);
-      
+
       if (err.response) {
-        const errorMessage = err.response.data?.message || err.response.data?.Error || 'Login failed';
+        const errorMessage =
+          err.response.data?.message || err.response.data?.Error || 'Login failed';
         setError(errorMessage);
         toast.error(errorMessage);
       } else if (err.request) {
@@ -236,6 +252,9 @@ const Login = () => {
               )}
             </button>
           </form>
+
+          {/* OAuth Buttons */}
+          <OAuthButtons />
 
           {/* Signup Link */}
           <div className="text-center mt-8">

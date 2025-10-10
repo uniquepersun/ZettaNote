@@ -15,7 +15,11 @@ const App = () => {
   const location = useLocation();
   const { user } = useContext(authContext);
 
-  
+  // Check if this is an OAuth callback
+  const isOAuthCallback =
+    location.pathname === '/dashboard' &&
+    new URLSearchParams(location.search).get('oauth') === 'success';
+
   return (
     <div className="">
       {location.pathname !== '/login' &&
@@ -25,8 +29,11 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={!user ? <Login /> : <Navigate to="/dashboard" />} />
         <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/dashboard" />} />
-        <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/" />} />
-        <Route path="/dashboard/:pageId" element={user ? <Dashboard /> :  <Navigate to="/" />} />
+        <Route
+          path="/dashboard"
+          element={user || isOAuthCallback ? <Dashboard /> : <Navigate to="/" />}
+        />
+        <Route path="/dashboard/:pageId" element={user ? <Dashboard /> : <Navigate to="/" />} />
         <Route path="/public/:shareId" element={<PublicShare />} />
       </Routes>
       {location.pathname !== '/login' &&

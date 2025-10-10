@@ -5,6 +5,7 @@ import {
   getUser,
   changePassword,
   deleteUser,
+  getUserById,
 } from '../controllers/auth.controller.js';
 import { asyncHandler } from '../middleware/error.middleware.js';
 
@@ -131,6 +132,19 @@ router.delete(
       });
     }
 
+    res.status(resStatus).json(resMessage);
+  })
+);
+
+/**
+ * @route   POST /api/auth/getuserbyid
+ * @desc    Get user info by user ID
+ * @access  Private
+ */
+router.post(
+  '/getuserbyid',
+  asyncHandler(async (req, res) => {
+    const { resStatus, resMessage } = await getUserById(req);
     res.status(resStatus).json(resMessage);
   })
 );

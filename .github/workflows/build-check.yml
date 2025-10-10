@@ -4,11 +4,17 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - "frontend/**"
+      - "admin-portal/**"
+      - "backend/**"
+      - ".github/workflows/**"
 
 jobs:
   frontend-build:
     name: Build Project
     runs-on: ubuntu-latest
+    if: contains(toJson(github.event.pull_request.changed_files), 'frontend/')
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -25,7 +31,7 @@ jobs:
       - name: Build project
         run: npm run build
         working-directory: ./frontend
-      - name: Check for Debug statements  
+      - name: Check for Debug statements
         run: |
           if grep -R --include=\*.{js,jsx,ts,tsx} "console.log" ./frontend; then
             echo "❌ console.log statements found in frontend code!"
@@ -56,6 +62,7 @@ jobs:
   admin-build:
     name: Build Project
     runs-on: ubuntu-latest
+    if: contains(toJson(github.event.pull_request.changed_files), 'admin-portal/')
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -95,3 +102,32 @@ jobs:
               echo "Build output is invalid."
               exit 1
           fi
+  backend-check:
+    name: Test Backend
+    runs-on: ubuntu-latest
+    if: contains(toJson(github.event.pull_request.changed_files), 'backend/')
+    env:
+      NODE_ENV: test
+      DB: ${{ secrets.DB }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      PORT: 4000
+      ALLOWED_ORIGINS: ${{ secrets.ALLOWED_ORIGINS }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      FROM_MAIL: ${{ secrets.FROM_MAIL }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./backend
+
+      - name: Lint Test
+        run: npm run lint --if-present
+        working-directory: ./backend

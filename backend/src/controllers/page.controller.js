@@ -660,9 +660,9 @@ export const getPublicShare = async (shareId) => {
 /**
  * Post Unshare Page Controller
  * Removes a shared page from user
+ * @param {object} req - Express request object
  * @param {string} id - Active page id
  * @param {string} gmail - Email of the user to unshare the page with
- * @returns {object} Response status and page content if successful
  */
 export const removeUserFromSharedPage = async (req,id, gmail) => {
   try {

@@ -11,11 +11,36 @@ on:
       - ".github/workflows/**"
 
 jobs:
+  # ---------------- DETECT CHANGES ----------------
+  detect-changes:
+    name: Detect Changed Folders
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.filter.outputs.frontend }}
+      admin-portal: ${{ steps.filter.outputs.admin-portal }}
+      backend: ${{ steps.filter.outputs.backend }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check changed paths
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            frontend:
+              - 'frontend/**'
+            admin-portal:
+              - 'admin-portal/**'
+            backend:
+              - 'backend/**'
+
   # ---------------- LINT: FRONTEND ----------------
   lint-frontend:
     name: Lint Frontend
     runs-on: ubuntu-latest
-    if: contains(toJson(github.event.pull_request.changed_files), 'frontend/')
+    needs: detect-changes
+    if: needs.detect-changes.outputs.frontend == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -37,7 +62,8 @@ jobs:
   lint-admin:
     name: Lint Admin Portal
     runs-on: ubuntu-latest
-    if: contains(toJson(github.event.pull_request.changed_files), 'admin-portal/')
+    needs: detect-changes
+    if: needs.detect-changes.outputs.admin-portal == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -59,7 +85,8 @@ jobs:
   lint-backend:
     name: Lint Backend
     runs-on: ubuntu-latest
-    if: contains(toJson(github.event.pull_request.changed_files), 'backend/')
+    needs: detect-changes
+    if: needs.detect-changes.outputs.backend == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -81,8 +108,8 @@ jobs:
   frontend-build:
     name: Build Frontend
     runs-on: ubuntu-latest
-    needs: [lint-frontend]
-    if: contains(toJson(github.event.pull_request.changed_files), 'frontend/')
+    needs: [detect-changes, lint-frontend]
+    if: needs.detect-changes.outputs.frontend == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -113,8 +140,8 @@ jobs:
   admin-build:
     name: Build Admin Portal
     runs-on: ubuntu-latest
-    needs: [lint-admin]
-    if: contains(toJson(github.event.pull_request.changed_files), 'admin-portal/')
+    needs: [detect-changes, lint-admin]
+    if: needs.detect-changes.outputs.admin-portal == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -145,8 +172,8 @@ jobs:
   backend-check:
     name: Test Backend
     runs-on: ubuntu-latest
-    needs: [lint-backend]
-    if: contains(toJson(github.event.pull_request.changed_files), 'backend/')
+    needs: [detect-changes, lint-backend]
+    if: needs.detect-changes.outputs.backend == 'true'
 
     steps:
       - name: Checkout code

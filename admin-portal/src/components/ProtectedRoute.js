@@ -1,8 +1,8 @@
-import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { adminAuth } from '../utils/adminAuth';
 
 // Component to protect admin routes
+// eslint-disable-next-line react/prop-types
 export const ProtectedRoute = ({ children }) => {
   const location = useLocation();
   const isAuthenticated = adminAuth.isAuthenticated();
@@ -16,6 +16,7 @@ export const ProtectedRoute = ({ children }) => {
 };
 
 // Component to protect login route when admin is already authenticated
+//eslint-disable-next-line react/prop-types
 export const PublicRoute = ({ children }) => {
   const isAuthenticated = adminAuth.isAuthenticated();
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -281,7 +281,8 @@ export default function AdminManagement() {
         <AdminNavbar />
         <Container maxWidth="lg" sx={{ py: 4 }}>
           <Alert severity="error">
-            You don't have permission to access admin management. Super admin privileges required.
+            You don&apos;t have permission to access admin management. Super admin privileges
+            required.
           </Alert>
         </Container>
       </Box>

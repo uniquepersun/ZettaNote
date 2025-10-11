@@ -9,7 +9,7 @@ import {
   sharePage,
   publicShare,
   getPublicShare,
-  deleteSharedPage
+  removeUserFromSharedPage,
 } from '../controllers/page.controller.js';
 import { asyncHandler } from '../middleware/error.middleware.js';
 
@@ -134,16 +134,17 @@ router.get(
 );
 
 /**
- * POST /api/pages/delete/sharedpage/:id
+ * POST /api/pages/sharepage/remove-user
  * @description Remove a shared user from a page
  * @public
  */
-router.post('/delete/sharedpage/:id', asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const { gmail } = req.body;
-  const { resStatus, resMessage } = await deleteSharedPage(id, gmail);
-  res.status(resStatus).json(resMessage);
-}));
-
+router.post(
+  '/sharepage/remove-user',
+  asyncHandler(async (req, res) => {
+    const { gmail, id } = req.body;
+    const { resStatus, resMessage } = await removeUserFromSharedPage(req,id, gmail);
+    res.status(resStatus).json(resMessage);
+  })
+);
 
 export default router;

@@ -259,8 +259,9 @@ const TopBar = ({ activePage, onSave, lastSaved, isLoading, onToggleSidebar, isS
 
   const removeSharedUser = async (userEmail) => {
     try {
-      const response=await axios.post(`${VITE_API_URL}/api/pages/delete/sharedpage/${activePage.id}`, {
+      const response=await axios.post(`${VITE_API_URL}/api/pages/sharepage/remove-user`, {
         gmail: userEmail,
+        id: activePage.id
       }, {
         withCredentials: true,
       });

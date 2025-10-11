@@ -56,7 +56,7 @@ export const generateMemorablePassword = () => {
 /**
  * Validate password strength
  * @param {string} password - Password to validate
- * @returns {Object} Validation result
+ * @returns {object} Validation result
  */
 export const validatePasswordStrength = (password) => {
   const minLength = 8;
@@ -86,7 +86,7 @@ export const validatePasswordStrength = (password) => {
 /**
  * Validate password using Zod schema
  * @param {string} password - Password to validate
- * @returns {Object} Validation result with status and message
+ * @returns {object} Validation result with status and message
  */
 export const validatePassword = (password) => {
   const passwordSchema = z

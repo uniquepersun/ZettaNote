@@ -12,8 +12,8 @@ import { asyncHandler } from '../middleware/error.middleware.js';
 const router = express.Router();
 
 /**
- * @route   POST /api/auth/signup
- * @desc    Register a new user
+ * POST /api/auth/signup
+ * @description Register a new user
  * @access  Public
  */
 router.post(
@@ -35,8 +35,8 @@ router.post(
 );
 
 /**
- * @route   POST /api/auth/login
- * @desc    Authenticate user and get token
+ * POST /api/auth/login
+ * @description Authenticate user and get token
  * @access  Public
  */
 router.post(
@@ -58,8 +58,8 @@ router.post(
 );
 
 /**
- * @route   POST /api/auth/logout
- * @desc    Logout user and clear cookie
+ * POST /api/auth/logout
+ * @description Logout user and clear cookie
  * @access  Private
  */
 router.post('/logout', (req, res) => {
@@ -77,8 +77,8 @@ router.post('/logout', (req, res) => {
 });
 
 /**
- * @route   POST /api/auth/changepassword
- * @desc    Change user password
+ * POST /api/auth/changepassword
+ * @description Change user password
  * @access  Private
  */
 router.post(
@@ -100,8 +100,8 @@ router.post(
 );
 
 /**
- * @route   GET /api/auth/getuser
- * @desc    Get current user information
+ * GET /api/auth/getuser
+ * @description Get current user information
  * @access  Private
  */
 router.get(
@@ -113,8 +113,8 @@ router.get(
 );
 
 /**
- * @route   DELETE /api/auth/deleteUser
- * @desc    Delete user account
+ * DELETE /api/auth/deleteUser
+ * @description Delete user account
  * @access  Private
  */
 router.delete(
@@ -137,8 +137,8 @@ router.delete(
 );
 
 /**
- * @route   POST /api/auth/getuserbyid
- * @desc    Get user info by user ID
+ * POST /api/auth/getuserbyid
+ * @description Get user info by user ID
  * @access  Private
  */
 router.post(

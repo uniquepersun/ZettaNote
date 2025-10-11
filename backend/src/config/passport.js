@@ -3,6 +3,7 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as GitHubStrategy } from 'passport-github2';
 import User from '../models/User.model.js';
 import config from './index.js';
+import logger from '../utils/logger.js';
 
 // Google OAuth Strategy
 passport.use(
@@ -64,7 +65,7 @@ passport.use(
 
         return done(null, user);
       } catch (err) {
-        console.error('Google OAuth error:', err);
+        logger.error('Google OAuth error', err);
         return done(err, null);
       }
     }
@@ -144,7 +145,7 @@ passport.use(
 
         return done(null, user);
       } catch (err) {
-        console.error('GitHub OAuth error:', err);
+        logger.error('GitHub OAuth error', err);
         return done(err, null);
       }
     }

@@ -79,7 +79,7 @@ export const updatePageSchema = z.object({
  * Validate input against schema
  * @param {z.ZodSchema} schema - Zod schema to validate against
  * @param {any} data - Data to validate
- * @returns {Object} Validation result
+ * @returns {object} Validation result
  */
 export const validate = (schema, data) => {
   const result = schema.safeParse(data);

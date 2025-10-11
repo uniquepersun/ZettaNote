@@ -1,5 +1,6 @@
 import rateLimit from 'express-rate-limit';
 import slowDown from 'express-slow-down';
+import logger from './logger.js';
 
 /**
  * Rate limiting for admin login attempts
@@ -57,6 +58,9 @@ export const adminCreationLimiter = rateLimit({
 
 /**
  * Middleware to log suspicious activity
+ * @param req
+ * @param res
+ * @param next
  */
 export const logSuspiciousActivity = (req, res, next) => {
   const suspiciousPatterns = [
@@ -76,7 +80,7 @@ export const logSuspiciousActivity = (req, res, next) => {
   );
 
   if (isSuspicious) {
-    console.warn('🚨 SUSPICIOUS ACTIVITY DETECTED:', {
+    logger.warn('🚨 SUSPICIOUS ACTIVITY DETECTED:', {
       ip: req.ip,
       userAgent,
       url,
@@ -89,7 +93,7 @@ export const logSuspiciousActivity = (req, res, next) => {
         url,
         body: req.body,
       });
-      req.admin.save().catch(console.error);
+      req.admin.save().catch(logger.error);
     }
   }
 
@@ -98,6 +102,10 @@ export const logSuspiciousActivity = (req, res, next) => {
 
 /**
  * Middleware to enforce HTTPS in production
+ * @param req
+ * @param res
+ * @param next
+ * @returns {*}
  */
 export const enforceHTTPS = (req, res, next) => {
   if (
@@ -112,6 +120,9 @@ export const enforceHTTPS = (req, res, next) => {
 
 /**
  * Security headers middleware
+ * @param req
+ * @param res
+ * @param next
  */
 export const securityHeaders = (req, res, next) => {
   // Prevent clickjacking

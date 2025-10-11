@@ -10,10 +10,13 @@ import {
 } from '../utils/validator.utils.js';
 import { STATUS_CODES } from '../constants/statusCodes.js';
 import { MESSAGES } from '../constants/messages.js';
+import logger from '../utils/logger.js';
 
 /**
  * User Signup Controller
  * Creates a new user account
+ * @param {object} req - Express request object
+ * @returns {object} Response status, message, and token if successful
  */
 export const signup = async (req) => {
   try {
@@ -72,7 +75,7 @@ export const signup = async (req) => {
       token,
     };
   } catch (err) {
-    console.error('Signup error:', err);
+    logger.error('Signup error', err);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
@@ -83,6 +86,8 @@ export const signup = async (req) => {
 /**
  * User Login Controller
  * Authenticates user and returns token
+ * @param {object} req - Express request object
+ * @returns {object} Response status, message, and token if successful
  */
 export const login = async (req) => {
   try {
@@ -163,7 +168,7 @@ export const login = async (req) => {
       token,
     };
   } catch (err) {
-    console.error('Login error:', err);
+    logger.error('Login error', err);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
@@ -174,6 +179,8 @@ export const login = async (req) => {
 /**
  * Get User Controller
  * Returns current user information
+ * @param {object} req - Express request object
+ * @returns {object} Response status and user information if successful
  */
 export const getUser = async (req) => {
   try {
@@ -205,7 +212,7 @@ export const getUser = async (req) => {
       },
     };
   } catch (err) {
-    console.error('Get user error:', err);
+    logger.error('Get user error', err);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
@@ -216,6 +223,8 @@ export const getUser = async (req) => {
 /**
  * Change Password Controller
  * Updates user password
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message if successful
  */
 export const changePassword = async (req) => {
   try {
@@ -280,7 +289,7 @@ export const changePassword = async (req) => {
       token,
     };
   } catch (err) {
-    console.error('Change password error:', err);
+    logger.error('Change password error', err);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
@@ -291,6 +300,8 @@ export const changePassword = async (req) => {
 /**
  * Delete User Controller
  * Deletes user account
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message if successful
  */
 export const deleteUser = async (req) => {
   try {
@@ -329,7 +340,7 @@ export const deleteUser = async (req) => {
       resMessage: { message: MESSAGES.AUTH.ACCOUNT_DELETED },
     };
   } catch (err) {
-    console.error('Delete user error:', err);
+    logger.error('Delete user error', err);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
@@ -340,6 +351,8 @@ export const deleteUser = async (req) => {
 /**
  * Get User By ID Controller
  * Returns user information by user ID
+ * @param {object} req - Express request object
+ * @returns {object} Response status and user information if successful
  */
 export const getUserById = async (req) => {
   try {
@@ -387,7 +400,7 @@ export const getUserById = async (req) => {
       },
     };
   } catch (err) {
-    console.error('Get user by ID error:', err);
+    logger.error('Get user by ID error', err);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },

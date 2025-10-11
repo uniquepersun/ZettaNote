@@ -657,6 +657,57 @@ export const getPublicShare = async (shareId) => {
   }
 };
 
+
+/**
+ * Post Remove Shared Page Controller
+ * Removes a shared page from user
+ * @param {string} id - Active page id
+ * @param {string} gmail - Email of the user to unshare the page with
+ * @returns {object} Response status and page content if successful
+ */
+export const deleteSharedPage=async(id,gmail)=>{
+  try{
+    const page=await Page.findById(id);
+    if(!page){
+      return {
+        resStatus: STATUS_CODES.NOT_FOUND,
+        resMessage: { Error: MESSAGES.PAGE.NOT_FOUND },
+      };
+    }
+    const user=await User.findOne({email:gmail});
+    if(!user){
+      return {
+        resStatus: STATUS_CODES.NOT_FOUND,
+        resMessage: { Error: 'User not found' },
+      };
+    }
+
+    const isShared=page.sharedTo.some((uid)=>uid.equals(user._id));
+    if(!isShared){
+      return {
+        resStatus: STATUS_CODES.BAD_REQUEST,
+        resMessage: { Error: 'Page not shared with this user' },
+      };
+    }
+
+    page.sharedTo.pull(user._id);
+    await page.save();
+    user.sharedPages.pull(page._id);
+    await user.save();
+
+    return {
+      resStatus: STATUS_CODES.OK,
+      resMessage: { message: 'Successfully unshared the page with the user' },
+    };
+  }catch(err){
+    logger.error('Delete shared page error', err);
+    return {
+      resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
+      resMessage: { Error: MESSAGES.GENERAL.SERVER_ERROR },
+    };
+  }
+}
+
 export default {
   createPage,
   getPage,
@@ -667,4 +718,5 @@ export default {
   sharePage,
   publicShare,
   getPublicShare,
+  deleteSharedPage
 };

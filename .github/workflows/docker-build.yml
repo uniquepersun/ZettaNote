@@ -35,8 +35,8 @@ jobs:
 
   build-and-push-backend:
     runs-on: ubuntu-latest
-    needs: detect-changes
-    if: needs.detect-changes.outputs.backend == 'true' && github.ref == 'refs/heads/main' && github.repository == 'braydenidzenga/ZettaNote'
+    # needs: detect-changes
+    if: github.ref == 'refs/heads/main' && github.repository == 'braydenidzenga/ZettaNote'
     permissions:
       contents: read
       packages: write
@@ -78,8 +78,8 @@ jobs:
 
   build-and-push-frontend:
     runs-on: ubuntu-latest
-    needs: detect-changes
-    if: needs.detect-changes.outputs.frontend == 'true' && github.ref == 'refs/heads/main' && github.repository == 'braydenidzenga/ZettaNote'
+    # needs: detect-changes
+    if: github.ref == 'refs/heads/main' && github.repository == 'braydenidzenga/ZettaNote'
     permissions:
       contents: read
       packages: write
@@ -190,12 +190,6 @@ jobs:
       - detect-changes
       - build-and-push-backend
       - build-and-push-frontend
-    if: |
-      always() &&
-      (needs.build-and-push-backend.result == 'success' || needs.build-and-push-backend.result == 'skipped') &&
-      (needs.build-and-push-frontend.result == 'success' || needs.build-and-push-frontend.result == 'skipped') &&
-      (needs.detect-changes.outputs.backend == 'true' || needs.detect-changes.outputs.frontend == 'true') &&
-      github.ref == 'refs/heads/main' && github.repository == 'braydenidzenga/ZettaNote'
     steps:
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@v1.0.3

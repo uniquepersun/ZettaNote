@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import {
   FiBold,
   FiItalic,
@@ -9,19 +9,18 @@ import {
   FiLink,
   FiTable,
   FiType,
-  FiAlignLeft,
   FiRotateCcw,
   FiRotateCw,
   FiEye,
   FiEdit,
   FiCode,
   FiMinus,
-  FiZap,
   FiStar,
 } from 'react-icons/fi';
 import { FaQuoteRight, FaListOl, FaStrikethrough, FaHighlighter } from 'react-icons/fa';
 import { BiCodeBlock, BiMath } from 'react-icons/bi';
 import toast from 'react-hot-toast';
+import propTypes from 'prop-types';
 
 const Note = ({ activePage, onContentChange, content = '', onSave }) => {
   const [editorContent, setEditorContent] = useState(content);
@@ -39,7 +38,7 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
       setHistory([content]);
       setHistoryIndex(0);
     }
-  }, [content, activePage?.id]);
+  }, [content, activePage?.id, editorContent]);
 
   // Auto-resize textarea to match content so the outer container remains the single scroller
   useEffect(() => {
@@ -79,30 +78,28 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
     [historyIndex, isUpdatingFromHistory]
   );
 
-    // Clicking the outer editor container's empty space should move the cursor there.
-    const handleContainerClick = (e) => {
-      // Only handle clicks directly on the container (not children like textarea)
-      if (e.target !== e.currentTarget) return;
+  // Clicking the outer editor container's empty space should move the cursor there.
+  const handleContainerClick = (e) => {
+    // Only handle clicks directly on the container (not children like textarea)
+    if (e.target !== e.currentTarget) return;
 
-      const ta = editorRef.current;
-      if (!ta) return;
+    const ta = editorRef.current;
+    if (!ta) return;
 
-      // Append a couple of newlines to create an empty area and place cursor at end
-      const appended = '\n\n';
-      const newContent = `${editorContent}${appended}`;
-      setEditorContent(newContent);
-      addToHistory(newContent);
-      if (onContentChange) onContentChange(newContent);
+    // Append a couple of newlines to create an empty area and place cursor at end
+    const appended = '\n\n';
+    const newContent = `${editorContent}${appended}`;
+    setEditorContent(newContent);
+    addToHistory(newContent);
+    if (onContentChange) onContentChange(newContent);
 
-      // Focus and move caret to end after DOM updates
-      setTimeout(() => {
-        ta.focus();
-        ta.setSelectionRange(newContent.length, newContent.length);
-      }, 0);
-    };
+    // Focus and move caret to end after DOM updates
+    setTimeout(() => {
+      ta.focus();
+      ta.setSelectionRange(newContent.length, newContent.length);
+    }, 0);
+  };
 
-
-    
   const handleKeyDown = (e) => {
     if (e.ctrlKey || e.metaKey) {
       switch (e.key.toLowerCase()) {
@@ -433,80 +430,78 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
   ];
 
   const renderMarkdown = (text) => {
-    return (
-      text
-        .replace(/^### (.*$)/gm, '<h3 class="text-xl font-bold mt-6 mb-3">$1</h3>')
-        .replace(/^## (.*$)/gm, '<h2 class="text-2xl font-bold mt-8 mb-4">$1</h2>')
-        .replace(/^# (.*$)/gm, '<h1 class="text-3xl font-bold mt-8 mb-6">$1</h1>')
+    return text
+      .replace(/^### (.*$)/gm, '<h3 class="text-xl font-bold mt-6 mb-3">$1</h3>')
+      .replace(/^## (.*$)/gm, '<h2 class="text-2xl font-bold mt-8 mb-4">$1</h2>')
+      .replace(/^# (.*$)/gm, '<h1 class="text-3xl font-bold mt-8 mb-6">$1</h1>')
 
-        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-primary">$1</strong>')
-        .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="italic">$1</em>')
-        .replace(/~~(.*?)~~/g, '<del class="line-through opacity-75">$1</del>')
-        .replace(/==(.*?)==/g, '<mark class="bg-yellow-200 px-1 rounded">$1</mark>')
-        .replace(/<u>(.*?)<\/u>/g, '<u class="underline">$1</u>')
-        .replace(
-          /`([^`]+)`/g,
-          '<code class="bg-base-200 text-primary px-2 py-1 rounded text-sm font-mono">$1</code>'
-        )
-        .replace(
-          /```(\w+)?\n([\s\S]*?)```/g,
-          '<pre class="bg-base-200 p-4 rounded-lg overflow-auto my-4"><code class="text-sm font-mono">$2</code></pre>'
-        )
+      .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-primary">$1</strong>')
+      .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="italic">$1</em>')
+      .replace(/~~(.*?)~~/g, '<del class="line-through opacity-75">$1</del>')
+      .replace(/==(.*?)==/g, '<mark class="bg-yellow-200 px-1 rounded">$1</mark>')
+      .replace(/<u>(.*?)<\/u>/g, '<u class="underline">$1</u>')
+      .replace(
+        /`([^`]+)`/g,
+        '<code class="bg-base-200 text-primary px-2 py-1 rounded text-sm font-mono">$1</code>'
+      )
+      .replace(
+        /```(\w+)?\n([\s\S]*?)```/g,
+        '<pre class="bg-base-200 p-4 rounded-lg overflow-auto my-4"><code class="text-sm font-mono">$2</code></pre>'
+      )
 
-        .replace(
-          /^> (.*$)/gm,
-          '<blockquote class="border-l-4 border-primary pl-4 italic my-4 text-base-content/80">$1</blockquote>'
-        )
-        .replace(
-          /^- \[x\] (.*$)/gm,
-          '<li class="flex items-center gap-2 my-1"><input type="checkbox" checked disabled class="checkbox checkbox-primary checkbox-sm"> <span class="line-through opacity-75">$1</span></li>'
-        )
-        .replace(
-          /^- \[ \] (.*$)/gm,
-          '<li class="flex items-center gap-2 my-1"><input type="checkbox" disabled class="checkbox checkbox-sm"> $1</li>'
-        )
-        .replace(
-          /^- (.*$)/gm,
-          '<li class="flex items-start gap-2 my-1"><span class="text-primary mt-1">•</span> $1</li>'
-        )
-        .replace(/^\d+\. (.*$)/gm, '<li class="flex items-start gap-2 my-1 ml-4">$1</li>')
+      .replace(
+        /^> (.*$)/gm,
+        '<blockquote class="border-l-4 border-primary pl-4 italic my-4 text-base-content/80">$1</blockquote>'
+      )
+      .replace(
+        /^- \[x\] (.*$)/gm,
+        '<li class="flex items-center gap-2 my-1"><input type="checkbox" checked disabled class="checkbox checkbox-primary checkbox-sm"> <span class="line-through opacity-75">$1</span></li>'
+      )
+      .replace(
+        /^- \[ \] (.*$)/gm,
+        '<li class="flex items-center gap-2 my-1"><input type="checkbox" disabled class="checkbox checkbox-sm"> $1</li>'
+      )
+      .replace(
+        /^- (.*$)/gm,
+        '<li class="flex items-start gap-2 my-1"><span class="text-primary mt-1">•</span> $1</li>'
+      )
+      .replace(/^\d+\. (.*$)/gm, '<li class="flex items-start gap-2 my-1 ml-4">$1</li>')
 
-        .replace(
-          /\[([^\]]+)\]\(([^\)]+)\)/g,
-          '<a href="$2" target="_blank" class="text-primary hover:underline font-medium">$1</a>'
-        )
-        .replace(
-          /!\[([^\]]*)\]\(([^\)]+)\)/g,
-          '<img src="$2" alt="$1" class="max-w-full h-auto rounded-lg shadow-md my-4">'
-        )
+      .replace(
+        /\[([^\]]+)\]\(([^)]+)\)/g,
+        '<a href="$2" target="_blank" class="text-primary hover:underline font-medium">$1</a>'
+      )
+      .replace(
+        /!\[([^\]]*)\]\(([^)]+)\)/g,
+        '<img src="$2" alt="$1" class="max-w-full h-auto rounded-lg shadow-md my-4">'
+      )
 
-        .replace(/^---$/gm, '<hr class="border-base-300 my-8">')
+      .replace(/^---$/gm, '<hr class="border-base-300 my-8">')
 
-        .replace(
-          /\$\$(.*?)\$\$/g,
-          '<div class="bg-base-200 p-4 rounded-lg text-center font-mono my-4">$1</div>'
-        )
-        .replace(
-          /\$([^$]+)\$/g,
-          '<span class="bg-base-200 px-2 py-1 rounded font-mono text-sm">$1</span>'
-        )
-        .replace(/\|(.+)\|/g, (match) => {
-          const cells = match
-            .slice(1, -1)
-            .split('|')
-            .map((cell) => cell.trim());
-          return (
-            '<tr>' +
-            cells
-              .map((cell) => `<td class="border border-base-300 px-3 py-2">${cell}</td>`)
-              .join('') +
-            '</tr>'
-          );
-        })
+      .replace(
+        /\$\$(.*?)\$\$/g,
+        '<div class="bg-base-200 p-4 rounded-lg text-center font-mono my-4">$1</div>'
+      )
+      .replace(
+        /\$([^$]+)\$/g,
+        '<span class="bg-base-200 px-2 py-1 rounded font-mono text-sm">$1</span>'
+      )
+      .replace(/\|(.+)\|/g, (match) => {
+        const cells = match
+          .slice(1, -1)
+          .split('|')
+          .map((cell) => cell.trim());
+        return (
+          '<tr>' +
+          cells
+            .map((cell) => `<td class="border border-base-300 px-3 py-2">${cell}</td>`)
+            .join('') +
+          '</tr>'
+        );
+      })
 
-        .replace(/\n\n/g, '</p><p class="mb-4">')
-        .replace(/\n/g, '<br>')
-    );
+      .replace(/\n\n/g, '</p><p class="mb-4">')
+      .replace(/\n/g, '<br>');
   };
 
   if (!activePage) {
@@ -544,39 +539,48 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
                   className="flex items-center bg-base-200/30 rounded-md lg:rounded-lg p-0.5 border border-base-300/20 flex-shrink-0"
                   title={group.name}
                 >
-                  {group.buttons.slice(0, window.innerWidth < 1024 && groupIndex > 2 ? 1 : window.innerWidth < 768 && groupIndex > 1 ? 2 : group.buttons.length).map((button, buttonIndex) => {
-                    const Icon = button.icon;
-                    const colorClass = `hover:btn-${group.color}`;
+                  {group.buttons
+                    .slice(
+                      0,
+                      window.innerWidth < 1024 && groupIndex > 2
+                        ? 1
+                        : window.innerWidth < 768 && groupIndex > 1
+                        ? 2
+                        : group.buttons.length
+                    )
+                    .map((button, buttonIndex) => {
+                      const Icon = button.icon;
+                      const colorClass = `hover:btn-${group.color}`;
 
-                    return (
-                      <button
-                        key={buttonIndex}
-                        onClick={button.onClick}
-                        disabled={button.disabled}
-                        className={`btn btn-ghost btn-xs lg:btn-sm btn-square ${colorClass} hover:scale-105 transition-all duration-200 relative group min-h-0 h-7 lg:h-8 w-7 lg:w-8 ${
-                          button.disabled ? 'opacity-40 cursor-not-allowed' : ''
-                        }`}
-                        title={button.title}
-                      >
-                        <Icon
-                          className={`w-2.5 h-2.5 lg:w-3.5 lg:h-3.5 ${
-                            button.variant === 'h2'
-                              ? 'scale-90'
-                              : button.variant === 'h3'
-                              ? 'scale-75'
-                              : ''
+                      return (
+                        <button
+                          key={buttonIndex}
+                          onClick={button.onClick}
+                          disabled={button.disabled}
+                          className={`btn btn-ghost btn-xs lg:btn-sm btn-square ${colorClass} hover:scale-105 transition-all duration-200 relative group min-h-0 h-7 lg:h-8 w-7 lg:w-8 ${
+                            button.disabled ? 'opacity-40 cursor-not-allowed' : ''
                           }`}
-                        />
+                          title={button.title}
+                        >
+                          <Icon
+                            className={`w-2.5 h-2.5 lg:w-3.5 lg:h-3.5 ${
+                              button.variant === 'h2'
+                                ? 'scale-90'
+                                : button.variant === 'h3'
+                                ? 'scale-75'
+                                : ''
+                            }`}
+                          />
 
-                        {/* Tooltip with shortcut */}
-                        {button.shortcut && (
-                          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-base-content text-base-100 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-                            {button.shortcut}
-                          </div>
-                        )}
-                      </button>
-                    );
-                  })}
+                          {/* Tooltip with shortcut */}
+                          {button.shortcut && (
+                            <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-base-content text-base-100 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                              {button.shortcut}
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
                 </div>
               ))}
             </div>
@@ -676,9 +680,15 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
               </div>
 
               {/* Enhanced Editor */}
-              <div onClick={handleContainerClick} className="bg-base-100 rounded-2xl border border-base-300 shadow-lg overflow-x-hidden overflow-y-auto max-h-[70vh] min-h-[70vh] relative flex note-container-scrollable">
+              <div
+                onClick={handleContainerClick}
+                className="bg-base-100 rounded-2xl border border-base-300 shadow-lg overflow-x-hidden overflow-y-auto max-h-[70vh] min-h-[70vh] relative flex note-container-scrollable"
+              >
                 {/* Line Numbers */}
-                <div ref={lineNumbersRef} className="hidden lg:flex flex-col w-16 bg-base-200/30 border-r border-base-300/50 py-4 text-xs text-base-content/40 font-mono flex-shrink-0">
+                <div
+                  ref={lineNumbersRef}
+                  className="hidden lg:flex flex-col w-16 bg-base-200/30 border-r border-base-300/50 py-4 text-xs text-base-content/40 font-mono flex-shrink-0"
+                >
                   {Array.from({ length: lineCount }, (_, i) => (
                     <div
                       key={i + 1}
@@ -724,6 +734,13 @@ Happy writing! 🚀"
       </div>
     </div>
   );
+};
+
+Note.propTypes = {
+  activePage: propTypes.object,
+  onContentChange: propTypes.func,
+  content: propTypes.string,
+  onSave: propTypes.func,
 };
 
 export default Note;

@@ -99,7 +99,6 @@ jobs:
       - name: Build project
         run: npm run build
         working-directory: ./frontend
-        
 
       - name: Verify build output
         run: |

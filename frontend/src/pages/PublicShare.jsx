@@ -1,14 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
-  FiFile, 
-  FiHome, 
-  FiDownload, 
-  FiExternalLink,
-  FiClock,
-  FiUser,
-  FiEye
-} from 'react-icons/fi';
+import { FiFile, FiHome, FiDownload, FiExternalLink, FiClock, FiEye } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { VITE_API_URL } from '../env';
@@ -30,7 +22,6 @@ const PublicShare = () => {
 
       try {
         const response = await axios.get(`${VITE_API_URL}/api/pages/share/${shareId}`);
-        
 
         if (response.status === 200 && response.data) {
           setPageData(response.data);
@@ -41,7 +32,9 @@ const PublicShare = () => {
         console.error('Error fetching shared page:', err);
         if (err.response) {
           // Server responded with error status
-          setError(err.response.data?.Error || err.response.data?.message || 'Failed to load shared page');
+          setError(
+            err.response.data?.Error || err.response.data?.message || 'Failed to load shared page'
+          );
         } else if (err.request) {
           // Network error
           setError('Network error. Please check your connection.');
@@ -59,53 +52,91 @@ const PublicShare = () => {
 
   const renderMarkdown = (text) => {
     if (!text) return '';
-    
+
     // Enhanced markdown rendering for public view
-    return text
-      // Headers
-      .replace(/^### (.*$)/gm, '<h3 class="text-xl font-bold mt-6 mb-3 text-base-content">$1</h3>')
-      .replace(/^## (.*$)/gm, '<h2 class="text-2xl font-bold mt-8 mb-4 text-base-content">$1</h2>')
-      .replace(/^# (.*$)/gm, '<h1 class="text-3xl font-bold mt-8 mb-6 text-base-content">$1</h1>')
-      
-      // Text formatting
-      .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-primary">$1</strong>')
-      .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="italic">$1</em>')
-      .replace(/~~(.*?)~~/g, '<del class="line-through opacity-75">$1</del>')
-      .replace(/==(.*?)==/g, '<mark class="bg-yellow-200 px-1 rounded">$1</mark>')
-      .replace(/<u>(.*?)<\/u>/g, '<u class="underline">$1</u>')
-      
-      // Code
-      .replace(/`([^`]+)`/g, '<code class="bg-base-200 text-primary px-2 py-1 rounded text-sm font-mono">$1</code>')
-      .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre class="bg-base-200 p-4 rounded-lg overflow-auto my-4 border"><code class="text-sm font-mono">$2</code></pre>')
-      
-      // Blockquotes
-      .replace(/^> (.*$)/gm, '<blockquote class="border-l-4 border-primary pl-4 italic my-4 text-base-content/80">$1</blockquote>')
-      
-      // Lists
-      .replace(/^- \[x\] (.*$)/gm, '<li class="flex items-center gap-2 my-1"><input type="checkbox" checked disabled class="checkbox checkbox-primary checkbox-sm"> <span class="line-through opacity-75">$1</span></li>')
-      .replace(/^- \[ \] (.*$)/gm, '<li class="flex items-center gap-2 my-1"><input type="checkbox" disabled class="checkbox checkbox-sm"> $1</li>')
-      .replace(/^- (.*$)/gm, '<li class="flex items-start gap-2 my-1"><span class="text-primary mt-1">•</span> $1</li>')
-      .replace(/^\d+\. (.*$)/gm, '<li class="flex items-start gap-2 my-1 ml-4">$1</li>')
-      
-      // Links and images
-      .replace(/\[([^\]]+)\]\(([^\)]+)\)/g, '<a href="$2" target="_blank" class="text-primary hover:underline font-medium">$1</a>')
-      .replace(/!\[([^\]]*)\]\(([^\)]+)\)/g, '<img src="$2" alt="$1" class="max-w-full h-auto rounded-lg shadow-md my-4">')
-      
-      // Horizontal rules
-      .replace(/^---$/gm, '<hr class="border-base-300 my-8">')
-      
-      // Math (basic support)
-      .replace(/\$\$(.*?)\$\$/g, '<div class="bg-base-200 p-4 rounded-lg text-center font-mono my-4">$1</div>')
-      .replace(/\$([^$]+)\$/g, '<span class="bg-base-200 px-2 py-1 rounded font-mono text-sm">$1</span>')
-      
-      // Line breaks
-      .replace(/\n\n/g, '</p><p class="mb-4">')
-      .replace(/\n/g, '<br>');
+    return (
+      text
+        // Headers
+        .replace(
+          /^### (.*$)/gm,
+          '<h3 class="text-xl font-bold mt-6 mb-3 text-base-content">$1</h3>'
+        )
+        .replace(
+          /^## (.*$)/gm,
+          '<h2 class="text-2xl font-bold mt-8 mb-4 text-base-content">$1</h2>'
+        )
+        .replace(/^# (.*$)/gm, '<h1 class="text-3xl font-bold mt-8 mb-6 text-base-content">$1</h1>')
+
+        // Text formatting
+        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-primary">$1</strong>')
+        .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="italic">$1</em>')
+        .replace(/~~(.*?)~~/g, '<del class="line-through opacity-75">$1</del>')
+        .replace(/==(.*?)==/g, '<mark class="bg-yellow-200 px-1 rounded">$1</mark>')
+        .replace(/<u>(.*?)<\/u>/g, '<u class="underline">$1</u>')
+
+        // Code
+        .replace(
+          /`([^`]+)`/g,
+          '<code class="bg-base-200 text-primary px-2 py-1 rounded text-sm font-mono">$1</code>'
+        )
+        .replace(
+          /```(\w+)?\n([\s\S]*?)```/g,
+          '<pre class="bg-base-200 p-4 rounded-lg overflow-auto my-4 border"><code class="text-sm font-mono">$2</code></pre>'
+        )
+
+        // Blockquotes
+        .replace(
+          /^> (.*$)/gm,
+          '<blockquote class="border-l-4 border-primary pl-4 italic my-4 text-base-content/80">$1</blockquote>'
+        )
+
+        // Lists
+        .replace(
+          /^- \[x\] (.*$)/gm,
+          '<li class="flex items-center gap-2 my-1"><input type="checkbox" checked disabled class="checkbox checkbox-primary checkbox-sm"> <span class="line-through opacity-75">$1</span></li>'
+        )
+        .replace(
+          /^- \[ \] (.*$)/gm,
+          '<li class="flex items-center gap-2 my-1"><input type="checkbox" disabled class="checkbox checkbox-sm"> $1</li>'
+        )
+        .replace(
+          /^- (.*$)/gm,
+          '<li class="flex items-start gap-2 my-1"><span class="text-primary mt-1">•</span> $1</li>'
+        )
+        .replace(/^\d+\. (.*$)/gm, '<li class="flex items-start gap-2 my-1 ml-4">$1</li>')
+
+        // Links and images
+        .replace(
+          /\[([^\]]+)\]\(([^)]+)\)/g,
+          '<a href="$2" target="_blank" class="text-primary hover:underline font-medium">$1</a>'
+        )
+        .replace(
+          /!\[([^\]]*)\]\(([^)]+)\)/g,
+          '<img src="$2" alt="$1" class="max-w-full h-auto rounded-lg shadow-md my-4">'
+        )
+
+        // Horizontal rules
+        .replace(/^---$/gm, '<hr class="border-base-300 my-8">')
+
+        // Math (basic support)
+        .replace(
+          /\$\$(.*?)\$\$/g,
+          '<div class="bg-base-200 p-4 rounded-lg text-center font-mono my-4">$1</div>'
+        )
+        .replace(
+          /\$([^$]+)\$/g,
+          '<span class="bg-base-200 px-2 py-1 rounded font-mono text-sm">$1</span>'
+        )
+
+        // Line breaks
+        .replace(/\n\n/g, '</p><p class="mb-4">')
+        .replace(/\n/g, '<br>')
+    );
   };
 
   const handleDownload = () => {
     if (!pageData) return;
-    
+
     const element = document.createElement('a');
     const file = new Blob([pageData.content || ''], { type: 'text/markdown' });
     element.href = URL.createObjectURL(file);
@@ -157,17 +188,11 @@ const PublicShare = () => {
           <h1 className="text-2xl font-bold text-base-content mb-3">Page Not Found</h1>
           <p className="text-base-content/70 mb-6">{error}</p>
           <div className="space-y-3">
-            <button
-              onClick={() => navigate('/')}
-              className="btn btn-primary w-full gap-2"
-            >
+            <button onClick={() => navigate('/')} className="btn btn-primary w-full gap-2">
               <FiHome className="w-4 h-4" />
               Go to Home
             </button>
-            <button
-              onClick={() => window.location.reload()}
-              className="btn btn-outline w-full"
-            >
+            <button onClick={() => window.location.reload()} className="btn btn-outline w-full">
               Try Again
             </button>
           </div>
@@ -249,10 +274,10 @@ const PublicShare = () => {
           {/* Main Content */}
           <div className="p-8 lg:p-12 min-h-[500px]">
             {pageData?.content ? (
-              <div 
+              <div
                 className="prose prose-lg max-w-none leading-relaxed"
-                dangerouslySetInnerHTML={{ 
-                  __html: `<p class="mb-4">${renderMarkdown(pageData.content)}</p>` 
+                dangerouslySetInnerHTML={{
+                  __html: `<p class="mb-4">${renderMarkdown(pageData.content)}</p>`,
                 }}
               />
             ) : (

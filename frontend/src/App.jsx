@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { Navigate, Routes, useLocation } from 'react-router-dom';
@@ -6,7 +6,7 @@ import { Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import Dashboard from './pages/Dashboard';
 import PublicShare from './pages/PublicShare';
 import authContext from './context/AuthProvider';

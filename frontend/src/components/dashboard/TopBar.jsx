@@ -1,20 +1,14 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import {
   FiShare2,
-  FiEdit3,
-  FiTrash2,
   FiCopy,
   FiExternalLink,
   FiSave,
   FiClock,
   FiFile,
-  FiLink,
   FiRefreshCw,
   FiGlobe,
-  FiLock,
   FiDownload,
-  FiMessageCircle,
-  FiSettings,
   FiCheckCircle,
   FiMenu,
   FiX,
@@ -27,17 +21,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import authContext from '../../context/AuthProvider';
 import { VITE_API_URL } from '../../env';
+import propTypes from 'prop-types';
 
-const TopBar = ({
-  activePage,
-  onSave,
-  onDelete,
-  onRename,
-  lastSaved,
-  isLoading,
-  onToggleSidebar,
-  isSidebarOpen,
-}) => {
+const TopBar = ({ activePage, onSave, lastSaved, isLoading, onToggleSidebar, isSidebarOpen }) => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareableLink, setShareableLink] = useState('');
   const [isGeneratingLink, setIsGeneratingLink] = useState(false);
@@ -47,7 +33,7 @@ const TopBar = ({
   const [lastFailedEmail, setLastFailedEmail] = useState('');
   const [isFetchingSharedUsers, setIsFetchingSharedUsers] = useState(false);
   const navigate = useNavigate();
-  const { user, setuser } = useContext(authContext);
+  const { setuser } = useContext(authContext);
 
   const handleUnauthorized = (error) => {
     if (error.response && error.response.status === 401) {
@@ -124,6 +110,7 @@ const TopBar = ({
     try {
       await generateShareableLink();
       toast.success('New link generated!', { id: 'regenerate' });
+      // eslint-disable-next-line no-unused-vars
     } catch (error) {
       toast.error('Failed to regenerate link', { id: 'regenerate' });
     }
@@ -133,6 +120,7 @@ const TopBar = ({
     try {
       await navigator.clipboard.writeText(text);
       toast.success('Link copied to clipboard!');
+      // eslint-disable-next-line no-unused-vars
     } catch (error) {
       toast.error('Failed to copy link');
     }
@@ -182,7 +170,7 @@ const TopBar = ({
             }
             throw new Error('Invalid user response');
           } catch (error) {
-            console.log(`Failed to fetch user ${userId}:`, error.message);
+            console.warn(`Failed to fetch user ${userId}:`, error.message);
           }
         });
 
@@ -253,9 +241,9 @@ const TopBar = ({
       if (error.code === 'ECONNABORTED') {
         toast.error('Request timed out. Please try again.');
       } else if (error.response) {
-        if(error.response.data?.message){
+        if (error.response.data?.message) {
           toast.error(`Failed to share: ${error.response.data.message}`);
-        }else{
+        } else {
           toast.error(`Failed to share.`);
         }
       } else if (error.request) {
@@ -689,6 +677,17 @@ const TopBar = ({
       )}
     </>
   );
+};
+
+TopBar.propTypes = {
+  activePage: propTypes.object,
+  onSave: propTypes.func.isRequired,
+  onDelete: propTypes.func,
+  onRename: propTypes.func,
+  lastSaved: propTypes.string,
+  isLoading: propTypes.bool,
+  onToggleSidebar: propTypes.func.isRequired,
+  isSidebarOpen: propTypes.bool.isRequired,
 };
 
 export default TopBar;

@@ -1,4 +1,4 @@
-import React from 'react'
+import propTypes from 'prop-types';
 
 const Feature = ({ icon, title, desc }) => (
   <div className="bg-[color:var(--color-base-200)] border border-[color:var(--color-border,rgba(0,0,0,0.06))] rounded-xl p-6 shadow-sm">
@@ -14,4 +14,10 @@ const Feature = ({ icon, title, desc }) => (
   </div>
 );
 
-export default Feature
+Feature.propTypes = {
+  icon: propTypes.node.isRequired,
+  title: propTypes.string.isRequired,
+  desc: propTypes.string.isRequired,
+};
+
+export default Feature;

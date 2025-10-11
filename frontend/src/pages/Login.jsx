@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, Eye, EyeOff, FileText } from 'lucide-react';
 import axios from 'axios';
@@ -16,7 +16,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, setuser } = useContext(authContext);
+  const { setuser } = useContext(authContext);
 
   // Handle OAuth errors from URL parameters
   useEffect(() => {

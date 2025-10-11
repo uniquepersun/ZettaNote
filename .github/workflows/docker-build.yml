@@ -98,7 +98,7 @@ jobs:
 
   build-and-push-admin:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.repository == 'braydenidzenga/ZettaNote'
+    if: contains(github.event.commits.modified, 'admin-portal') && github.ref == 'refs/heads/main' && github.repository == 'braydenidzenga/ZettaNote'
     permissions:
       contents: read
       packages: write
@@ -163,7 +163,6 @@ jobs:
     needs:
       - build-and-push-backend
       - build-and-push-frontend
-      - build-and-push-admin
     if: github.ref == 'refs/heads/main' && github.repository == 'braydenidzenga/ZettaNote'
     steps:
       - name: Deploy to server via SSH

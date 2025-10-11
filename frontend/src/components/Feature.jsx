@@ -1,7 +1,7 @@
 import propTypes from 'prop-types';
 
 const Feature = ({ icon, title, desc }) => (
-  <div className="bg-[color:var(--color-base-200)] border border-[color:var(--color-border,rgba(0,0,0,0.06))] rounded-xl p-6 shadow-sm">
+  <div className="h-full bg-[color:var(--color-base-200)] border border-[color:var(--color-border,rgba(0,0,0,0.06))] rounded-xl p-6 shadow-sm flex flex-col justify-between">
     <div className="flex items-start gap-4">
       <div className="p-2 flex items-center justify-center rounded-full bg-[color:var(--color-primary)]/10">
         <div className="text-[color:var(--color-primary)]">{icon}</div>

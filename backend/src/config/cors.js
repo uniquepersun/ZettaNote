@@ -1,5 +1,6 @@
 import cors from 'cors';
 import config from './index.js';
+import logger from '../utils/logger.js';
 
 /**
  * Configure CORS middleware
@@ -20,7 +21,7 @@ export const configureCors = () => {
         return callback(null, true);
       } else {
         // Log rejected origin for debugging
-        console.warn('CORS rejected origin:', origin);
+        logger.warn('CORS rejected origin:', origin);
         return callback(new Error('Not allowed by CORS'), false);
       }
     },

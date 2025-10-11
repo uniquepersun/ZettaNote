@@ -1,12 +1,18 @@
 import { STATUS_CODES } from '../constants/statusCodes.js';
 import { MESSAGES } from '../constants/messages.js';
+import logger from '../utils/logger.js';
 
 /**
  * Global error handling middleware
  * Catches all errors and sends appropriate response
+ * Handles Mongoose, JWT, and general errors
+ * @param {object} err - Error object
+ * @param {object} req - Express request object
+ * @param {object} res - Express response object
+ * @returns {void}
  */
-export const errorHandler = (err, req, res, next) => {
-  console.error('Error:', err);
+export const errorHandler = (err, req, res) => {
+  logger.error('Error', err);
 
   // Mongoose validation error
   if (err.name === 'ValidationError') {
@@ -63,6 +69,10 @@ export const errorHandler = (err, req, res, next) => {
 
 /**
  * 404 Not Found handler
+ * Catches unmatched routes and returns 404 response
+ * @param {object} req - Express request object
+ * @param {object} res - Express response object
+ * @returns {void}
  */
 export const notFoundHandler = (req, res) => {
   res.status(STATUS_CODES.NOT_FOUND).json({
@@ -75,6 +85,8 @@ export const notFoundHandler = (req, res) => {
 /**
  * Async error wrapper
  * Wraps async route handlers to catch errors
+ * @param {Function} fn - Async route handler function
+ * @returns {Function} Wrapped function with error handling
  */
 export const asyncHandler = (fn) => {
   return (req, res, next) => {

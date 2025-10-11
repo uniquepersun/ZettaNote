@@ -14,8 +14,8 @@ import { STATUS_CODES } from '../constants/statusCodes.js';
 const router = express.Router();
 
 /**
- * @route   GET /api/health
- * @desc    Health check endpoint
+ * GET /api/health
+ * @description Health check endpoint
  * @access  Public
  */
 router.get('/health', (req, res) => {

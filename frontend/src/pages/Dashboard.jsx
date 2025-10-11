@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import Sidebar from '../components/dashboard/Sidebar';
 import TopBar from '../components/dashboard/TopBar';
 import Note from '../components/dashboard/Note';
@@ -48,18 +48,49 @@ const Dashboard = () => {
     }
   }, [location, navigate, user, setuser]);
 
-  const handleUnauthorized = (error) => {
-    if (error.response && error.response.status === 401) {
-      setuser(null);
-      localStorage.removeItem('zetta_user');
-      toast.error('Session expired. Please login again.');
-      setTimeout(() => {
-        navigate('/login');
-      }, 1500);
-      return true;
-    }
-    return false;
-  };
+  const handleUnauthorized = useCallback(
+    (error) => {
+      if (error.response && error.response.status === 401) {
+        setuser(null);
+        localStorage.removeItem('zetta_user');
+        toast.error('Session expired. Please login again.');
+        setTimeout(() => {
+          navigate('/login');
+        }, 1500);
+        return true;
+      }
+      return false;
+    },
+    [setuser, navigate]
+  );
+
+  const loadPageContent = useCallback(
+    async (pageId) => {
+      try {
+        setIsLoading(true);
+        const response = await axios.post(
+          `${VITE_API_URL}/api/pages/getpage`,
+          { pageId },
+          { withCredentials: true }
+        );
+
+        if (response.data.Page) {
+          setPageContent(response.data.Page.pageData || '');
+          setLastSaved(response.data.Page.updatedAt);
+        }
+      } catch (error) {
+        if (error.response?.status === 401) {
+          handleUnauthorized(error);
+          return;
+        }
+        toast.error('Failed to load page content');
+        console.error('Error loading page:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [handleUnauthorized]
+  );
 
   useEffect(() => {
     if (activePage?.id) {
@@ -67,32 +98,7 @@ const Dashboard = () => {
     } else {
       setPageContent('');
     }
-  }, [activePage]);
-
-  const loadPageContent = async (pageId) => {
-    try {
-      setIsLoading(true);
-      const response = await axios.post(
-        `${VITE_API_URL}/api/pages/getpage`,
-        { pageId },
-        { withCredentials: true }
-      );
-
-      if (response.data.Page) {
-        setPageContent(response.data.Page.pageData || '');
-        setLastSaved(response.data.Page.updatedAt);
-      }
-    } catch (error) {
-      if (error.response?.status === 401) {
-        handleUnauthorized();
-        return;
-      }
-      toast.error('Failed to load page content');
-      console.error('Error loading page:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [activePage, loadPageContent]);
 
   const handleContentChange = (newContent) => {
     setPageContent(newContent);

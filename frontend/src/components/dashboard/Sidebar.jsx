@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import {
   FiPlus,
   FiFile,
@@ -7,7 +8,6 @@ import {
   FiMoreHorizontal,
   FiEdit3,
   FiTrash2,
-  FiEye,
   FiUsers,
   FiFolder,
   FiChevronDown,
@@ -23,18 +23,22 @@ const Sidebar = ({ onPageSelect, selectedPageId, isOpen, onClose }) => {
   const { user, setuser } = useContext(authContext);
   const navigate = useNavigate();
 
-  const handleUnauthorized = (error) => {
-    if (error.response && error.response.status === 401) {
-      setuser(null);
-      localStorage.removeItem('zetta_user');
-      toast.error('Session expired. Please login again.');
-      setTimeout(() => {
-        navigate('/login');
-      }, 1500);
-      return true;
-    }
-    return false;
-  };
+  const handleUnauthorized = useCallback(
+    (error) => {
+      if (error.response && error.response.status === 401) {
+        setuser(null);
+        localStorage.removeItem('zetta_user');
+        toast.error('Session expired. Please login again.');
+        setTimeout(() => {
+          navigate('/login');
+        }, 1500);
+        return true;
+      }
+      return false;
+    },
+    [setuser, navigate]
+  );
+
   const [pages, setPages] = useState([]);
   const [sharedPages, setSharedPages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,7 +54,7 @@ const Sidebar = ({ onPageSelect, selectedPageId, isOpen, onClose }) => {
   const [isRenaming, setIsRenaming] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const fetchPages = async () => {
+  const fetchPages = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axios.post(
@@ -88,7 +92,7 @@ const Sidebar = ({ onPageSelect, selectedPageId, isOpen, onClose }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [handleUnauthorized]);
 
   const openCreateModal = () => {
     setNewPageName('');
@@ -244,7 +248,7 @@ const Sidebar = ({ onPageSelect, selectedPageId, isOpen, onClose }) => {
     if (user) {
       fetchPages();
     }
-  }, [user]);
+  }, [fetchPages, user]);
 
   const filteredPages = pages.filter((page) =>
     page.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -730,6 +734,13 @@ const Sidebar = ({ onPageSelect, selectedPageId, isOpen, onClose }) => {
       )}
     </div>
   );
+};
+
+Sidebar.propTypes = {
+  onPageSelect: PropTypes.func,
+  selectedPageId: PropTypes.string,
+  isOpen: PropTypes.bool,
+  onClose: PropTypes.func,
 };
 
 export default Sidebar;

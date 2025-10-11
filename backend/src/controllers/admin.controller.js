@@ -9,14 +9,14 @@ import User from '../models/User.model.js';
 import Page from '../models/Page.model.js';
 import { generateAdminToken, verifyAdminToken } from '../utils/token.utils.js';
 import { generateMemorablePassword, validatePasswordStrength } from '../utils/password.utils.js';
-import { validate, emailSchema, passwordSchema } from '../utils/validator.utils.js';
 import { STATUS_CODES } from '../constants/statusCodes.js';
 import { MESSAGES } from '../constants/messages.js';
+import logger from '../utils/logger.js';
 
 /**
  * Admin Login
- * @param {Object} req - Express request object
- * @returns {Object} Response status and message
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message
  */
 export async function adminLogin(req) {
   const { email, password } = req.body;
@@ -169,7 +169,7 @@ export async function adminLogin(req) {
       },
     };
   } catch (error) {
-    console.error('Admin login error:', error);
+    logger.error('Admin login error', error);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: {
@@ -182,8 +182,8 @@ export async function adminLogin(req) {
 
 /**
  * Admin Logout
- * @param {Object} req - Express request object
- * @returns {Object} Response status and message
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message
  */
 export async function adminLogout(req) {
   try {
@@ -201,7 +201,7 @@ export async function adminLogout(req) {
       },
     };
   } catch (error) {
-    console.error('Admin logout error:', error);
+    logger.error('Admin logout error', error);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: {
@@ -214,8 +214,8 @@ export async function adminLogout(req) {
 
 /**
  * Change First Password
- * @param {Object} req - Express request object
- * @returns {Object} Response status and message
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message
  */
 export async function changeFirstPassword(req) {
   const { tempToken, newPassword, confirmPassword } = req.body;
@@ -314,7 +314,7 @@ export async function changeFirstPassword(req) {
       },
     };
   } catch (error) {
-    console.error('Change first password error:', error);
+    logger.error('Change first password error', error);
 
     if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
       return {
@@ -338,8 +338,8 @@ export async function changeFirstPassword(req) {
 
 /**
  * Create Admin
- * @param {Object} req - Express request object
- * @returns {Object} Response status and message
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message
  */
 export async function createAdmin(req) {
   const { email, name, role = 'admin', permissions, createdBy } = req.body;
@@ -428,7 +428,7 @@ export async function createAdmin(req) {
       },
     };
   } catch (error) {
-    console.error('Create admin error:', error);
+    logger.error('Create admin error', error);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: {
@@ -441,8 +441,8 @@ export async function createAdmin(req) {
 
 /**
  * Delete Admin
- * @param {Object} req - Express request object
- * @returns {Object} Response status and message
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message
  */
 export async function deleteAdmin(req) {
   const { adminId } = req.params;
@@ -520,7 +520,7 @@ export async function deleteAdmin(req) {
       },
     };
   } catch (error) {
-    console.error('Delete admin error:', error);
+    logger.error('Delete admin error', error);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: {
@@ -533,8 +533,8 @@ export async function deleteAdmin(req) {
 
 /**
  * Get All Admins
- * @param {Object} req - Express request object
- * @returns {Object} Response status and message
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message
  */
 export async function getAllAdmins(req) {
   try {
@@ -557,7 +557,7 @@ export async function getAllAdmins(req) {
       },
     };
   } catch (error) {
-    console.error('Get all admins error:', error);
+    logger.error('Get all admins error', error);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: {
@@ -570,8 +570,8 @@ export async function getAllAdmins(req) {
 
 /**
  * Update Admin
- * @param {Object} req - Express request object
- * @returns {Object} Response status and message
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message
  */
 export async function updateAdmin(req) {
   const { adminId } = req.params;
@@ -712,7 +712,7 @@ export async function updateAdmin(req) {
       },
     };
   } catch (error) {
-    console.error('Update admin error:', error);
+    logger.error('Update admin error', error);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: {
@@ -725,8 +725,8 @@ export async function updateAdmin(req) {
 
 /**
  * Get All Users
- * @param {Object} req - Express request object
- * @returns {Object} Response status and message
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message
  */
 export async function getAllUsers(req) {
   try {
@@ -734,7 +734,7 @@ export async function getAllUsers(req) {
     const skip = (page - 1) * limit;
 
     // Build search filter
-    let filter = {};
+    const filter = {};
 
     if (search) {
       filter.$or = [
@@ -786,7 +786,7 @@ export async function getAllUsers(req) {
       },
     };
   } catch (error) {
-    console.error('Get all users error:', error);
+    logger.error('Get all users error', error);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: {
@@ -799,8 +799,8 @@ export async function getAllUsers(req) {
 
 /**
  * Get Total Users
- * @param {Object} req - Express request object
- * @returns {Object} Response status and message
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message
  */
 export async function getTotalUsers(req) {
   try {
@@ -837,7 +837,7 @@ export async function getTotalUsers(req) {
       },
     };
   } catch (error) {
-    console.error('Get total users error:', error);
+    logger.error('Get total users error', error);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: {
@@ -850,8 +850,8 @@ export async function getTotalUsers(req) {
 
 /**
  * Ban User
- * @param {Object} req - Express request object
- * @returns {Object} Response status and message
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message
  */
 export async function banUser(req) {
   const { userId } = req.params;
@@ -918,7 +918,7 @@ export async function banUser(req) {
       },
     };
   } catch (error) {
-    console.error('Ban user error:', error);
+    logger.error('Ban user error', error);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: {
@@ -931,8 +931,8 @@ export async function banUser(req) {
 
 /**
  * Unban User
- * @param {Object} req - Express request object
- * @returns {Object} Response status and message
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message
  */
 export async function unbanUser(req) {
   const { userId } = req.params;
@@ -997,7 +997,7 @@ export async function unbanUser(req) {
       },
     };
   } catch (error) {
-    console.error('Unban user error:', error);
+    logger.error('Unban user error', error);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: {
@@ -1010,8 +1010,8 @@ export async function unbanUser(req) {
 
 /**
  * Get Analytics
- * @param {Object} req - Express request object
- * @returns {Object} Response status and message
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message
  */
 export async function getAnalytics(req) {
   try {
@@ -1099,7 +1099,7 @@ export async function getAnalytics(req) {
       },
     };
   } catch (error) {
-    console.error('Get admin analytics error:', error);
+    logger.error('Get admin analytics error', error);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: {

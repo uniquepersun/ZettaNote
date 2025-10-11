@@ -2,13 +2,15 @@ import { v4 as uuidv4 } from 'uuid';
 import Page from '../models/Page.model.js';
 import User from '../models/User.model.js';
 import { verifyToken } from '../utils/token.utils.js';
-import { validate } from '../utils/validator.utils.js';
 import { STATUS_CODES } from '../constants/statusCodes.js';
 import { MESSAGES } from '../constants/messages.js';
 import { z } from 'zod';
+import logger from '../utils/logger.js';
 
 /**
  * Helper function to get page name and ID
+ * @param {string} pageId - ID of the page
+ * @returns {object|null} Object with page name and ID or null if not found
  */
 const getPageNameAndId = async (pageId) => {
   const page = await Page.findById(pageId);
@@ -24,6 +26,8 @@ const getPageNameAndId = async (pageId) => {
 /**
  * Create Page Controller
  * Creates a new page for the user
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message if successful
  */
 export const createPage = async (req) => {
   try {
@@ -77,7 +81,7 @@ export const createPage = async (req) => {
       },
     };
   } catch (err) {
-    console.error('Create page error:', err);
+    logger.error('Create page error', err);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
@@ -88,6 +92,8 @@ export const createPage = async (req) => {
 /**
  * Get Single Page Controller
  * Returns page details if user has access
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message if successful
  */
 export const getPage = async (req) => {
   try {
@@ -146,7 +152,7 @@ export const getPage = async (req) => {
       resMessage: { Page: page },
     };
   } catch (err) {
-    console.error('Get page error:', err);
+    logger.error('Get page error', err);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: { Error: MESSAGES.GENERAL.SERVER_ERROR },
@@ -157,6 +163,8 @@ export const getPage = async (req) => {
 /**
  * Get All Pages Controller
  * Returns list of owned and shared pages
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message if successful
  */
 export const getPages = async (req) => {
   try {
@@ -203,7 +211,7 @@ export const getPages = async (req) => {
       },
     };
   } catch (err) {
-    console.error('Get pages error:', err);
+    logger.error('Get pages error', err);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
@@ -214,6 +222,8 @@ export const getPages = async (req) => {
 /**
  * Save Page Controller
  * Updates page content
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message if successful
  */
 export const savePage = async (req) => {
   try {
@@ -277,7 +287,7 @@ export const savePage = async (req) => {
       },
     };
   } catch (err) {
-    console.error('Save page error:', err);
+    logger.error('Save page error', err);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
@@ -288,6 +298,8 @@ export const savePage = async (req) => {
 /**
  * Rename Page Controller
  * Updates page name
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message if successful
  */
 export const renamePage = async (req) => {
   try {
@@ -351,7 +363,7 @@ export const renamePage = async (req) => {
       },
     };
   } catch (err) {
-    console.error('Rename page error:', err);
+    logger.error('Rename page error', err);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
@@ -362,6 +374,8 @@ export const renamePage = async (req) => {
 /**
  * Delete Page Controller
  * Deletes a page
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message if successful
  */
 export const deletePage = async (req) => {
   try {
@@ -430,7 +444,7 @@ export const deletePage = async (req) => {
       resMessage: { message: MESSAGES.PAGE.DELETED },
     };
   } catch (err) {
-    console.error('Delete page error:', err);
+    logger.error('Delete page error', err);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
@@ -441,6 +455,8 @@ export const deletePage = async (req) => {
 /**
  * Share Page Controller
  * Shares page with another user
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message if successful
  */
 export const sharePage = async (req) => {
   try {
@@ -461,7 +477,9 @@ export const sharePage = async (req) => {
     if (!parseResult.success) {
       return {
         resStatus: STATUS_CODES.BAD_REQUEST,
-        resMessage: { message: parseResult.error?.errors?.map((e) => e.message).join(', ') || 'Invalid input' },
+        resMessage: {
+          message: parseResult.error?.errors?.map((e) => e.message).join(', ') || 'Invalid input',
+        },
       };
     }
     const { pageId, email: userEmail } = parseResult.data;
@@ -523,7 +541,7 @@ export const sharePage = async (req) => {
       resMessage: { message: MESSAGES.PAGE.SHARED },
     };
   } catch (err) {
-    console.error('Share page error:', err);
+    logger.error('Share page error', err);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
@@ -534,6 +552,8 @@ export const sharePage = async (req) => {
 /**
  * Public Share Controller
  * Generates public share link for page
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message if successful
  */
 export const publicShare = async (req) => {
   try {
@@ -596,7 +616,7 @@ export const publicShare = async (req) => {
       },
     };
   } catch (err) {
-    console.error('Public share error:', err);
+    logger.error('Public share error', err);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: { message: MESSAGES.GENERAL.SERVER_ERROR },
@@ -607,6 +627,8 @@ export const publicShare = async (req) => {
 /**
  * Get Public Share Controller
  * Returns publicly shared page content
+ * @param {string} shareId - Public share ID
+ * @returns {object} Response status and page content if successful
  */
 export const getPublicShare = async (shareId) => {
   try {
@@ -627,7 +649,7 @@ export const getPublicShare = async (shareId) => {
       },
     };
   } catch (err) {
-    console.error('Get public share error:', err);
+    logger.error('Get public share error', err);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: { Error: MESSAGES.GENERAL.SERVER_ERROR },

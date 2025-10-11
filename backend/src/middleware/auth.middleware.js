@@ -1,10 +1,16 @@
 import { verifyToken } from '../utils/token.utils.js';
 import { STATUS_CODES } from '../constants/statusCodes.js';
 import { MESSAGES } from '../constants/messages.js';
+import logger from '../utils/logger.js';
 
 /**
  * Middleware to verify user authentication
  * Checks for valid JWT token in cookies
+ * Attaches user info to req object if valid
+ * @param {object} req - Express request object
+ * @param {object} res - Express response object
+ * @param {Function} next - Next middleware function
+ * @returns {void}
  */
 export const authenticate = async (req, res, next) => {
   try {
@@ -40,7 +46,7 @@ export const authenticate = async (req, res, next) => {
 
     next();
   } catch (error) {
-    console.error('Authentication middleware error:', error);
+    logger.error('Authentication middleware error', error);
     return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: MESSAGES.GENERAL.SERVER_ERROR,
@@ -51,6 +57,11 @@ export const authenticate = async (req, res, next) => {
 /**
  * Optional authentication middleware
  * Continues even if user is not authenticated
+ * Attaches user info to req object if valid token is present
+ * @param {object} req - Express request object
+ * @param {object} res - Express response object
+ * @param {Function} next - Next middleware function
+ * @returns {void}
  */
 export const optionalAuth = async (req, res, next) => {
   try {
@@ -65,6 +76,7 @@ export const optionalAuth = async (req, res, next) => {
     }
 
     next();
+    // eslint-disable-next-line no-unused-vars
   } catch (error) {
     // Continue without auth
     next();

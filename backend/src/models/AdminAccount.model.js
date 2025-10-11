@@ -110,7 +110,9 @@ AdminAccountSchema.virtual('isLocked').get(function () {
 
 // Pre-save middleware to hash password
 AdminAccountSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+  if (!this.isModified('password')) {
+    return next();
+  }
 
   try {
     const saltRounds = 12; // Higher than normal user passwords
@@ -127,31 +129,27 @@ AdminAccountSchema.methods.comparePassword = async function (candidatePassword) 
     throw new Error('Account is temporarily locked');
   }
 
-  try {
-    const isMatch = await bcrypt.compare(candidatePassword, this.password);
+  const isMatch = await bcrypt.compare(candidatePassword, this.password);
 
-    if (isMatch) {
-      // Reset login attempts on successful login
-      if (this.loginAttempts > 0) {
-        this.loginAttempts = 0;
-        this.lockUntil = null;
-        await this.save();
-      }
-      return true;
-    } else {
-      // Increment login attempts
-      this.loginAttempts += 1;
-
-      // Lock account after 5 failed attempts for 30 minutes
-      if (this.loginAttempts >= 5) {
-        this.lockUntil = Date.now() + 30 * 60 * 1000; // 30 minutes
-      }
-
+  if (isMatch) {
+    // Reset login attempts on successful login
+    if (this.loginAttempts > 0) {
+      this.loginAttempts = 0;
+      this.lockUntil = null;
       await this.save();
-      return false;
     }
-  } catch (error) {
-    throw error;
+    return true;
+  } else {
+    // Increment login attempts
+    this.loginAttempts += 1;
+
+    // Lock account after 5 failed attempts for 30 minutes
+    if (this.loginAttempts >= 5) {
+      this.lockUntil = Date.now() + 30 * 60 * 1000; // 30 minutes
+    }
+
+    await this.save();
+    return false;
   }
 };
 
@@ -172,7 +170,9 @@ AdminAccountSchema.methods.addAuditLog = function (action, ip, userAgent, detail
 
 // Static method to check permissions
 AdminAccountSchema.statics.hasPermission = function (admin, permission) {
-  if (admin.role === 'super_admin') return true;
+  if (admin.role === 'super_admin') {
+    return true;
+  }
   return admin.permissions.includes(permission);
 };
 

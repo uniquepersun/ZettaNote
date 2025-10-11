@@ -15,9 +15,9 @@ import { asyncHandler } from '../middleware/error.middleware.js';
 const router = express.Router();
 
 /**
- * @route   POST /api/pages/createpage
- * @desc    Create a new page
- * @access  Private
+ * POST /api/pages/createpage
+ * @description Create a new page
+ * @private
  */
 router.post(
   '/createpage',
@@ -28,9 +28,9 @@ router.post(
 );
 
 /**
- * @route   POST /api/pages/getpage
- * @desc    Get a single page by ID
- * @access  Private
+ * POST /api/pages/getpage
+ * @description Get a single page by ID
+ * @private
  */
 router.post(
   '/getpage',
@@ -41,9 +41,9 @@ router.post(
 );
 
 /**
- * @route   POST /api/pages/getpages
- * @desc    Get all pages (owned and shared)
- * @access  Private
+ * POST /api/pages/getpages
+ * @description Get all pages (owned and shared)
+ * @private
  */
 router.post(
   '/getpages',
@@ -54,9 +54,9 @@ router.post(
 );
 
 /**
- * @route   POST /api/pages/savepage
- * @desc    Save/update page content
- * @access  Private
+ * POST /api/pages/savepage
+ * @description Save/update page content
+ * @private
  */
 router.post(
   '/savepage',
@@ -67,9 +67,9 @@ router.post(
 );
 
 /**
- * @route   POST /api/pages/renamepage
- * @desc    Rename a page
- * @access  Private
+ * POST /api/pages/renamepage
+ * @description Rename a page
+ * @private
  */
 router.post(
   '/renamepage',
@@ -80,9 +80,9 @@ router.post(
 );
 
 /**
- * @route   DELETE /api/pages/deletepage
- * @desc    Delete a page
- * @access  Private
+ * DELETE /api/pages/deletepage
+ * @description Delete a page
+ * @private
  */
 router.delete(
   '/deletepage',
@@ -93,9 +93,9 @@ router.delete(
 );
 
 /**
- * @route   POST /api/pages/sharepage
- * @desc    Share a page with another user
- * @access  Private
+ * POST /api/pages/sharepage
+ * @description Share a page with another user
+ * @private
  */
 router.post(
   '/sharepage',
@@ -106,9 +106,9 @@ router.post(
 );
 
 /**
- * @route   POST /api/pages/publicshare
- * @desc    Generate public share link
- * @access  Private
+ * POST /api/pages/publicshare
+ * @description Generate public share link
+ * @private
  */
 router.post(
   '/publicshare',
@@ -119,9 +119,9 @@ router.post(
 );
 
 /**
- * @route   GET /api/pages/share/:shareId
- * @desc    Get publicly shared page
- * @access  Public
+ * GET /api/pages/share/:shareId
+ * @description Get publicly shared page
+ * @public
  */
 router.get(
   '/share/:shareId',

@@ -35,8 +35,8 @@ router.use(logSuspiciousActivity);
 router.use(adminApiLimiter);
 
 /**
- * @route   POST /api/admin/login
- * @desc    Admin login
+ * POST /api/admin/login
+ * @description    Admin login
  * @access  Public
  */
 router.post(
@@ -49,8 +49,8 @@ router.post(
 );
 
 /**
- * @route   POST /api/admin/change-first-password
- * @desc    Change first time admin password
+ * POST /api/admin/change-first-password
+ * @description    Change first time admin password
  * @access  Public
  */
 router.post(
@@ -62,8 +62,8 @@ router.post(
 );
 
 /**
- * @route   POST /api/admin/logout
- * @desc    Admin logout
+ * POST /api/admin/logout
+ * @description    Admin logout
  * @access  Private (Admin)
  */
 router.post(
@@ -76,8 +76,8 @@ router.post(
 );
 
 /**
- * @route   GET /api/admin/me
- * @desc    Get current admin info
+ * GET /api/admin/me
+ * @description    Get current admin info
  * @access  Private (Admin)
  */
 router.get('/me', authenticateAdmin, (req, res) => {
@@ -100,8 +100,8 @@ router.get('/me', authenticateAdmin, (req, res) => {
 });
 
 /**
- * @route   POST /api/admin/create
- * @desc    Create new admin
+ * POST /api/admin/create
+ * @description    Create new admin
  * @access  Private (Super Admin)
  */
 router.post(
@@ -117,8 +117,8 @@ router.post(
 );
 
 /**
- * @route   GET /api/admin/analytics/total-users
- * @desc    Get total users count
+ * GET /api/admin/analytics/total-users
+ * @description    Get total users count
  * @access  Private (Admin with read_analytics permission)
  */
 router.get(
@@ -132,8 +132,8 @@ router.get(
 );
 
 /**
- * @route   GET /api/admin/analytics
- * @desc    Get analytics data
+ * GET /api/admin/analytics
+ * @description    Get analytics data
  * @access  Private (Admin with read_analytics permission)
  */
 router.get(
@@ -147,8 +147,8 @@ router.get(
 );
 
 /**
- * @route   GET /api/admin/users
- * @desc    Get all users
+ * GET /api/admin/users
+ * @description    Get all users
  * @access  Private (Admin with read_users permission)
  */
 router.get(
@@ -162,8 +162,8 @@ router.get(
 );
 
 /**
- * @route   POST /api/admin/users/:userId/ban
- * @desc    Ban a user
+ * POST /api/admin/users/:userId/ban
+ * @description    Ban a user
  * @access  Private (Admin with ban_users permission)
  */
 router.post(
@@ -177,8 +177,8 @@ router.post(
 );
 
 /**
- * @route   POST /api/admin/users/:userId/unban
- * @desc    Unban a user
+ * POST /api/admin/users/:userId/unban
+ * @description    Unban a user
  * @access  Private (Admin with ban_users permission)
  */
 router.post(
@@ -192,8 +192,8 @@ router.post(
 );
 
 /**
- * @route   GET /api/admin/admins
- * @desc    Get all admins
+ * GET /api/admin/admins
+ * @description    Get all admins
  * @access  Private (Super Admin)
  */
 router.get(
@@ -207,8 +207,8 @@ router.get(
 );
 
 /**
- * @route   PUT /api/admin/admins/:adminId
- * @desc    Update admin
+ * PUT /api/admin/admins/:adminId
+ * @description    Update admin
  * @access  Private (Super Admin)
  */
 router.put(
@@ -222,8 +222,8 @@ router.put(
 );
 
 /**
- * @route   DELETE /api/admin/admins/:adminId
- * @desc    Delete admin
+ * DELETE /api/admin/admins/:adminId
+ * @description    Delete admin
  * @access  Private (Super Admin)
  */
 router.delete(

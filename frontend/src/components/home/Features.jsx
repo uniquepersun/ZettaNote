@@ -1,6 +1,5 @@
-import React from 'react'
-import Feature from '../Feature'
-import { IoOptions } from 'react-icons/io5'
+import Feature from '../Feature';
+import { IoOptions } from 'react-icons/io5';
 
 const Features = () => {
   return (
@@ -8,7 +7,7 @@ const Features = () => {
       <section className="features-section second max-w-6xl mx-auto mt-12">
         <h2 className="text-5xl font-semibold text-secondary flex items-center gap-3">
           <IoOptions />
-         <span className='mb-2'> Core features</span>
+          <span className="mb-2"> Core features</span>
         </h2>
         <p className="mt-2 text-sm text-[color:var(--color-neutral-content)] max-w-2xl">
           Designed for writers, students and developers — minimal UI, fast editor and safe sharing.
@@ -80,7 +79,7 @@ const Features = () => {
         </div>
       </section>
     </div>
-  )
-}
+  );
+};
 
-export default Features
+export default Features;

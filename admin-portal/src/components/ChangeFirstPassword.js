@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Container,
@@ -27,6 +27,7 @@ import { LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
 import { adminAuth } from '../utils/adminAuth';
 
+// eslint-disable-next-line react/prop-types
 export default function ChangeFirstPassword({ tempToken, adminData }) {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -173,6 +174,7 @@ export default function ChangeFirstPassword({ tempToken, adminData }) {
                   fontWeight: 500,
                 }}
               >
+                {/* eslint-disable-next-line react/prop-types */}
                 Welcome, {adminData?.name}! Please create a new password for your first login.
               </Typography>
             </Box>
@@ -331,7 +333,7 @@ export default function ChangeFirstPassword({ tempToken, adminData }) {
 
             <Box sx={{ mt: 4, textAlign: 'center' }}>
               <Typography variant="caption" sx={{ color: '#999' }}>
-                🔒 After changing your password, you'll be redirected to login with your new
+                🔒 After changing your password, you&apos;ll be redirected to login with your new
                 credentials.
               </Typography>
             </Box>

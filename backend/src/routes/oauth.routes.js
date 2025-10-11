@@ -2,6 +2,7 @@ import express from 'express';
 import passport from 'passport';
 import { generateToken } from '../utils/token.utils.js';
 import config from '../config/index.js';
+import logger from '../utils/logger.js';
 
 const router = express.Router();
 
@@ -15,9 +16,9 @@ router.get(
 );
 
 router.get('/google/callback', (req, res, next) => {
-  passport.authenticate('google', { session: false }, (err, user, info) => {
+  passport.authenticate('google', { session: false }, (err, user) => {
     if (err) {
-      console.error('Google OAuth error:', err);
+      logger.error('Google OAuth error', err);
       return res.redirect(
         `${config.frontendUrl}/login?error=oauth_failed&message="Authentication failed"`
       );
@@ -51,9 +52,9 @@ router.get(
 );
 
 router.get('/github/callback', (req, res, next) => {
-  passport.authenticate('github', { session: false }, (err, user, info) => {
+  passport.authenticate('github', { session: false }, (err, user) => {
     if (err) {
-      console.error('GitHub OAuth error:', err);
+      logger.error('GitHub OAuth error', err);
       return res.redirect(
         `${config.frontendUrl}/login?error=oauth_failed&message="Authentication failed"`
       );

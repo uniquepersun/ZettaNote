@@ -11,10 +11,14 @@ import { authenticate } from '../middleware/auth.middleware.js';
 const router = express.Router();
 
 /**
- * @route   POST /api/mailer/send
- * @desc    Send an email
+ * POST /api/mailer/send
+ * @description    Send an email
  * @access  Private (requires authentication)
- * @body    { to: string|string[], subject: string, html?: string, text?: string }
+ * @param {object} req.body - The request body
+ * @param {string|string[]} req.body.to - Recipient email address(es)
+ * @param {string} req.body.subject - Email subject
+ * @param {string} [req.body.html] - HTML content (optional)
+ * @param {string} [req.body.text] - Text content (optional)
  */
 router.post(
   '/send',
@@ -26,10 +30,14 @@ router.post(
 );
 
 /**
- * @route   POST /api/mailer/test
- * @desc    Send a test email (for testing purposes)
+ * POST /api/mailer/test
+ * @description    Send a test email (for testing purposes)
  * @access  Private (requires authentication)
- * @body    { to: string, subject: string, html?: string, text?: string }
+ * @param {object} req.body - The request body
+ * @param {string} req.body.to - Recipient email address
+ * @param {string} req.body.subject - Email subject
+ * @param {string} [req.body.html] - HTML content (optional)
+ * @param {string} [req.body.text] - Text content (optional)
  */
 router.post(
   '/test',

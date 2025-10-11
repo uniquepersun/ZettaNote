@@ -5,8 +5,8 @@ import AdminAccount from '../models/AdminAccount.model.js';
 
 /**
  * Generate JWT token for regular users
- * @param {Object} user - User object
- * @param {Object} options - Token options
+ * @param {object} user - User object
+ * @param {object} options - Token options
  * @returns {string} JWT token
  */
 export const generateToken = (user, options = {}) => {
@@ -22,8 +22,8 @@ export const generateToken = (user, options = {}) => {
 
 /**
  * Generate JWT token for admin users
- * @param {Object} admin - Admin object
- * @param {Object} options - Token options
+ * @param {object} admin - Admin object
+ * @param {object} options - Token options
  * @returns {string} JWT token
  */
 export const generateAdminToken = (admin, options = {}) => {
@@ -41,7 +41,7 @@ export const generateAdminToken = (admin, options = {}) => {
 /**
  * Verify user token and return user object
  * @param {string} token - JWT token
- * @returns {Promise<Object|null>} User object or null
+ * @returns {Promise<object | null>} User object or null
  */
 export const verifyToken = async (token) => {
   try {
@@ -53,6 +53,7 @@ export const verifyToken = async (token) => {
 
     const user = await User.findById(decoded.id);
     return user || null;
+    // eslint-disable-next-line no-unused-vars
   } catch (error) {
     return null;
   }
@@ -61,7 +62,7 @@ export const verifyToken = async (token) => {
 /**
  * Verify admin token and return admin object
  * @param {string} token - JWT token
- * @returns {Promise<Object|null>} Admin object or null
+ * @returns {Promise<object | null>} Admin object or null
  */
 export const verifyAdminToken = async (token) => {
   try {
@@ -78,6 +79,7 @@ export const verifyAdminToken = async (token) => {
     }
 
     return admin;
+    // eslint-disable-next-line no-unused-vars
   } catch (error) {
     return null;
   }
@@ -85,7 +87,7 @@ export const verifyAdminToken = async (token) => {
 
 /**
  * Extract token from cookie
- * @param {Object} req - Express request object
+ * @param {object} req - Express request object
  * @returns {string|null} Token or null
  */
 export const extractTokenFromCookie = (req) => {
@@ -94,7 +96,7 @@ export const extractTokenFromCookie = (req) => {
 
 /**
  * Extract token from Authorization header
- * @param {Object} req - Express request object
+ * @param {object} req - Express request object
  * @returns {string|null} Token or null
  */
 export const extractTokenFromHeader = (req) => {

@@ -188,7 +188,7 @@ const Signup = () => {
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-base-content mb-2">Create Account</h2>
             <p className="text-base-content/70">
-              Start taking notes in seconds. It's free and always will be.
+              Start taking notes in seconds. It&apos;s free and always will be.
             </p>
           </div>
 

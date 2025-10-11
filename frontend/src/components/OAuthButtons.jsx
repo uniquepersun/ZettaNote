@@ -1,4 +1,3 @@
-import React from 'react';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
 import { VITE_API_URL } from '../env';
 

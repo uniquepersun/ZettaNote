@@ -1,7 +1,4 @@
-import React, { useRef } from 'react';
-import { Link } from 'react-router-dom';
-import Feature from '../components/Feature';
-import ExampleNote from '../components/home/ExampleNote';
+import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -19,7 +16,7 @@ const Home = () => {
     () => {
       // Main heading animations
       const headingTl = gsap.timeline({ delay: 0.3 });
-      
+
       headingTl
         .from('.heading-word-1', {
           opacity: 0,
@@ -28,25 +25,37 @@ const Home = () => {
           duration: 1.2,
           ease: 'power3.out',
         })
-        .from('.heading-word-2', {
-          opacity: 0,
-          y: 100,
-          rotationX: -90,
-          duration: 1.2,
-          ease: 'power3.out',
-        }, '-=0.8')
-        .to('.heading-tagline', {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: 'power2.out',
-        }, '-=0.4')
-        .to('.heading-cta', {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: 'power2.out',
-        }, '-=0.2');
+        .from(
+          '.heading-word-2',
+          {
+            opacity: 0,
+            y: 100,
+            rotationX: -90,
+            duration: 1.2,
+            ease: 'power3.out',
+          },
+          '-=0.8'
+        )
+        .to(
+          '.heading-tagline',
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+          },
+          '-=0.4'
+        )
+        .to(
+          '.heading-cta',
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+          },
+          '-=0.2'
+        );
 
       // Floating dots animation
       gsap.to('.floating-dot', {
@@ -58,8 +67,8 @@ const Home = () => {
         repeat: -1,
         stagger: {
           each: 0.5,
-          from: 'random'
-        }
+          from: 'random',
+        },
       });
 
       // Hero section animations
@@ -194,20 +203,20 @@ const Home = () => {
 
       // Heading button hover animations
       const buttons = document.querySelectorAll('.heading-cta button');
-      buttons.forEach(button => {
+      buttons.forEach((button) => {
         button.addEventListener('mouseenter', () => {
           gsap.to(button, {
             scale: 1.05,
             duration: 0.3,
-            ease: 'power2.out'
+            ease: 'power2.out',
           });
         });
-        
+
         button.addEventListener('mouseleave', () => {
           gsap.to(button, {
             scale: 1,
             duration: 0.3,
-            ease: 'power2.out'
+            ease: 'power2.out',
           });
         });
       });
@@ -234,7 +243,7 @@ const Home = () => {
       className="min-h-screen mt-20 p-6 lg:p-12"
       style={{ background: 'color:var(--color-base-100)' }}
     >
-      <Heading/>
+      <Heading />
       <Hero />
       <Features />
       <CommunityAndContribution />

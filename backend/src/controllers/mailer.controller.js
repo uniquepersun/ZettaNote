@@ -6,11 +6,12 @@
 import { sendMail } from '../mailers/resend.client.js';
 import { STATUS_CODES } from '../constants/statusCodes.js';
 import { MESSAGES } from '../constants/messages.js';
+import logger from '../utils/logger.js';
 
 /**
  * Send Test/Generic Email
- * @param {Object} req - Express request object
- * @returns {Object} Response status and message
+ * @param {object} req - Express request object
+ * @returns {object} Response status and message
  */
 export const sendTestMail = async (req) => {
   const { to, subject, html, text } = req.body || {};
@@ -67,7 +68,7 @@ export const sendTestMail = async (req) => {
       },
     };
   } catch (error) {
-    console.error('Mailer error:', error);
+    logger.error('Mailer error', error);
     return {
       resStatus: STATUS_CODES.INTERNAL_SERVER_ERROR,
       resMessage: {

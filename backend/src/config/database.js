@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import config from './index.js';
+import logger from '../utils/logger.js';
 
 /**
  * Connect to MongoDB database
@@ -8,18 +9,18 @@ import config from './index.js';
 export const connectDatabase = async () => {
   try {
     await mongoose.connect(config.database.uri);
-    console.log('✅ Connected to MongoDB database');
+    logger.success('Connected to MongoDB database');
 
     // Handle connection events
     mongoose.connection.on('error', (err) => {
-      console.error('❌ MongoDB connection error:', err);
+      logger.error('MongoDB connection error', err);
     });
 
     mongoose.connection.on('disconnected', () => {
-      console.warn('⚠️  MongoDB disconnected');
+      logger.warn('MongoDB disconnected');
     });
   } catch (error) {
-    console.error('❌ Failed to connect to MongoDB:', error.message);
+    logger.error('Failed to connect to MongoDB', error);
     process.exit(1);
   }
 };

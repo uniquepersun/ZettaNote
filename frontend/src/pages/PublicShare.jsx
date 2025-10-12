@@ -4,6 +4,9 @@ import { FiFile, FiHome, FiDownload, FiExternalLink, FiClock, FiEye } from 'reac
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { VITE_API_URL } from '../env';
+// Importing highlight.js for code syntax highlighting
+import hljs from "highlight.js";
+import "highlight.js/styles/atom-one-dark.css";
 
 const PublicShare = () => {
   const { shareId } = useParams();
@@ -75,14 +78,22 @@ const PublicShare = () => {
         .replace(/<u>(.*?)<\/u>/g, '<u class="underline">$1</u>')
 
         // Code
-        .replace(
-          /`([^`]+)`/g,
-          '<code class="bg-base-200 text-primary px-2 py-1 rounded text-sm font-mono">$1</code>'
-        )
-        .replace(
-          /```(\w+)?\n([\s\S]*?)```/g,
-          '<pre class="bg-base-200 p-4 rounded-lg overflow-auto my-4 border"><code class="text-sm font-mono">$2</code></pre>'
-        )
+        // Multiline code block with syntax highlighting
+        .replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
+          const highlighted = lang
+            ? hljs.highlight(code, { language: lang, ignoreIllegals: true }).value
+            : hljs.highlightAuto(code).value;
+
+
+          return `<pre class="bg-base-200 p-4 rounded-lg overflow-auto my-4"><code class="text-sm font-mono language-${lang || 'auto'}">${highlighted}</code></pre>`;
+        })
+         // Single line code block with syntax highlighting
+         //tbh idk why adding highlighting just to multiline code block adds it to single line too, but i will add it again just to be safe.
+        .replace(/`([^`]+)`/g, (match, code) => {
+          const highlighted = hljs.highlightAuto(code).value;
+          return `<code class="bg-base-200 text-primary px-2 py-1 rounded text-sm font-mono">${highlighted}</code>`;
+        })
+
 
         // Blockquotes
         .replace(
@@ -101,7 +112,7 @@ const PublicShare = () => {
         )
         .replace(
           /^- (.*$)/gm,
-          '<li class="flex items-start gap-2 my-1"><span class="text-primary mt-1">•</span> $1</li>'
+          '<li class="flex items-start gap-2 my-1"><span class="text-primary">•</span> $1</li>'
         )
         .replace(/^\d+\. (.*$)/gm, '<li class="flex items-start gap-2 my-1 ml-4">$1</li>')
 

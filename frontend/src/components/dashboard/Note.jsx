@@ -463,7 +463,7 @@ const Note = ({ activePage, onContentChange, content = '', onSave }) => {
       )
       .replace(
         /^- (.*$)/gm,
-        '<li class="flex items-start gap-2 my-1"><span class="text-primary mt-1">•</span> $1</li>'
+        '<li class="flex items-start gap-2 my-1"><span class="text-primary">•</span> $1</li>'
       )
       .replace(/^\d+\. (.*$)/gm, '<li class="flex items-start gap-2 my-1 ml-4">$1</li>')
 

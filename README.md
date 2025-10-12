@@ -506,6 +506,13 @@ We welcome contributions from the community!
 		</tr>
 		<tr>
             <td align="center">
+                <a href="https://github.com/naextro">
+                    <img src="https://avatars.githubusercontent.com/u/130078323?v=4" width="100;" alt="naextro"/>
+                    <br />
+                    <sub><b>naextro</b></sub>
+                </a>
+            </td>
+            <td align="center">
                 <a href="https://github.com/AsadAhmedSaiyed">
                     <img src="https://avatars.githubusercontent.com/u/166991578?v=4" width="100;" alt="AsadAhmedSaiyed"/>
                     <br />

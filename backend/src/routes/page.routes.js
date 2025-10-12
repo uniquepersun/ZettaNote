@@ -136,13 +136,13 @@ router.get(
 /**
  * POST /api/pages/sharepage/remove-user
  * @description Remove a shared user from a page
- * @public
+ * @private
  */
 router.post(
   '/sharepage/remove-user',
   asyncHandler(async (req, res) => {
     const { gmail, id } = req.body;
-    const { resStatus, resMessage } = await removeUserFromSharedPage(req,id, gmail);
+    const { resStatus, resMessage } = await removeUserFromSharedPage(req, id, gmail);
     res.status(resStatus).json(resMessage);
   })
 );

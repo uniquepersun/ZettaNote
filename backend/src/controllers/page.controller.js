@@ -663,10 +663,11 @@ export const getPublicShare = async (shareId) => {
  * @param {object} req - Express request object
  * @param {string} id - Active page id
  * @param {string} gmail - Email of the user to unshare the page with
+ * @returns {object} Response status and message if successful
  */
-export const removeUserFromSharedPage = async (req,id, gmail) => {
+export const removeUserFromSharedPage = async (req, id, gmail) => {
   try {
-     const token = req.cookies?.token;
+    const token = req.cookies?.token;
     if (!token) {
       return {
         resStatus: STATUS_CODES.UNAUTHORIZED,
@@ -695,8 +696,8 @@ export const removeUserFromSharedPage = async (req,id, gmail) => {
     //only owner can unshare the page
     if (!page.owner.equals(verifiedUser._id)) {
       return {
-        resStatus: STATUS_CODES.FORBIDDEN,
-        resMessage: { Error: 'Not authorized to unshare this page' },
+        resStatus: STATUS_CODES.UNAUTHORIZED,
+        resMessage: { Error: MESSAGES.PAGE.ACCESS_DENIED },
       };
     }
 
@@ -705,7 +706,7 @@ export const removeUserFromSharedPage = async (req,id, gmail) => {
     if (!user) {
       return {
         resStatus: STATUS_CODES.NOT_FOUND,
-        resMessage: { Error: 'User not found' },
+        resMessage: { Error: MESSAGES.AUTH.USER_NOT_FOUND },
       };
     }
 

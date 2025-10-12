@@ -351,17 +351,17 @@ We welcome contributions from the community!
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/deepshikhatutorials">
-                    <img src="https://avatars.githubusercontent.com/u/233038862?v=4" width="100;" alt="deepshikhatutorials"/>
-                    <br />
-                    <sub><b>deepshikhatutorials</b></sub>
-                </a>
-            </td>
-            <td align="center">
                 <a href="https://github.com/damarudhvarma">
                     <img src="https://avatars.githubusercontent.com/u/138239688?v=4" width="100;" alt="damarudhvarma"/>
                     <br />
                     <sub><b>damarudhvarma</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/deepshikhatutorials">
+                    <img src="https://avatars.githubusercontent.com/u/233038862?v=4" width="100;" alt="deepshikhatutorials"/>
+                    <br />
+                    <sub><b>deepshikhatutorials</b></sub>
                 </a>
             </td>
             <td align="center">
@@ -510,6 +510,13 @@ We welcome contributions from the community!
                     <img src="https://avatars.githubusercontent.com/u/166991578?v=4" width="100;" alt="AsadAhmedSaiyed"/>
                     <br />
                     <sub><b>AsadAhmedSaiyed</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/AmjustGettingStarted">
+                    <img src="https://avatars.githubusercontent.com/u/111118246?v=4" width="100;" alt="AmjustGettingStarted"/>
+                    <br />
+                    <sub><b>AmjustGettingStarted</b></sub>
                 </a>
             </td>
             <td align="center">

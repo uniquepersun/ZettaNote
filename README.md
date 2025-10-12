@@ -344,6 +344,13 @@ We welcome contributions from the community!
                 </a>
             </td>
             <td align="center">
+                <a href="https://github.com/deepshikhatutorials">
+                    <img src="https://avatars.githubusercontent.com/u/233038862?v=4" width="100;" alt="deepshikhatutorials"/>
+                    <br />
+                    <sub><b>deepshikhatutorials</b></sub>
+                </a>
+            </td>
+            <td align="center">
                 <a href="https://github.com/kaushalyap">
                     <img src="https://avatars.githubusercontent.com/u/24698778?v=4" width="100;" alt="kaushalyap"/>
                     <br />
@@ -355,13 +362,6 @@ We welcome contributions from the community!
                     <img src="https://avatars.githubusercontent.com/u/138239688?v=4" width="100;" alt="damarudhvarma"/>
                     <br />
                     <sub><b>damarudhvarma</b></sub>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/deepshikhatutorials">
-                    <img src="https://avatars.githubusercontent.com/u/233038862?v=4" width="100;" alt="deepshikhatutorials"/>
-                    <br />
-                    <sub><b>deepshikhatutorials</b></sub>
                 </a>
             </td>
             <td align="center">
@@ -425,17 +425,24 @@ We welcome contributions from the community!
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/DikshantJangra">
-                    <img src="https://avatars.githubusercontent.com/u/76596000?v=4" width="100;" alt="DikshantJangra"/>
-                    <br />
-                    <sub><b>DikshantJangra</b></sub>
-                </a>
-            </td>
-            <td align="center">
                 <a href="https://github.com/AnirbanNath-dev">
                     <img src="https://avatars.githubusercontent.com/u/116329986?v=4" width="100;" alt="AnirbanNath-dev"/>
                     <br />
                     <sub><b>AnirbanNath-dev</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/naextro">
+                    <img src="https://avatars.githubusercontent.com/u/130078323?v=4" width="100;" alt="naextro"/>
+                    <br />
+                    <sub><b>naextro</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/DikshantJangra">
+                    <img src="https://avatars.githubusercontent.com/u/76596000?v=4" width="100;" alt="DikshantJangra"/>
+                    <br />
+                    <sub><b>DikshantJangra</b></sub>
                 </a>
             </td>
             <td align="center">
@@ -452,6 +459,8 @@ We welcome contributions from the community!
                     <sub><b>mukeshdhadhariya</b></sub>
                 </a>
             </td>
+		</tr>
+		<tr>
             <td align="center">
                 <a href="https://github.com/siddxharth1">
                     <img src="https://avatars.githubusercontent.com/u/91618085?v=4" width="100;" alt="siddxharth1"/>
@@ -459,8 +468,6 @@ We welcome contributions from the community!
                     <sub><b>siddxharth1</b></sub>
                 </a>
             </td>
-		</tr>
-		<tr>
             <td align="center">
                 <a href="https://github.com/shourya2006">
                     <img src="https://avatars.githubusercontent.com/u/75479705?v=4" width="100;" alt="shourya2006"/>
@@ -496,20 +503,13 @@ We welcome contributions from the community!
                     <sub><b>mahenoorsalat</b></sub>
                 </a>
             </td>
+		</tr>
+		<tr>
             <td align="center">
                 <a href="https://github.com/komalsathvik">
                     <img src="https://avatars.githubusercontent.com/u/170125200?v=4" width="100;" alt="komalsathvik"/>
                     <br />
                     <sub><b>komalsathvik</b></sub>
-                </a>
-            </td>
-		</tr>
-		<tr>
-            <td align="center">
-                <a href="https://github.com/naextro">
-                    <img src="https://avatars.githubusercontent.com/u/130078323?v=4" width="100;" alt="naextro"/>
-                    <br />
-                    <sub><b>naextro</b></sub>
                 </a>
             </td>
             <td align="center">

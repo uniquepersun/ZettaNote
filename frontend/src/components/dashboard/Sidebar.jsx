@@ -685,18 +685,22 @@ const Sidebar = ({ onPageSelect, selectedPageId, isOpen, onClose }) => {
                   <div>
                     <p className="text-xs text-base-content/60 mb-2">Quick suggestions:</p>
                     <div className="flex flex-wrap gap-2">
-                      {['Meeting Notes', 'Ideas', 'To-Do List', 'Project Plan', 'Daily Journal'].map(
-                        (suggestion) => (
-                          <button
-                            key={suggestion}
-                            onClick={() => setNewPageName(suggestion)}
-                            className="btn btn-xs btn-ghost btn-outline hover:btn-primary"
-                            disabled={isCreating}
-                          >
-                            {suggestion}
-                          </button>
-                        )
-                      )}
+                      {[
+                        'Meeting Notes',
+                        'Ideas',
+                        'To-Do List',
+                        'Project Plan',
+                        'Daily Journal',
+                      ].map((suggestion) => (
+                        <button
+                          key={suggestion}
+                          onClick={() => setNewPageName(suggestion)}
+                          className="btn btn-xs btn-ghost btn-outline hover:btn-primary"
+                          disabled={isCreating}
+                        >
+                          {suggestion}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>

@@ -10,11 +10,10 @@ import {
   FiGlobe,
   FiDownload,
   FiCheckCircle,
-  FiMenu,
-  FiX,
   FiUsers,
   FiMail,
   FiPlus,
+  FiX,
 } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import axios from 'axios';
@@ -23,7 +22,7 @@ import authContext from '../../context/AuthProvider';
 import { VITE_API_URL } from '../../env';
 import propTypes from 'prop-types';
 
-const TopBar = ({ activePage, onSave, lastSaved, isLoading, onToggleSidebar, isSidebarOpen }) => {
+const TopBar = ({ activePage, onSave, lastSaved, isLoading }) => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareableLink, setShareableLink] = useState('');
   const [isGeneratingLink, setIsGeneratingLink] = useState(false);
@@ -34,7 +33,7 @@ const TopBar = ({ activePage, onSave, lastSaved, isLoading, onToggleSidebar, isS
   const [isFetchingSharedUsers, setIsFetchingSharedUsers] = useState(false);
   const navigate = useNavigate();
   const { user, setuser } = useContext(authContext);
-  
+
   const handleUnauthorized = (error) => {
     if (error.response && error.response.status === 401) {
       setuser(null);
@@ -264,12 +263,16 @@ const TopBar = ({ activePage, onSave, lastSaved, isLoading, onToggleSidebar, isS
 
   const removeSharedUser = async (userEmail) => {
     try {
-      const response=await axios.post(`${VITE_API_URL}/api/pages/sharepage/remove-user`, {
-        gmail: userEmail,
-        id: activePage.id
-      }, {
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        `${VITE_API_URL}/api/pages/sharepage/remove-user`,
+        {
+          gmail: userEmail,
+          id: activePage.id,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       if (response.status !== 200) {
         throw new Error(response.data?.message || 'Failed to remove user access');
       }
@@ -296,21 +299,11 @@ const TopBar = ({ activePage, onSave, lastSaved, isLoading, onToggleSidebar, isS
     return `Saved ${saved.toLocaleDateString()}`;
   };
 
-  
   return (
     <>
-      <div className="h-16 lg:h-20 bg-base-100 border-b border-base-300 flex items-center justify-between px-4 lg:px-8 sticky top-16 z-30 shadow-sm">
+      <div className="h-16 lg:h-20 bg-base-100 border-b border-base-300 hidden md:flex items-center justify-between px-4 lg:px-8 sticky top-16 z-30 shadow-sm">
         {/* Left Section - Enhanced Page Info */}
-        <div className="flex items-center space-x-6">
-          {/* Mobile Menu Button */}
-          <button
-            onClick={onToggleSidebar}
-            className="btn btn-ghost btn-sm btn-circle lg:hidden hover:btn-primary hover:scale-110 transition-all duration-200"
-            title={isSidebarOpen ? 'Close menu' : 'Open menu'}
-          >
-            {isSidebarOpen ? <FiX className="w-5 h-5" /> : <FiMenu className="w-5 h-5" />}
-          </button>
-
+        <div className="flex items-center space-x-4 lg:space-x-6">
           <div className="flex items-center space-x-4">
             <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/10">
               <FiFile className="w-6 h-6 text-primary" />
@@ -658,10 +651,10 @@ const TopBar = ({ activePage, onSave, lastSaved, isLoading, onToggleSidebar, isS
                   {shareableLink && Array.isArray(sharedUsers) && sharedUsers.length > 0
                     ? 'Public & private sharing active'
                     : shareableLink
-                    ? 'Public sharing active'
-                    : Array.isArray(sharedUsers) && sharedUsers.length > 0
-                    ? 'Private sharing active'
-                    : 'No active sharing'}
+                      ? 'Public sharing active'
+                      : Array.isArray(sharedUsers) && sharedUsers.length > 0
+                        ? 'Private sharing active'
+                        : 'No active sharing'}
                 </span>
               </div>
               <div className="flex gap-3">
@@ -700,8 +693,6 @@ TopBar.propTypes = {
   onRename: propTypes.func,
   lastSaved: propTypes.string,
   isLoading: propTypes.bool,
-  onToggleSidebar: propTypes.func.isRequired,
-  isSidebarOpen: propTypes.bool.isRequired,
 };
 
 export default TopBar;
